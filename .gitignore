@@ -107,4 +107,4 @@ venv.bak/
 *.clsf.gz
 
 # local alphamelts install folder
-pyrolite-meltsutil/data/localinstall/*
+pyrolite_meltsutil/data/localinstall/*

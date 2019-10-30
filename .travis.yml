@@ -19,7 +19,7 @@ matrix:
 install:
   - pip install -q pytest pytest-runner pytest-cov coverage
   - pip install coveralls
-  - pip install -e .[skl] # install skl dependencies
+  - pip install -e .
 
 script:
   - xvfb-run python setup.py test

@@ -1,9 +1,6 @@
 # pyrolite-meltsutil
 Extension for pyrolite for working with alphaMELTS and its outputs.
 
-<a href='https://coveralls.io/github/morganjwilliams/pyrolite-meltsutil?branch=master'><img src='https://coveralls.io/repos/github/morganjwilliams/pyrolite-meltsutil/badge.svg?branch=master' alt='Coverage Status' /></a>
-
-
 <img src="https://raw.githubusercontent.com/morganjwilliams/pyrolite/develop/docs/source/_static/icon.jpg" alt="pyrolite Logo" width="30%" align="right">
 
 <p align="left">

@@ -1,3 +1,10 @@
+API
+-------
+
+.. automodule:: pyrolite_meltsutil
+    :members:
+    :undoc-members:
+
 pyrolite_meltsutil\.automation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   .. automodule:: pyrolite_meltsutil.automation

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# pyrolite documentation build configuration file, created by
-# sphinx-quickstart on Tue Sep 18 13:48:13 2018.
+# pyrolite-meltsutil documentation build configuration file, created by
+# sphinx-quickstart
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -274,24 +274,11 @@ warnings.filterwarnings(
 
 from docpatch import *  # patch for sphinx_gallery pages
 
-github_doc_root = "https://github.com/morganjwilliams/pyrolite/tree/develop/docs/"
+github_doc_root = "https://github.com/morganjwilliams/pyrolite-meltsutil/tree/develop/docs/"
 
 # metadata
 # ordered reference composition list
-from pyrolite.geochem.norm import all_reference_compositions
 
-refs = all_reference_compositions()
-reservoirs = set(
-    [refs[n].reservoir for n in refs.keys() if refs[n].reservoir is not None]
-)
-comps = []
-for r in reservoirs:
-    comps += [n for n in refs if refs[n].reservoir == r]
-refcomps = (
-    "    <dl>"
-    + "\n    ".join(["<dt>{}</dt><dd>{}</dd>".format(n, refs[n]) for n in comps])
-    + "</dl>"
-)
 rst_prolog = """
 .. |br| raw:: html
 
@@ -304,10 +291,6 @@ rst_prolog = """
 .. |version| raw:: html
 
     {version}
-
-.. |refcomps| raw:: html
-
-    {rc}
 
 .. |doibadage| raw:: html
 
@@ -323,7 +306,7 @@ rst_prolog += """
 
 .. raw:: html
 
-  <a href="https://github.com/morganjwilliams/pyrolite"
+  <a href="https://github.com/morganjwilliams/pyrolite-meltsutil"
      class="github-corner"
      aria-label="View source on GitHub">
   <svg width="80"

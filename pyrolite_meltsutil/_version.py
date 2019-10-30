@@ -43,7 +43,7 @@ def get_config():
     cfg.style = "pep440"
     cfg.tag_prefix = ""
     cfg.parentdir_prefix = "pyrolite-meltsutil-"
-    cfg.versionfile_source = "pyrolite-meltsutil/_version.py"
+    cfg.versionfile_source = "pyrolite_meltsutil/_version.py"
     cfg.verbose = False
     return cfg
 

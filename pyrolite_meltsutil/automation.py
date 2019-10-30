@@ -16,12 +16,13 @@ import queue
 import shlex
 from pyrolite.util.multip import combine_choices
 from pyrolite.util.general import get_process_tree
-from pyrolite.util.meta import pyrolite_datafolder, ToLogger
+from pyrolite.util.meta import ToLogger
 from pyrolite.geochem.ind import common_elements, common_oxides
 from .tables import MeltsOutput
 from .parse import read_envfile, read_meltsfile
 from .meltsfile import to_meltsfile
 from .env import MELTS_Env
+from .util import pyrolite_meltsutil_datafolder
 
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -188,16 +189,14 @@ class MeltsProcess(object):
             # check for local install
             if platform.system() == "Windows":
                 local_run = (
-                    pyrolite_datafolder(subfolder="alphamelts")
-                    / "localinstall"
+                    pyrolite_meltsutil_datafolder(subfolder="localinstall")
                     / "links"
                     / "run_alphamelts.bat"
                 )
 
             else:
                 local_run = (
-                    pyrolite_datafolder(subfolder="alphamelts")
-                    / "localinstall"
+                    pyrolite_meltsutil_datafolder(subfolder="localinstall")
                     / "links"
                     / "run_alphamelts.command"
                 )

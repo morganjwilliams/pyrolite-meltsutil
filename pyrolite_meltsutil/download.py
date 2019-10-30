@@ -8,8 +8,8 @@ import requests
 import zipfile
 from pathlib import Path
 from pyrolite.util.general import copy_file, extract_zip, remove_tempdir, check_perl
-from pyrolite.util.meta import pyrolite_datafolder
 from pyrolite.util.web import internet_connection
+from .util import pyrolite_meltsutil_datafolder
 import logging
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -124,7 +124,7 @@ def install_melts(
         download_melts(temp_dir, version=version)
 
     if local:
-        install_dir = pyrolite_datafolder(subfolder="alphamelts") / "localinstall"
+        install_dir = pyrolite_meltsutil_datafolder(subfolder="localinstall")
     else:
         install_dir = Path(install_dir)
 

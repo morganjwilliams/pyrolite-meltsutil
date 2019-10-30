@@ -69,7 +69,7 @@ class TestInstall(unittest.TestCase):
         """
         Checks that the local install procedure works.
         """
-        dir = pyrolite_datafolder() / "alphamelts" / "localinstall"
+        dir = pyrolite_meltsutil_datafolder(subfolder="localinstall")
         for keeptemp in [False, True]:
             with self.subTest(keeptemp=keeptemp):
                 install_melts(

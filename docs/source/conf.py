@@ -298,8 +298,7 @@ rst_prolog = """
      <img src="https://zenodo.org/badge/137172322.svg" alt="DOI">
     </a>
 
-""".format(
-    rc=refcomps, year=str(date.today().year), version=version
+""".format( year=str(date.today().year), version=version
 )
 
 rst_prolog += """

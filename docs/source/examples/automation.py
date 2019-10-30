@@ -5,8 +5,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pyrolite.plot
 from pyrolite.geochem.norm import get_reference_composition
-from pyrolite.ext.alphamelts.env import MELTS_Env
-from pyrolite.ext.alphamelts.automation import MeltsBatch
+from pyrolite_meltsutil.env import MELTS_Env
+from pyrolite_meltsutil.automation import MeltsBatch
 
 from pyrolite.util.meta import stream_log
 import logging

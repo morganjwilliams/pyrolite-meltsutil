@@ -1,6 +1,6 @@
 from pathlib import Path
-from pyrolite.ext.alphamelts.tables import get_experiments_summary
-from pyrolite.ext.alphamelts.plottemplates import table_by_phase
+from pyrolite_meltsutil.tables import get_experiments_summary
+from pyrolite_meltsutil.plottemplates import table_by_phase
 
 tempdir = Path("./") / "montecarlo"
 

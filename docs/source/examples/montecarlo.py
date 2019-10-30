@@ -68,7 +68,7 @@ from pyrolite.util.plot import save_figure
 
 save_figure(ax.figure, save_at="../../source/_static", name="melt_blurredmorb")
 # %% run the models for each of the inputs
-from pyrolite.ext.alphamelts.automation import MeltsBatch
+from pyrolite_meltsutil.automation import MeltsBatch
 
 # create a directory to run this experiment in
 tempdir = Path("./") / "montecarlo"
@@ -99,8 +99,8 @@ batch.run(
 
 # %% aggregate the results over the same gridded space
 from pathlib import Path
-from pyrolite.ext.alphamelts.tables import get_experiments_summary
-from pyrolite.ext.alphamelts.plottemplates import table_by_phase
+from pyrolite_meltsutil.tables import get_experiments_summary
+from pyrolite_meltsutil.plottemplates import table_by_phase
 
 tempdir = Path("./") / "montecarlo"
 

@@ -1,4 +1,4 @@
-from pyrolite.ext.alphamelts.web import *
+from pyrolite_meltsutil.web import *
 
 
 def default_datadict():

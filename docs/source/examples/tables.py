@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from pyrolite.ext.alphamelts.tables import MeltsOutput
+from pyrolite_meltsutil.tables import MeltsOutput
 
 # %% ---
 # say you have a folder containing melts tables

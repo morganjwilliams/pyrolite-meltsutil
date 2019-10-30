@@ -274,7 +274,9 @@ warnings.filterwarnings(
 
 from docpatch import *  # patch for sphinx_gallery pages
 
-github_doc_root = "https://github.com/morganjwilliams/pyrolite-meltsutil/tree/develop/docs/"
+github_doc_root = (
+    "https://github.com/morganjwilliams/pyrolite-meltsutil/tree/develop/docs/"
+)
 
 # metadata
 # ordered reference composition list
@@ -298,7 +300,8 @@ rst_prolog = """
      <img src="https://zenodo.org/badge/137172322.svg" alt="DOI">
     </a>
 
-""".format( year=str(date.today().year), version=version
+""".format(
+    year=str(date.today().year), version=version
 )
 
 rst_prolog += """

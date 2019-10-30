@@ -1,0 +1,10 @@
+[run]
+source = pyrolite_meltsutil
+omit =
+    # Omit test, docs, draft and data files
+    test/*
+    docs/*
+    **/data
+    draft/*
+    # Ignore _version.py
+    */_version.py

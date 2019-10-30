@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# classifier model builds
+*.clsf.gz
+
+# local alphamelts install folder
+pyrolite_meltsutil/data/localinstall/*

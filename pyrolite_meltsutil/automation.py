@@ -18,6 +18,7 @@ from pyrolite.util.multip import combine_choices
 from pyrolite.util.general import get_process_tree
 from pyrolite.util.meta import ToLogger
 from pyrolite.geochem.ind import common_elements, common_oxides
+from pyrolite.comp.codata import renormalise
 from .tables import MeltsOutput
 from .parse import read_envfile, read_meltsfile
 from .meltsfile import to_meltsfile

@@ -246,7 +246,7 @@ sphinx_gallery_conf = {
     "backreferences_dir": "galleries/backreferences",
     "doc_module": ("pyrolite_meltsutil"),
     "filename_pattern": r"\.py",
-    "default_thumb_file": "./_static/icon_small.png",
+    "default_thumb_file": str(Path("./_static/icon_small.png").resolve()),
     "remove_config_comments": True,
     "download_all_examples": False,
     "reference_url": {"pyrolite-meltsutil": None},

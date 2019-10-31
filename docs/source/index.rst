@@ -20,6 +20,8 @@ to import output tables, and to visualise these results.
    examples
    tutorials
    api/API
+   dev/debugging
+   dev/development
    dev/changelog
    dev/future
    dev/conduct

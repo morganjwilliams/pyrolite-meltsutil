@@ -11,8 +11,8 @@ pyrolite is available on `PyPi <https://pypi.org/project/pyrolite-meltsutil/>`_,
 .. note:: pyrolite-meltsutil is not yet packaged for Anaconda, and as such :code:`conda install pyrolite-meltsutil` will not work.
 
 
-Upgrading pyrolite
---------------------
+Upgrading pyrolite-meltsutil
+-----------------------------
 
 New versions of pyrolite-meltsutil will be occasionally released. You can upgrade to
 the latest edition on `PyPi <https://pypi.org/project/pyrolite-meltsutil/>`_ using

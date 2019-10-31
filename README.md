@@ -30,7 +30,7 @@ Extension for pyrolite for working with alphaMELTS and its outputs.
 ### Install
 
 ```bash
-pip install pyrolite[melts]
+pip install pyrolite-meltsutil
 ```
 
 ### Build Status

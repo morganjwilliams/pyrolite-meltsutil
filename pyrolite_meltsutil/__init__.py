@@ -71,11 +71,5 @@ from ._version import get_versions
 __version__ = get_versions()["version"]
 del get_versions
 
-from .download import *
-from .meltsfile import *
-from .parse import *
-from .tables import *
-from .util import *
-from .web import *
-from .env import *
-from .automation import *
+from .download import install_melts
+from .util import pyrolite_meltsutil_datafolder

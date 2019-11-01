@@ -60,7 +60,7 @@ MORB["Increment Pressure"] = 0
 from pyrolite.util.text import slugify
 from pyrolite.util.pd import accumulate
 
-reps = 3 # increase this to perform more experiments
+reps = 3  # increase this to perform more experiments
 df = accumulate([MORB] * reps)
 df = df.reset_index().drop(columns="index")
 df[df.pyrochem.list_oxides] = (

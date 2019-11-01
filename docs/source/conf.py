@@ -227,6 +227,7 @@ intersphinx_mapping = {
     "pathlib": ("https://pathlib.readthedocs.io/en/pep428/", None),
     "periodictable": ("https://periodictable.readthedocs.io/en/latest/", None),
     "pytest": ("https://docs.pytest.org/en/latest/", None),
+    "pyrolite": ("https://pyrolite.readthedocs.io/en/develop/", None),
 }
 
 # sphinx_gallery config

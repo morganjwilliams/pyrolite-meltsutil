@@ -3,7 +3,7 @@
 
 
 Other Examples
----------
+----------------
 
   .. toctree::
     :glob:

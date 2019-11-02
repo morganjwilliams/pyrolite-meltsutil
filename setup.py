@@ -45,12 +45,12 @@ setup(
     keywords=["geochemistry", "compositional data", "visualisation", "petrology"],
     packages=find_packages(exclude=["test*"]),
     install_requires=[
-        "pyrolite @ https://github.com/morganjwilliams/pyrolite/tarball/develop#egg=pyrolite",
+        "pyrolite>=0.2.2",
         "requests",
         "psutil",
         "xmljson",
         "dicttoxml",
-        "tqdm"
+        "tqdm",
     ],
     extras_require={"dev": dev_require},
     tests_require=tests_require,

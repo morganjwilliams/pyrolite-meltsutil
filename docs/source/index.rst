@@ -12,7 +12,7 @@ to import output tables, and to visualise these results.
 - There's also a quick `installation guide <./installation.html>`__ and some notes on
   where the project is heading in the near `future <./dev/future.html>`__.
 
-Note that this package is currently experimental and this project is not affiliated
+Note that this package is currently experimental and the project is not affiliated
 with alphaMELTS or related entities. For more information on these projects,
 see the `alphaMELTS site <https://magmasource.caltech.edu/alphamelts/>`__ and relevant
 references

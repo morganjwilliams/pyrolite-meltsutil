@@ -236,16 +236,16 @@ from sphinx_gallery.sorting import ExplicitOrder
 
 sphinx_gallery_conf = {
     "examples_dirs": [
-        "examples/_auto/",
-        "tutorials/_auto/",
+        "usage/examples/_auto/",
+        "usage/tutorials/_auto/",
     ],  # path to your example scripts
     "subsection_order": ExplicitOrder(["examples/_auto", "tutorials/_auto"]),
     "gallery_dirs": [
-        "galleries/examples",
-        "galleries/tutorials",
+        "examples",
+        "tutorials",
     ],  # path to where to save gallery generated output
     "capture_repr": ("_repr_html_", "__repr__", "__str__"),
-    "backreferences_dir": "galleries/backreferences",
+    "backreferences_dir": "_backreferences",
     "doc_module": ("pyrolite_meltsutil"),
     "filename_pattern": r"\.py",
     "default_thumb_file": str(Path("./_static/icon_small.png").resolve()),

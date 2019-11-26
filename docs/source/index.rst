@@ -23,10 +23,8 @@ references
    :hidden:
 
    installation
-   examples
-   tutorials
+   examples/index
    api/API
-   dev/debugging
    dev/development
    dev/changelog
    dev/future

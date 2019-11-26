@@ -39,6 +39,7 @@ def blur_compositions(df, noise=0.05, scale=100):
 ########################################################################################
 # Here we can do a conditonal install - downloading alphamelts if it doesnt exist:
 #
+from pyrolite_meltsutil.download import install_melts
 from pyrolite_meltsutil.util import pyrolite_meltsutil_datafolder
 
 if not (pyrolite_meltsutil_datafolder(subfolder="localinstall")).exists():

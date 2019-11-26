@@ -20,6 +20,7 @@ import pyrolite.plot
 from pyrolite.comp.codata import ilr, inverse_ilr
 from pyrolite.util.meta import stream_log
 import logging
+
 # sphinx_gallery_thumbnail_number = 2
 logger = logging.Logger(__name__)
 stream_log(logger)  # print the logging output
@@ -35,6 +36,14 @@ def blur_compositions(df, noise=0.05, scale=100):
     xvals += np.random.randn(*xvals.shape) * noise
     return inverse_ilr(xvals) * scale
 
+########################################################################################
+# Here we can do a conditonal install - downloading alphamelts if it doesnt exist:
+#
+from pyrolite_meltsutil.util import pyrolite_meltsutil_datafolder
+
+if not (pyrolite_meltsutil_datafolder(subfolder="localinstall")).exists():
+    stream_log("pyrolite-meltsutil", level="INFO")  # logger for output info
+    install_melts(local=True)  # install a copy of melts to pyrolite data folder
 
 ########################################################################################
 # We'll use the major element composition of MORB from Gale et al (2013) for this

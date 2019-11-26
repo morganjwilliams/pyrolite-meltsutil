@@ -31,7 +31,7 @@ Here we can do a conditonal install - only downloading alphamelts if it doesnt e
 .. code-block:: default
 
     if not (pyrolite_meltsutil_datafolder(subfolder="localinstall")).exists():
-        stream_log("pyrolite.util.alphamelts", level="INFO")  # logger for output info
+        stream_log("pyrolite-meltsutil", level="INFO")  # logger for output info
         install_melts(local=True)  # install a copy of melts to pyrolite data folder
 
 
@@ -57,7 +57,7 @@ Here we can do a conditonal install - only downloading alphamelts if it doesnt e
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.065 seconds)
+   **Total running time of the script:** ( 0 minutes  0.102 seconds)
 
 
 .. _sphx_glr_download_examples_install.py:

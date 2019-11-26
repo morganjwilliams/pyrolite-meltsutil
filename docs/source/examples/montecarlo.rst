@@ -27,6 +27,7 @@ should be modelled differently.
     from pyrolite.comp.codata import ilr, inverse_ilr
     from pyrolite.util.meta import stream_log
     import logging
+
     logger = logging.Logger(__name__)
     stream_log(logger)  # print the logging output
 
@@ -41,6 +42,24 @@ should be modelled differently.
         xvals += np.random.randn(*xvals.shape) * noise
         return inverse_ilr(xvals) * scale
 
+
+
+
+
+
+
+
+Here we can do a conditonal install - downloading alphamelts if it doesnt exist:
+
+
+
+.. code-block:: default
+
+    from pyrolite_meltsutil.util import pyrolite_meltsutil_datafolder
+
+    if not (pyrolite_meltsutil_datafolder(subfolder="localinstall")).exists():
+        stream_log("pyrolite-meltsutil", level="INFO")  # logger for output info
+        install_melts(local=True)  # install a copy of melts to pyrolite data folder
 
 
 
@@ -249,7 +268,7 @@ We can aggregate and import these results for simple visualisations:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  17.319 seconds)
+   **Total running time of the script:** ( 0 minutes  14.813 seconds)
 
 
 .. _sphx_glr_download_examples_montecarlo.py:

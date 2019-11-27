@@ -24,6 +24,7 @@ references
 
    installation
    examples/index
+   tutorials/index
    api/API
    dev/development
    dev/changelog

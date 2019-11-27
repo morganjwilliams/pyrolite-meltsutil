@@ -3,7 +3,7 @@ Local Installation of alphaMELTS
 ----------------------------------
 
 pyrolite can download and manage its own version of alphaMELTS (without any real
-'installation', *per-se*), and use this for :mod:`~pyrolite.util.alphamelts.automation`
+'installation', *per-se*), and use this for :mod:`~pyrolite_meltsutil.automation`
 purposes.
 
 """

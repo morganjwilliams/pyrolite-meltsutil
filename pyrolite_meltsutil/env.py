@@ -6,7 +6,7 @@ import logging
 from pyrolite.util.env import validate_update_envvar
 from pyrolite.util.text import remove_prefix
 from textwrap import dedent
-from .data.env import MELTS_environment_variables
+from .data.environment import MELTS_environment_variables
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 logger = logging.getLogger(__name__)

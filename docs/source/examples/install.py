@@ -10,6 +10,7 @@ purposes.
 from pyrolite.util.meta import stream_log
 from pyrolite_meltsutil.download import install_melts
 from pyrolite_meltsutil.util import pyrolite_meltsutil_datafolder
+
 ########################################################################################
 # Here we can do a conditonal install - only downloading alphamelts if it doesnt exist:
 #

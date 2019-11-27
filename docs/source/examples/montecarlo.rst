@@ -55,6 +55,7 @@ Here we can do a conditonal install - downloading alphamelts if it doesnt exist:
 
 .. code-block:: default
 
+    from pyrolite_meltsutil.download import install_melts
     from pyrolite_meltsutil.util import pyrolite_meltsutil_datafolder
 
     if not (pyrolite_meltsutil_datafolder(subfolder="localinstall")).exists():
@@ -268,7 +269,7 @@ We can aggregate and import these results for simple visualisations:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  14.813 seconds)
+   **Total running time of the script:** ( 0 minutes  9.791 seconds)
 
 
 .. _sphx_glr_download_examples_montecarlo.py:

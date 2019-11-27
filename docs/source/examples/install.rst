@@ -24,6 +24,7 @@ purposes.
 
 
 
+
 Here we can do a conditonal install - only downloading alphamelts if it doesnt exist:
 
 
@@ -57,7 +58,7 @@ Here we can do a conditonal install - only downloading alphamelts if it doesnt e
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.102 seconds)
+   **Total running time of the script:** ( 0 minutes  13.412 seconds)
 
 
 .. _sphx_glr_download_examples_install.py:

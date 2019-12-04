@@ -151,7 +151,7 @@ class TestMeltsBatch(unittest.TestCase):
                 "Final Temperature": 800,
                 "modes": ["isobaric"],
             },
-            grid={"Initial Pressure": [5000]},
+            config_grid={"Initial Pressure": [5000]},
             env=self.env,
             fromdir=self.dir,
             logger=logger,

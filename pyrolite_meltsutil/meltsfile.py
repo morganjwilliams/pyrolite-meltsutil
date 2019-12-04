@@ -3,6 +3,7 @@ Utilities for reading and writing .melts files.
 """
 import io
 import os
+import itertools
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -14,7 +15,109 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 logger = logging.getLogger(__name__)
 
 
-def to_meltsfile(
+def dict_to_meltsfile(
+    d, linesep=os.linesep, writetraces=True, modes=[], exclude=[], **kwargs
+):
+    """
+    Converts a dictionary to a MELTSfile text representation. It requires 'title'
+    and 'initial composition' lines, major elements to be represented as oxides
+    in Wt% and trace elements in µg/g.
+
+    Parameters
+    ----------
+    d : :class:`dict`
+        Dictionary to convert to a melts file.
+    linesep : :class:`str`
+        Line separation character.
+    writetraces : :class:`bool`
+        Whether to include traces in the output file.
+    modes : :class:`list`
+        List of modes to use (e.g. 'isobaric', 'fractionate solids').
+    exclude : :class:`list`
+        List of chemical components to exclude from the meltsfile.
+
+    Returns
+    -------
+    :class:`str`
+        String representation of the meltsfile, which can be immediately written to a
+        file object.
+
+    Notes
+    -------
+
+        * Some of the parameters are one-to-many, including modes, phase fractionation,
+            supression and coexist-limits.
+
+    Todo
+    -----
+        * Parameter validation.
+    """
+    # we'll incrementally collect the lines for the melts file from the data dictionary
+    lines = []
+    # first we add the title
+    assert ("Title" in d) or ("title" in d)
+    if "Title" in d:
+        lines.append("Title: {}".format(d["Title"]))
+    else:
+        lines.append("Title: {}".format(d["title"]))
+
+    # then we'll collect the composition Parameters
+    majors = [
+        (k, v) for (k, v) in d.items() if k in common_oxides() and not k in exclude
+    ]
+    traces = [
+        (k, v) for (k, v) in d.items() if k in common_elements() and not k in exclude
+    ]
+    for k, v in majors:
+        if not pd.isnull(v):  # no NaN data in MELTS files
+            lines.append("Initial Composition: {} {}".format(k, v))
+
+    if writetraces:
+        for k, v in traces:
+            if not pd.isnull(v):  # no NaN data in MELTS files
+                lines.append("Initial Trace: {} {}".format(k, v))
+
+    # follwed by the pressure and temperature parameters
+    PTpars = [
+        (" ".join([pre, param]), d.get(" ".join([pre, param]), None))
+        for pre, param in itertools.product(
+            ["Initial", "Final", "Increment"], ["Temperature", "Pressure"]
+        )
+    ]
+
+    for (k, v) in PTpars:
+        if not pd.isnull(v):  # no NaN data in MELTS files
+            lines.append("{}: {}".format(k, v))
+
+    for mfilepar in [
+        "dp/dt",
+        "Log fO2 Path",
+        "Log fO2 Delta",
+        "Suppress",
+        "Limit coexisting",
+        "Fractionate",
+    ]:
+        par = [(k, v) for (k, v) in d.items() if k.lower() == mfilepar.lower()]
+        if par:
+            par, v = par[0]
+            if isinstance(v, list):
+                for iv in v:
+                    if not pd.isnull(iv):  # no NaN data in MELTS files
+                        lines.append(
+                            "{}: {}".format(mfilepar, iv)
+                        )  # suppress, fractionate
+            else:
+                if not pd.isnull(v):
+                    lines.append("{}: {}".format(mfilepar, v))
+
+    for m in modes:
+        lines.append("Mode: {}".format(m))
+
+    # valid_modes = ["Fractionate Solids", "Fractionate"]
+    return linesep.join(lines)
+
+
+def ser_to_meltsfile(
     ser, linesep=os.linesep, writetraces=True, modes=[], exclude=[], **kwargs
 ):
     """
@@ -47,60 +150,17 @@ def to_meltsfile(
     """
     lines = []
     ser = to_ser(ser)
-    assert ("Title" in ser.index) or ("title" in ser.index)
-    if "Title" in ser.index:
-        lines.append("Title: {}".format(ser.Title))
-    else:
-        lines.append("Title: {}".format(ser.title))
-    majors = [i for i in ser.index if i in common_oxides() and not i in exclude]
-    for k, v in zip(majors, ser.loc[majors].values):
-        if not pd.isnull(v):  # no NaN data in MELTS files
-            lines.append("Initial Composition: {} {}".format(k, v))
-
-    if writetraces:
-        traces = [i for i in ser.index if i in common_elements() and not i in exclude]
-        for k, v in zip(traces, ser.loc[traces].values):
-            if not pd.isnull(v):  # no NaN data in MELTS files
-                lines.append("Initial Trace: {} {}".format(k, v))
-
-    for param in ["Temperature", "Pressure"]:
-        for subparam in ["Initial", "Final", "Increment"]:
-            k = " ".join([subparam, param])
-            if k in ser.index:
-                v = ser[k]
-                if not pd.isnull(v):  # no NaN data in MELTS files
-                    lines.append("{}: {}".format(k, v))
-
-    for k in [
-        "dp/dt",
-        "Log fO2 Path",
-        "Log fO2 Delta",
-        "Suppress",
-        "Limit coexisting",
-        "Fractionate",
-    ]:
-        par = [
-            par for ix, par in enumerate(ser.index.tolist()) if par.lower() == k.lower()
-        ]
-        if par:
-            par = par[0]
-            v = ser[par]
-            if isinstance(v, list):  # no NaN data in MELTS files
-                for iv in v:
-                    if not pd.isnull(iv):
-                        lines.append("{}: {}".format(k, iv))  # suppress, fractionate
-            else:
-                if not pd.isnull(v):
-                    lines.append("{}: {}".format(k, v))
-
-    for m in modes:
-        lines.append("Mode: {}".format(m))
-
-    # valid_modes = ["Fractionate Solids", "Fractionate"]
-    return linesep.join(lines)
+    return dict_to_meltsfile(
+        ser.to_dict(),
+        linesep=linesep,
+        writetraces=writetraces,
+        modes=modes,
+        exclude=exclude,
+        **kwargs
+    )
 
 
-def to_meltsfiles(df, linesep=os.linesep, **kwargs):
+def df_to_meltsfiles(df, linesep=os.linesep, **kwargs):
     """
     Creates a number of melts files from a dataframe.
 
@@ -120,11 +180,11 @@ def to_meltsfiles(df, linesep=os.linesep, **kwargs):
     # Type checking such that series will be passed directly to MELTSfiles
     if isinstance(df, pd.DataFrame):
         return [
-            to_meltsfile(df.iloc[ix, :], linesep=os.linesep, **kwargs)
+            ser_to_meltsfile(df.iloc[ix, :], linesep=os.linesep, **kwargs)
             for ix in range(df.index.size)
         ]
     elif isinstance(df, pd.Series):
-        return [to_meltsfile(df, linesep=os.linesep, **kwargs)]
+        return [ser_to_meltsfile(df, linesep=os.linesep, **kwargs)]
 
 
 def from_meltsfile(filename):

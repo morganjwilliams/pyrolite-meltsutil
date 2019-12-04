@@ -8,7 +8,7 @@ import logging
 import periodictable as pt
 from pyrolite.mineral.transform import merge_formulae
 from .env import MELTS_Env
-from .meltsfile import to_meltsfile
+from .meltsfile import ser_to_meltsfile
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 logger = logging.getLogger(__name__)

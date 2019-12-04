@@ -160,6 +160,7 @@ log fo2 Path: None
 """
 
 
+
 class Test2MELTSFiles(unittest.TestCase):
     def setUp(self):
         self.df = test_df()
@@ -168,10 +169,10 @@ class Test2MELTSFiles(unittest.TestCase):
         self.ser.loc["Title"] = "Test_title"
 
     def test_series_to_melts_file(self):
-        ret = to_meltsfiles(self.ser)
+        ret = df_to_meltsfiles(self.ser)
 
     def test_df_to_melts_files(self):
-        ret = to_meltsfiles(self.df)
+        ret = df_to_meltsfiles(self.df)
 
     def test_replicate_file(self):
         """

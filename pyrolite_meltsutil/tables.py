@@ -9,7 +9,7 @@ import pandas as pd
 from pathlib import Path
 import pyrolite.geochem
 from .parse import from_melts_cstr
-from .meltsfile import to_meltsfiles
+from .meltsfile import df_to_meltsfiles
 from pyrolite.util.pd import zero_to_nan, to_frame, to_ser
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

@@ -1,7 +1,7 @@
 pyrolite-meltsutil
 ===================
 
-  pyrolite-meltsutil is a pyrolite extension for working with alphaMELTS and its outputs..
+  pyrolite-meltsutil is a pyrolite extension for working with alphaMELTS and its outputs.
 
 The python package includes functions to install and run melts with specific configurations,
 to import output tables, and to visualise these results.

@@ -152,5 +152,5 @@ def from_melts_cstr(composition_str, formula=True):
         return {k: v for k, v in result}
     else:
         # entries with rounding errors giving negative 0 won't match
-        result = tfm(composition_str.replace("-0.0", "0.0"))
+        result = tfm(str(composition_str).replace("nan", "").replace("-0.0", "0.0"))
         return pt.formula(result)

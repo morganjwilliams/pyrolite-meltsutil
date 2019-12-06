@@ -100,7 +100,7 @@ def dict_to_meltsfile(
         par = [(k, v) for (k, v) in d.items() if k.lower() == mfilepar.lower()]
         if par:
             par, v = par[0]
-            if isinstance(v, list):
+            if isinstance(v, (list, set, tuple)):
                 for iv in v:
                     if not pd.isnull(iv):  # no NaN data in MELTS files
                         lines.append(

@@ -35,6 +35,8 @@ def exp_name(exp):
         This is a subset of potential parameters, hash is used to ensure uniqueness of naming.
 
         To avoid path length limits, we keep only a fraction of the hash length.
+
+        Avoid using odd symbols like @.
     """
 
     p0, p1, t0, t1 = "", "", "", ""
@@ -55,11 +57,12 @@ def exp_name(exp):
     tstr = t0 + ["-" + t1, ""][t1 == ""] + ["", "C"][t0 + t1 != ""]
     fo2str = "{}{}".format(fo2d, fo2)
     chemstr = "-".join(
-        ["{}@{}".format(k, v) for k, v in exp.get("modifychem", {}).items()]
+        ["{}{}".format(k, v) for k, v in exp.get("modifychem", {}).items()]
     )
-    suppressstr = "-".join(["no_{}".format(v) for v in exp.get("Suppress", {})])
-    hashstr = "({})".format(exp_hash(exp))
 
-    return "".join(
-        [titlestr, modestr, pstr, tstr, fo2str, chemstr, suppressstr, hashstr]
+    suppressstr = "-".join(["no_{}".format(v) for v in exp.get("Suppress", {})])
+    hashstr = "{}".format(exp_hash(exp))
+
+    return slugify(
+        "".join([titlestr, modestr, pstr, tstr, fo2str, chemstr, suppressstr, hashstr])
     )

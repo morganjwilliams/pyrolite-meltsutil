@@ -39,6 +39,7 @@ class MeltsProcess(object):
         meltsfile=None,
         fromdir=r"./",
         log=logger.debug,
+        timeout=None,
     ):
         """
         Parameters
@@ -73,6 +74,7 @@ class MeltsProcess(object):
         self.meltsfile = None
         self.fromdir = None  # default to None, runs from cwd
         self.log = log
+        self.timeout = timeout or 60.0  # 1 minute max
         if fromdir is not None:
             self.log("Setting working directory: {}".format(fromdir))
             fromdir = Path(fromdir)
@@ -125,7 +127,7 @@ class MeltsProcess(object):
             self.env = Path(env)
             self.run += ["-f", str(env)]
 
-        self.start()
+        self.start()  # could split this out such that processes can be prepared beforehand
         time.sleep(0.5)
         self.log("Passing Inital Variables: " + " ".join(self.init_args))
         self.write(self.init_args)
@@ -150,6 +152,7 @@ class MeltsProcess(object):
         :class:`subprocess.Popen`
             Melts process object.
         """
+        self.started = time.time()
         self.log(
             "Starting Melts Process with: " + " ".join([self.exname] + self.run[1:])
         )
@@ -193,6 +196,10 @@ class MeltsProcess(object):
             lines.append(self.q.get_nowait().decode())
         return "".join(lines)
 
+    @property
+    def timed_out(self):
+        return (time.time() - self.started) > self.timeout
+
     def wait(self, step=1.0):
         """
         Wait until addtions to process.stdout stop.
@@ -205,7 +212,15 @@ class MeltsProcess(object):
         while True:
             size = self.q.qsize()
             time.sleep(step)
-            if size == self.q.qsize():
+            if self.timed_out:
+                self.log(
+                    "Process timed out after {:2.1f} s".format(
+                        time.time() - self.started
+                    )
+                )
+                self.terminate()
+                break
+            elif size == self.q.qsize():
                 break
 
     def write(self, messages, wait=True, log=False):

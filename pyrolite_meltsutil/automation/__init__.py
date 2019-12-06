@@ -1,11 +1,17 @@
 """
-This submodule contains functions for automated execution, plotting and reporting from
-alphamelts 1.9.
+This submodule contains functions for automated execution of alphamelts 1.9.
+
+Issues
+------
+
+    * names are truncated for modifychem melts files?
+    * need a timeout so processes can keep going, add unfinished experiments to failed list
 """
+import itertools
 from pathlib import Path
 import time, datetime
+import numpy as np
 from tqdm import tqdm
-import itertools
 
 from pyrolite.geochem.ind import common_elements, common_oxides
 from pyrolite.comp.codata import renormalise
@@ -16,7 +22,7 @@ from ..parse import read_envfile, read_meltsfile
 from ..env import MELTS_Env
 from ..meltsfile import dict_to_meltsfile
 
-from .naming import exp_name
+from .naming import exp_name, exp_hash
 from .org import make_meltsfolder
 from .process import MeltsProcess
 from .timing import estimate_experiment_duration
@@ -44,10 +50,20 @@ class MeltsExperiment(object):
         * Post-processing functions for i) validation and ii) plotting
     """
 
-    def __init__(self, title="MeltsExperiment", dir="./", meltsfile=None, env=None):
-        self.title = title
-        self.dir = dir
+    def __init__(
+        self,
+        name="MeltsExperiment",
+        title="MeltsExperiment",
+        dir="./",
+        meltsfile=None,
+        env=None,
+        timeout=None,
+    ):
+        self.name = name  # folder name
+        self.title = title  # meltsfile title
+        self.dir = dir  # create an experiment directory here
         self.log = []
+        self.timeout = timeout
 
         if meltsfile is not None:
             self.set_meltsfile(meltsfile)
@@ -87,7 +103,11 @@ class MeltsExperiment(object):
         Create the experiment folder.
         """
         self.folder = make_meltsfolder(
-            meltsfile=self.meltsfile, title=self.title, dir=self.dir, env=self.envfile
+            name=self.name,
+            title=self.title,
+            meltsfile=self.meltsfile,
+            dir=self.dir,
+            env=self.envfile,
         )
         self.meltsfilepath = self.folder / (self.title + ".melts")
         self.envfilepath = self.folder / "environment.txt"
@@ -100,6 +120,7 @@ class MeltsExperiment(object):
             meltsfile=str(self.title) + ".melts",
             env="environment.txt",
             fromdir=str(self.folder),
+            timeout=self.timeout,
         )
         self.mp.write([3, [0, 1][superliquidus_start], 4], wait=True, log=log)
         self.mp.terminate()
@@ -142,6 +163,8 @@ class MeltsBatch(object):
             This is currently about correct for an isobaric calcuation at 10 degree
             temperature steps over few hundred degrees - but won't work for different
             T steps.
+
+        * Does number precision make a difference?
     """
 
     def __init__(
@@ -152,7 +175,9 @@ class MeltsBatch(object):
         config_grid={},
         env=None,
         logger=logger,
+        timeout=None,
     ):
+        self.timeout = timeout
         self.logger = logger
         # make a file logger
         fh = logging.FileHandler("autolog.log")
@@ -175,37 +200,42 @@ class MeltsBatch(object):
             {**cfg, **cmp}
             for (cfg, cmp) in itertools.product(self.configs, self.compositions)
         ]
-        self.experiments = [(exp_name(expr), expr, self.env) for expr in exprs]
+        self.experiments = [
+            (exp_hash(expr), exp_name(expr), expr, self.env) for expr in exprs
+        ]
         self.est_duration = str(
             datetime.timedelta(seconds=len(self.experiments) * 6)
         )  # 6s/run
         self.logger.info("Estimated Calculation Time: {}".format(self.est_duration))
 
-    def run(self, overwrite=False, exclude=[], superliquidus_start=True):
+    def run(self, overwrite=False, exclude=[], superliquidus_start=True, timeout=None):
+        timeout = self.timeout or timeout
         self.started = time.time()
         experiments = self.experiments
         if not overwrite:
             experiments = [
-                (n, cfg, env)
-                for (n, cfg, env) in experiments
-                if not (self.dir / n).exists()
+                (h, t, exp, env)
+                for (h, t, exp, env) in experiments
+                if not (self.dir / h).exists()
             ]
 
         self.logger.info("Starting {} Calculations.".format(len(experiments)))
         paths = []
-        for name, exp, env in tqdm(
+        failed = []
+        for hsh, title, exp, env in tqdm(
             experiments, file=ToLogger(self.logger), mininterval=2
         ):
             if "modifychem" in exp:
-                modifications = exp.pop("modifychem")  # remove modify chem
+                modifications = exp.pop("modifychem", {})  # remove modify chem
                 ek, mk = set(exp.keys()), set(modifications.keys())
-                for k, v in exp["modifychem"].items():
+                for k, v in modifications.items():
                     exp[k] = v
                 allchem = (ek | mk) & __chem__
                 unmodified = (ek - mk) & __chem__
-                offset = np.array(modifications.values()).sum()
+
+                offset = np.array(list(modifications.values())).sum()
                 for uk in unmodified:
-                    exp[uk] *= 100.0 - offset
+                    exp[uk] = np.round(exp[uk] * (100.0 - offset) / 100, 4)
 
             exp_exclude = exclude
             if "exclude" in exp:
@@ -213,14 +243,32 @@ class MeltsBatch(object):
 
             # expdir = self.dir / name  # experiment dir
             # paths.append(expdir)
-            self.logger.info("Start {}.".format(name))
+            self.logger.info("Start {}.".format(title))
             meltsfile = dict_to_meltsfile(exp, modes=exp["modes"], exclude=exp_exclude)
-            M = MeltsExperiment(meltsfile=meltsfile, title=name, env=env, dir=self.dir)
-            M.run(superliquidus_start=superliquidus_start)
-            self.logger.info("Finished {}.".format(name))
+            M = MeltsExperiment(
+                name=hsh,
+                title=title,
+                meltsfile=meltsfile,
+                env=env,
+                dir=self.dir,
+                timeout=timeout,
+            )
+            try:
+                M.run(superliquidus_start=superliquidus_start)
+                self.logger.info("Finished {}.".format(title))
+            except OSError:
+                try:
+                    self.logger.info("Errored @ {}.".format(M.mp.callstring))
+                except:
+                    pass
+                failed.append(title)
+        # should check if it actually ran here (e.g. timeouts)
         self.duration = datetime.timedelta(seconds=time.time() - self.started)
         self.logger.info("Calculations Complete after {}".format(self.duration))
-        self.paths = paths
+        if failed:
+            self.logger.warning("Some calculations errored:")
+            for f in failed:
+                self.logger.warning(f)
 
     def cleanup(self):
         pass

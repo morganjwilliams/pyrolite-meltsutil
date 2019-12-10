@@ -1,5 +1,5 @@
 """
-Utility functions for use with alphaMELTS.
+Generating synthetic data for use with alphaMELTS.
 """
 import logging
 from collections import OrderedDict

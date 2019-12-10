@@ -193,16 +193,24 @@ class MeltsBatch(object):
         # let's establish the grid of configurations
         self.configs = [{**self.default}]
         grid = combine_choices(config_grid)
-        self.configs += [{**self.default, **i} for i in grid if i not in self.configs]
+        for i in grid:  # unique configurations
+            _cfg = {**self.default, **i}
+            if _cfg not in self.configs:
+                self.configs.append(_cfg)
         self.compositions = comp_df.to_dict("records")
         # combine these to create full experiment configs
         exprs = [
             {**cfg, **cmp}
             for (cfg, cmp) in itertools.product(self.configs, self.compositions)
         ]
-        self.experiments = [
-            (exp_hash(expr), exp_name(expr), expr, self.env) for expr in exprs
-        ]
+        expnames = np.array([exp_name(i) for i in exprs])
+        _, cnts = np.unique(expnames, return_counts=True)
+        if (cnts > 1).any():
+            self.logger.debug("Duplicate experiments detected.")
+        self.experiments = {
+            name: (exp_name(expr), expr, self.env)
+            for expr, name in zip(exprs, expnames)
+        }  # this ensures that no duplicates are preserved
         self.est_duration = str(
             datetime.timedelta(seconds=len(self.experiments) * 6)
         )  # 6s/run
@@ -213,17 +221,17 @@ class MeltsBatch(object):
         self.started = time.time()
         experiments = self.experiments
         if not overwrite:
-            experiments = [
-                (h, t, exp, env)
-                for (h, t, exp, env) in experiments
+            experiments = {
+                h: (t, exp, env)
+                for h, (t, exp, env) in experiments.items()
                 if not (self.dir / h).exists()
-            ]
+            }
 
         self.logger.info("Starting {} Calculations.".format(len(experiments)))
         paths = []
         failed = []
-        for hsh, title, exp, env in tqdm(
-            experiments, file=ToLogger(self.logger), mininterval=2
+        for hsh, (title, exp, env) in tqdm(
+            experiments.items(), file=ToLogger(self.logger), mininterval=2
         ):
             if "modifychem" in exp:
                 modifications = exp.pop("modifychem", {})  # remove modify chem
@@ -243,7 +251,7 @@ class MeltsBatch(object):
 
             # expdir = self.dir / name  # experiment dir
             # paths.append(expdir)
-            self.logger.info("Start {}.".format(title))
+            self.logger.debug("Start {}.".format(title))
             meltsfile = dict_to_meltsfile(exp, modes=exp["modes"], exclude=exp_exclude)
             M = MeltsExperiment(
                 name=hsh,

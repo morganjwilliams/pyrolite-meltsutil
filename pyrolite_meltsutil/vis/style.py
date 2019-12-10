@@ -1,4 +1,4 @@
-from ..tables.util import phasename
+from ..util.tables import phasename
 import matplotlib.colors as mcolors
 
 COLORS = {

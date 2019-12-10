@@ -71,7 +71,7 @@ __version__ = get_versions()["version"]
 del get_versions
 
 from .download import install_melts
-from .util import pyrolite_meltsutil_datafolder
+from .util.general import pyrolite_meltsutil_datafolder
 
 from . import env
 from . import automation

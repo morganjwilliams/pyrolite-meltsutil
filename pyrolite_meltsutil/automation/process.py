@@ -7,7 +7,7 @@ import queue
 import time
 from pathlib import Path
 from pyrolite.util.general import get_process_tree
-from ..util import pyrolite_meltsutil_datafolder
+from ..util.general import pyrolite_meltsutil_datafolder
 
 import logging
 

@@ -9,7 +9,7 @@ import zipfile
 from pathlib import Path
 from pyrolite.util.general import copy_file, extract_zip, remove_tempdir, check_perl
 from pyrolite.util.web import internet_connection
-from .util import pyrolite_meltsutil_datafolder
+from .util.general import pyrolite_meltsutil_datafolder
 import logging
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

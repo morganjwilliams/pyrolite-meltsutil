@@ -1,5 +1,11 @@
 """
-Functions for loading alphaMELTS tables to :class:`pandas.DataFrame`
+Functions for loading alphaMELTS tables to :class:`pandas.DataFrame`.
+
+Notes
+-------
+
+    * Some variable abbreviations are converted to their names (e.g.
+        enthalpy, entropy and volume).
 """
 import re
 import io
@@ -20,6 +26,17 @@ TABLES = {
     "Trace_main_tbl.txt",
     "Phase_main_tbl.txt",
 }
+
+THERMO = {"H": "enthalpy", "S": "entropy", "V": "volume"}
+
+
+def convert_thermo_names(df):
+    """
+    Convert the abbreviations for thermodynamic variables (e.g. H, S) to
+    expanded names. This avoids some issues with pulling out compositions.
+    """
+    df.rename(columns=THERMO, inplace=True)
+    return df
 
 
 def read_melts_table(filepath, kelvin=False, **kwargs):
@@ -51,6 +68,7 @@ def read_melts_table(filepath, kelvin=False, **kwargs):
         df.pyrochem.add_MgNo()
     df = zero_to_nan(df)
     df = tuple_reindex(df)
+    df = convert_thermo_names(df)
     return df
 
 
@@ -97,6 +115,7 @@ def read_phasemain(filepath, kelvin=False):
 
     df = zero_to_nan(df)
     df = tuple_reindex(df)
+    df = convert_thermo_names(df)
     return df
 
 
@@ -113,7 +132,7 @@ def import_tables(pth, kelvin=False):
     system = read_melts_table(pth / "System_main_tbl.txt", skiprows=3, kelvin=kelvin)
     system["step"] = np.arange(system.index.size)  # generate the step index
     system["mass%"] = system["mass"] / system["mass"].values[0]
-    system["V%"] = system["V"] / system["V"].values[0]
+    system["volume%"] = system["volume"] / system["volume"].values[0]
     system = system.reindex(
         columns=["step"] + [i for i in system.columns if i != "step"]
     )
@@ -144,6 +163,6 @@ def import_tables(pth, kelvin=False):
     phase[num] = phase[num].apply(pd.to_numeric, errors="coerce")
 
     phase["mass%"] = phase["mass"] / system.loc[phase.index, "mass"].values[0] * 100
-    phase["V%"] = phase["V"] / system.loc[phase.index, "V"].values[0]
+    phase["volume%"] = phase["volume"] / system.loc[phase.index, "volume"].values[0]
 
     return system, phase

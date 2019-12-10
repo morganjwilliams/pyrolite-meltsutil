@@ -14,7 +14,7 @@ import numpy as np
 from pathlib import Path
 from pyrolite.util.pd import zero_to_nan
 from ..parse import from_melts_cstr
-from .util import phasename, tuple_reindex, integrate_solids
+from ..util.tables import phasename, tuple_reindex, integrate_solids
 
 TABLES = {
     "Phase_mass_tbl.txt",
@@ -34,6 +34,16 @@ def convert_thermo_names(df):
     """
     Convert the abbreviations for thermodynamic variables (e.g. H, S) to
     expanded names. This avoids some issues with pulling out compositions.
+
+    Parameters
+    ------------
+    :class:`pandas.DataFrame`
+        DataFrame to convert column names for.
+
+    Returns
+    -------
+    :class:`pandas.DataFrame`
+        DataFrame with table information.
     """
     df.rename(columns=THERMO, inplace=True)
     return df

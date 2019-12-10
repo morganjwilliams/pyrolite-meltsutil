@@ -46,6 +46,20 @@ def tuple_reindex(df, columns=["Pressure", "Temperature"]):
 
 def integrate_solids(df, frac=True):
     """
+    Integrate solid compositions to return a 'cumulate' like
+    composition.
+
+    Parameters
+    -----------
+    df : :class:`pandas.DataFrame`
+        DataFrame to integrate.
+    frac : :class:`bool`
+        Whether the experiment is a fractional crystallisation experiment.
+
+    Returns
+    -----------
+    df : :class:`pandas.DataFrame`
+        DataFrame containing an integrated solid composition.
     """
     slds = df.loc[df.phase == "solid", :]
     if frac:

@@ -26,8 +26,38 @@ from pyrolite_meltsutil.vis.style import phaseID_linestyle, phaseID_marker
 ########################################################################################
 # We can now use these when we're plotting to differentiate different phases:
 #
+phaseIDs = ["olivine_0", "olivine_1", "clinopyroxene_0", "spinel_0"]
+styles = [
+    dict(color=phase_color(ID), ls=phaseID_linestyle(ID), marker=phaseID_marker(ID))
+    for ID in phaseIDs
+]
+########################################################################################
+import numpy as np
+import matplotlib.pyplot as plt
+from pyrolite.util.plot import proxy_line
 
+np.random.seed(27)
+
+fig, ax = plt.subplots(1)
+
+for ix, (ID, style) in enumerate(zip(phaseIDs, styles)):
+    ax.plot(np.arange(10), np.random.randn(10) + ix * 3, **style)
+########################################################################################
+# These are also handy for generating legend proxies, which can be used to
+# generate summary legends where you may have multiple items with the same style:
+#
+proxies = [proxy_line(**sty) for sty in styles]
 
 ########################################################################################
-# These are also handy for generating legend proxies:
-# 
+for ix, (ID, style) in enumerate(zip(phaseIDs, styles)):
+    for i in range(3):  # make a few more lines per phaseID
+        ax.plot(np.arange(10), np.random.randn(10) + ix * 3, **style)
+
+ax.legend(  # use our proxy lines to generate a legend
+    proxies,
+    phaseIDs,
+    frameon=False,
+    facecolor=None,
+    bbox_to_anchor=(1.0, 1.0),
+    loc="upper left",
+)

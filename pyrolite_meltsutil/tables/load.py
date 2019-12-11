@@ -9,6 +9,7 @@ Notes
 """
 import re
 import io
+import json
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -179,6 +180,32 @@ def import_tables(pth, kelvin=False):
     system = system.rename(columns=cls)
     phase = phase.rename(columns=cls)
     return system, phase
+
+
+def import_batch_config(filepath):
+    """
+    Import a batch configuration file.
+
+    Parameters
+    -----------
+    filepath : :class:`str` | :class:`pathlib.Path`
+
+    Returns
+    ---------
+    :class:`dict`
+        Configuration dictionary indexed by hashes.
+    """
+
+    filepath = Path(filepath)
+    if filepath.is_dir():
+        # find config
+        cfgpath = filepath / "meltsBatchConfig.json"
+    else:
+        cfgpath = filepath.with_suffix("json")
+
+    with open(str(cfgpath), "r") as f:
+        cfg = json.loads(f.read())
+    return cfg
 
 
 def aggregate_tables(lst):

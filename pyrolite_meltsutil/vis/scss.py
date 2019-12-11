@@ -40,17 +40,19 @@ def plot_sulfur_saturation_point(liquid, ax=None, start=1000, xvar="mass%"):
     for xS in start:
         s_wtpct = xS / 10000.0
         s_wtpct /= liquid["mass%"] / liquid["mass%"].values[0]
-        satpoint = np.argmax(s_wtpct.values > liquid["SCSS"].values)  # will return where first true
+        satpoint = np.argmax(
+            s_wtpct.values > liquid["SCSS"].values
+        )  # will return where first true
         satabund = s_wtpct[satpoint]
 
-        s_melt = np.zeros_like(s_wtpct)
+        s_melt = np.ones_like(s_wtpct) * np.nan
         s_melt[s_wtpct < liquid.SCSS] = s_wtpct[s_wtpct < liquid.SCSS]
         s_melt[s_wtpct >= liquid.SCSS] = liquid.SCSS[s_wtpct >= liquid.SCSS]
         lines = ax.plot(
             liquid[xvar], s_melt, ls="--", label="Sulfur Content ({} ppm)".format(start)
         )
         # plot the excess sulfur abundnace
-        s_free = np.zeros_like(s_wtpct)
+        s_free = np.ones_like(s_wtpct) * np.nan
         s_free[s_wtpct >= liquid.SCSS] = (
             s_wtpct[s_wtpct >= liquid.SCSS] - liquid.SCSS[s_wtpct >= liquid.SCSS]
         )
@@ -73,19 +75,19 @@ def plot_sulfur_saturation_point(liquid, ax=None, start=1000, xvar="mass%"):
             fontsize=10,
             ha="right",
             va="center",
-            arrowprops=dict(shrink=0.2, width=1, headwidth=1),
+            arrowprops=dict(shrink=0.05, width=1, headwidth=1),
         )
     for k, d in saturation_info.items():  # annotate the (first) saturation point
         if k not in starts_saturated:
             ax.annotate(
                 "{:.4g} @ {} ppm".format(d["x"], k),
-                xytext=(d["x"], 1.5 * d["y"]),
+                xytext=(d["x"], 1.2 * d["y"]),
                 xy=(d["x"], d["y"]),
                 rotation=90,
                 fontsize=10,
                 ha="center",
                 va="bottom",
-                arrowprops=dict(shrink=0.2, width=1, headwidth=1),
+                arrowprops=dict(shrink=0.05, width=1, headwidth=1),
             )
     share_axes([ax, ax2], which="xy")
     return ax

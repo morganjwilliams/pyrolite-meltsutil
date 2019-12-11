@@ -11,6 +11,7 @@ import itertools
 from pathlib import Path
 import time, datetime
 import numpy as np
+import json
 from tqdm import tqdm
 
 from pyrolite.geochem.ind import common_elements, common_oxides
@@ -203,20 +204,49 @@ class MeltsBatch(object):
             {**cfg, **cmp}
             for (cfg, cmp) in itertools.product(self.configs, self.compositions)
         ]
-        expnames = np.array([exp_name(i) for i in exprs])
-        _, cnts = np.unique(expnames, return_counts=True)
+        exphashes = np.array([exp_hash(i) for i in exprs])
+        _, cnts = np.unique(exphashes, return_counts=True)
         if (cnts > 1).any():
             self.logger.debug("Duplicate experiments detected.")
         self.experiments = {
-            name: (exp_name(expr), expr, self.env)
-            for expr, name in zip(exprs, expnames)
+            hsh: (exp_name(expr), expr, self.env) for hsh, expr in zip(exphashes, exprs)
         }  # this ensures that no duplicates are preserved
         self.est_duration = str(
             datetime.timedelta(seconds=len(self.experiments) * 6)
         )  # 6s/run
         self.logger.info("Estimated Calculation Time: {}".format(self.est_duration))
 
+    def dump(self, experiments=None, to_dir=None):
+        """
+        Serialize the configuration to a json file.
+
+        Parameters
+        -----------
+        experiments : :class:`dict`
+            Dictionary of experiments to be serialized.
+        to_dir : :class:`str` | :class:`pathlib.Path`
+            Directory to export file to.
+        """
+        to_dir = to_dir or self.dir
+        experiments = experiments or self.experiments
+
+        target = Path(to_dir) / "meltsBatchConfig.json"
+        target.touch()
+
+        data = json.dumps(
+            {
+                h: (t, exp, env.dump(unset_variables=False))
+                for (h, (t, exp, env)) in experiments.items()
+            },
+            sort_keys=False,
+            ensure_ascii=False,
+        ).encode("utf8")
+
+        with open(target, "wb") as f:
+            f.write(data)
+
     def run(self, overwrite=False, exclude=[], superliquidus_start=True, timeout=None):
+        self.dump()  # Serialize the config first
         timeout = self.timeout or timeout
         self.started = time.time()
         experiments = self.experiments

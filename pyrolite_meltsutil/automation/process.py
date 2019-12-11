@@ -7,7 +7,7 @@ import queue
 import time
 from pathlib import Path
 from pyrolite.util.general import get_process_tree
-from ..util.general import pyrolite_meltsutil_datafolder
+from ..util.general import get_local_link
 
 import logging
 
@@ -87,18 +87,9 @@ class MeltsProcess(object):
         if executable is None:
             # check for local install
             if platform.system() == "Windows":
-                local_run = (
-                    pyrolite_meltsutil_datafolder(subfolder="localinstall")
-                    / "links"
-                    / "run_alphamelts.bat"
-                )
-
+                local_run = get_local_link("run_alphamelts.bat")
             else:
-                local_run = (
-                    pyrolite_meltsutil_datafolder(subfolder="localinstall")
-                    / "links"
-                    / "run_alphamelts.command"
-                )
+                local_run = get_local_link("run_alphamelts.command")
 
             executable = local_run
             self.log(

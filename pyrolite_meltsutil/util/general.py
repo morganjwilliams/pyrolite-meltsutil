@@ -51,3 +51,19 @@ def get_local_example(name):
     :class:`pathlib.Path`
     """
     return pyrolite_meltsutil_datafolder("localinstall") / "examples" / name
+
+
+def get_data_example(name):
+    """
+    Get the filepath of an example data file from pyrolite-meltsutil.
+
+    Parameters
+    -----------
+    name : :class:`str`
+        Filename for the example file.
+
+    Returns
+    -------
+    :class:`pathlib.Path`
+    """
+    return pyrolite_meltsutil_datafolder("data_examples") / name

@@ -43,7 +43,7 @@ def default_data_dictionary():
     return d
 
 
-def isobaricGaleMORBexample(T0=1300, T1=800, P0=5000, P1=5000, fO2="FMQ"):
+def isobaricGaleMORBexample(T0=1300, T1=800, P0=5000, P1=5000, fO2="FMQ", title=None):
     Gale_MORB = get_reference_composition("MORB_Gale2013")
     majors = [
         "SiO2",
@@ -58,9 +58,8 @@ def isobaricGaleMORBexample(T0=1300, T1=800, P0=5000, P1=5000, fO2="FMQ"):
         "P2O5",
     ]
     MORB = Gale_MORB.comp[majors].reset_index(drop=True)
-    MORB["Title"] = [
-        "{}_{}".format(Gale_MORB.name, ix) for ix in MORB.index.values.astype(str)
-    ]
+    if title is not None:
+        MORB["Title"] = title
     MORB["Initial Temperature"] = T0
     MORB["Final Temperature"] = T1
     MORB["Initial Pressure"] = P0

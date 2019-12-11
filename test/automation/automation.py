@@ -25,10 +25,10 @@ with open(str(get_local_example("Morb.melts"))) as f:
     MELTSFILE = f.read()
 
 
-
 class TestMakeMeltsFolder(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("testMELTSFILE_temp" + self.__class__.__name__)
+        self.dir = temp_path() / ("testmelts_temp" + self.__class__.__name__)
+        self.dir.mkdir(parents=True)
         self.meltsfile = MELTSFILE
         self.env = ENV  # use default
 
@@ -45,7 +45,8 @@ class TestMakeMeltsFolder(unittest.TestCase):
 @unittest.skipIf(not check_perl(), "Perl is not installed.")
 class TestMeltsProcess(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("testMELTSFILE_temp" + self.__class__.__name__)
+        self.dir = temp_path() / ("testmelts_temp" + self.__class__.__name__)
+        self.dir.mkdir(parents=True)
         self.meltsfile = MELTSFILE
         self.env = ENV  # use default
 
@@ -79,7 +80,8 @@ class TestMeltsProcess(unittest.TestCase):
 @unittest.skipIf(not check_perl(), "Perl is not installed.")
 class TestMeltsExperiment(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("testMELTSFILE_temp" + self.__class__.__name__)
+        self.dir = temp_path() / ("testmelts_temp" + self.__class__.__name__)
+        self.dir.mkdir(parents=True)
         self.meltsfile = MELTSFILE
         self.env = ENV  # use default
 
@@ -107,8 +109,8 @@ class TestMeltsExperiment(unittest.TestCase):
 @unittest.skipIf(not check_perl(), "Perl is not installed.")
 class TestMeltsBatch(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("testMELTSFILE_temp" + self.__class__.__name__)
-
+        self.dir = temp_path() / ("testmelts_temp" + self.__class__.__name__)
+        self.dir.mkdir(parents=True)
         Gale_MORB = get_reference_composition("MORB_Gale2013")
         majors = [
             "SiO2",

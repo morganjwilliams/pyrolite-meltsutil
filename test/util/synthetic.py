@@ -1,6 +1,7 @@
 import unittest
-from pyrolite_meltsutil.util import default_data_dictionary
+from pyrolite_meltsutil.util.synthetic import default_data_dictionary
 from collections import OrderedDict
+
 
 class TestDefaultMELTSDict(unittest.TestCase):
     def test_default(self):
@@ -10,3 +11,7 @@ class TestDefaultMELTSDict(unittest.TestCase):
         self.assertIn("initialize", D)
         self.assertIn("calculationMode", D)
         self.assertIn("constraints", D)
+
+
+if __name__ == "__main__":
+    unittest.main()

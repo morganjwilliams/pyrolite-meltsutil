@@ -2,19 +2,14 @@ import io
 import unittest
 import pandas as pd
 from pyrolite.util.pd import to_numeric
-from pyrolite.util.meta import stream_log
 from pyrolite.util.general import check_perl, temp_path, remove_tempdir
 from pyrolite.geochem.norm import get_reference_composition
-from pyrolite_meltsutil.download import install_melts
+
 from pyrolite_meltsutil.automation import *
-from pyrolite_meltsutil.util import pyrolite_meltsutil_datafolder
+from pyrolite_meltsutil.util.general import pyrolite_meltsutil_datafolder
 import logging
 
 logger = logging.Logger(__name__)
-
-if not (pyrolite_meltsutil_datafolder(subfolder="localinstall")).exists():
-    stream_log("pyrolite.ext.alphamelts")
-    install_melts(local=True)  # install melts for example files etc
 
 _env = MELTS_Env()
 _env.VERSION = "MELTS"

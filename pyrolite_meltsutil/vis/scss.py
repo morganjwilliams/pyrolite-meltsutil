@@ -40,7 +40,7 @@ def plot_sulfur_saturation_point(liquid, ax=None, start=1000, xvar="mass%"):
     for xS in start:
         s_wtpct = xS / 10000.0
         s_wtpct /= liquid["mass%"] / liquid["mass%"].values[0]
-        satpoint = np.argmax(s_wtpct > liquid["SCSS"])  # will return where first true
+        satpoint = np.argmax(s_wtpct.values > liquid["SCSS"].values)  # will return where first true
         satabund = s_wtpct[satpoint]
 
         s_melt = np.zeros_like(s_wtpct)

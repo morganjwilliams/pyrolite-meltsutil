@@ -6,39 +6,36 @@ from pyrolite.util.general import check_perl, temp_path, remove_tempdir
 from pyrolite.geochem.norm import get_reference_composition
 
 from pyrolite_meltsutil.automation import *
-from pyrolite_meltsutil.util.general import pyrolite_meltsutil_datafolder
+from pyrolite_meltsutil.util.general import get_local_example
 import logging
 
 logger = logging.Logger(__name__)
 
-_env = MELTS_Env()
-_env.VERSION = "MELTS"
-_env.MODE = "isobaric"
-_env.MINP = 2000
-_env.MAXP = 10000
-_env.MINT = 500
-_env.MAXT = 1500
-_env.DELTAT = -10
-_env.DELTAP = 0
+ENV = MELTS_Env()
+ENV.VERSION = "MELTS"
+ENV.MODE = "isobaric"
+ENV.MINP = 2000
+ENV.MAXP = 10000
+ENV.MINT = 500
+ENV.MAXT = 1500
+ENV.DELTAT = -10
+ENV.DELTAP = 0
 
-with open(
-    str(
-        pyrolite_meltsutil_datafolder(subfolder="localinstall")
-        / "examples"
-        / "Morb.melts"
-    )
-) as f:
-    _melts = f.read()
+with open(str(get_local_example("Morb.melts"))) as f:
+    MELTSFILE = f.read()
+
 
 
 class TestMakeMeltsFolder(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("test_melts_temp" + self.__class__.__name__)
-        self.meltsfile = _melts
-        self.env = _env  # use default
+        self.dir = temp_path() / ("testMELTSFILE_temp" + self.__class__.__name__)
+        self.meltsfile = MELTSFILE
+        self.env = ENV  # use default
 
     def test_default(self):
-        folder = make_meltsfolder(self.meltsfile, "MORB", env=self.env, dir=self.dir)
+        folder = make_meltsfolder(
+            "MORB", "MORB", self.meltsfile, env=self.env, dir=self.dir
+        )
 
     def tearDown(self):
         if self.dir.exists():
@@ -48,14 +45,18 @@ class TestMakeMeltsFolder(unittest.TestCase):
 @unittest.skipIf(not check_perl(), "Perl is not installed.")
 class TestMeltsProcess(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("test_melts_temp" + self.__class__.__name__)
-        self.meltsfile = _melts
-        self.env = _env  # use default
+        self.dir = temp_path() / ("testMELTSFILE_temp" + self.__class__.__name__)
+        self.meltsfile = MELTSFILE
+        self.env = ENV  # use default
 
     def test_default(self):
         title = "TestMeltsProcess"
         folder = make_meltsfolder(
-            self.meltsfile, title=title, env=self.env, dir=self.dir
+            name=title,
+            meltsfile=self.meltsfile,
+            title=title,
+            env=self.env,
+            dir=self.dir,
         )
         process = MeltsProcess(
             meltsfile="{}.melts".format(title),
@@ -78,9 +79,9 @@ class TestMeltsProcess(unittest.TestCase):
 @unittest.skipIf(not check_perl(), "Perl is not installed.")
 class TestMeltsExperiment(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("test_melts_temp" + self.__class__.__name__)
-        self.meltsfile = _melts
-        self.env = _env  # use default
+        self.dir = temp_path() / ("testMELTSFILE_temp" + self.__class__.__name__)
+        self.meltsfile = MELTSFILE
+        self.env = ENV  # use default
 
     def test_default(self):
         exp = MeltsExperiment(
@@ -106,7 +107,7 @@ class TestMeltsExperiment(unittest.TestCase):
 @unittest.skipIf(not check_perl(), "Perl is not installed.")
 class TestMeltsBatch(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("test_melts_temp" + self.__class__.__name__)
+        self.dir = temp_path() / ("testMELTSFILE_temp" + self.__class__.__name__)
 
         Gale_MORB = get_reference_composition("MORB_Gale2013")
         majors = [
@@ -135,7 +136,7 @@ class TestMeltsBatch(unittest.TestCase):
         MORB["Increment Temperature"] = -5
         MORB["Increment Pressure"] = 0
         self.df = MORB
-        self.env = _env
+        self.env = ENV
 
     def test_default(self):
         batch = MeltsBatch(

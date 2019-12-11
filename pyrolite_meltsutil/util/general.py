@@ -21,6 +21,22 @@ def pyrolite_meltsutil_datafolder(subfolder=None):
     return get_module_datafolder(module="pyrolite_meltsutil", subfolder=subfolder)
 
 
+def get_local_link(name):
+    """
+    Get the filepath of a local link file installed with alphaMELTS.
+
+    Parameters
+    -----------
+    name : :class:`str`
+        Filename for the link file.
+
+    Returns
+    -------
+    :class:`pathlib.Path`
+    """
+    return pyrolite_meltsutil_datafolder("localinstall") / "links" / name
+
+
 def get_local_example(name):
     """
     Get the filepath of a local example file installed with alphaMELTS.

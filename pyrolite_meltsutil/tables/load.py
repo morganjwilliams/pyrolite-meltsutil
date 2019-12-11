@@ -168,11 +168,68 @@ def import_tables(pth, kelvin=False):
         phase = phase.append(tb, sort=False)
 
     phase["step"] = system.loc[phase.index, "step"]
-    phase = phase.reindex(columns=["Step"] + [i for i in phase.columns if i != "step"])
+    phase = phase.reindex(columns=["step"] + [i for i in phase.columns if i != "step"])
 
     phase[num] = phase[num].apply(pd.to_numeric, errors="coerce")
 
     phase["mass%"] = phase["mass"] / system.loc[phase.index, "mass"].values[0] * 100
     phase["volume%"] = phase["volume"] / system.loc[phase.index, "volume"].values[0]
 
+    cls = {c: c.lower() for c in ["Pressure", "Temperature"]}
+    system = system.rename(columns=cls)
+    phase = phase.rename(columns=cls)
     return system, phase
+
+
+def aggregate_tables(lst):
+    """
+    Aggregate a number of melts tables to a single dataframe.
+
+    Parameters
+    ------------
+    lst : :class:`str` | :class:`pathlib.Path` | :class:`list`
+        Directory, list of directories or list of 2-dataframe tuples.
+
+    Parameters
+    ------------
+    system : :class:`pandas.DataFrame`
+        System aggregate table.
+    phases : :class:`pandas.DataFrame`
+        Phases aggregate table.
+    """
+    # if the input is a directory, aggregate subfolders
+    if isinstance(lst, (str, Path)):
+        lst = [x for x in Path(lst).rglob("*") if x.is_dir()]
+    system, phases = pd.DataFrame(), pd.DataFrame()
+    if isinstance(lst[0], (str, Path)):
+        # if the list is of filenames, aggregate the tables one by one
+        for d in lst:
+            S, P = import_tables(d)
+            # ensure the experiment name is incorporated
+            S["experiment"] = d.name
+            P["experiment"] = d.name
+
+            system = system.append(S, sort=False)
+            phases = phases.append(P, sort=False)
+    elif isinstance(lst[0], (list, tuple)) and isinstance(lst[0][0], (pd.DataFrame)):
+        # if the list is of tuples of dataframes,
+        # aggregate them to a single table
+        Sagg, Pagg = pd.DataFrame(), pd.DataFrame()
+        for ix, d in enumerate(lst):
+            S, P = d
+            # ensure the experiment index is incorporated
+            S["experiment"] = ix
+            P["experiment"] = ix
+
+            system = system.append(S, sort=False)
+            phases = phases.append(P, sort=False)
+    else:
+        raise NotImplementedError
+
+    system = system.reindex(
+        columns=["experiment"] + [i for i in system.columns if i != "experiment"]
+    )
+    phases = phases.reindex(
+        columns=["experiment"] + [i for i in phases.columns if i != "experiment"]
+    )
+    return system, phases

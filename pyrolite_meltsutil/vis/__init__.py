@@ -11,7 +11,7 @@ from ..tables.load import import_tables
 from .style import phase_color, phaseID_linestyle
 
 
-def xy_by_phase(df, xvar="Temperature", yvar="volume", legend=False):
+def xy_by_phase(df, xvar="temperature", yvar="volume", legend=False):
     """
     Plot selected variables from a table grouped by phases.
 

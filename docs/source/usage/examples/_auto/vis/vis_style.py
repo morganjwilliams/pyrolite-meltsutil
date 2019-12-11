@@ -7,7 +7,7 @@ Visualisation: Distinguishing Phases
 # :func:`~pyrolite_meltsutil.vis.style.phase_color` function, which will return
 # unique colors for each phase:
 from pyrolite_meltsutil.vis.style import phase_color
-
+# sphinx_gallery_thumbnail_number = 2
 phase_color("olivine")
 ########################################################################################
 # This will also work if given a phase ID:
@@ -61,3 +61,4 @@ ax.legend(  # use our proxy lines to generate a legend
     bbox_to_anchor=(1.0, 1.0),
     loc="upper left",
 )
+plt.show()

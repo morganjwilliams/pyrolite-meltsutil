@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def make_meltsfolder(
-    name, title, meltsfile, dir=None, env="./alphamelts_default_env.txt"
+    name, title=None, meltsfile=None, dir=None, env="./alphamelts_default_env.txt"
 ):
     """
     Create a folder for a given meltsfile, including the default environment file.
@@ -41,7 +41,9 @@ def make_meltsfolder(
         dir = Path("./")
     else:
         dir = Path(dir)
+    assert meltsfile is not None
     name = str(name)  # need to pathify this!
+    title = title or name
     title = str(title)  # need to pathify this!
     experiment_folder = dir / name
     if not experiment_folder.exists():

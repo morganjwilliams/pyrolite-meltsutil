@@ -60,7 +60,7 @@ def phase_color(phase, rgb=False):
     return c
 
 
-def phaseID_linestyle(phaseID):
+def phaseID_linestyle(phaseID, linestyles=["-", "--", ":", "-."]):
     """
     Method for generating linestyles for delineating sequential phases
     based on their phase IDs (e.g. olivine_0, olivine_1) .
@@ -69,13 +69,40 @@ def phaseID_linestyle(phaseID):
     -----------
     phasename : :class:`str`
         Phase ID for which to generate a line style.
+    linestyles : :class:`list`
+        List of line styles for sequential phase ID numbers.
+        Added to allow reconfiguraiton where needed.
 
     Returns
     ---------
-    linestyle : :class:`str`
+    :class:`str`
         Line style for the phase ID.
     """
     if "_" in phaseID:
-        return ["-", "--", ":", "-."][int(phaseID[-1])]
+        return linestyles[int(phaseID[-1])]
     else:
-        return "-"
+        return linestyles[0]
+
+
+def phaseID_marker(phaseID, markers=["D", "s", "o", "+", "*"]):
+    """
+    Method for generating markers for delineating sequential phases
+    based on their phase IDs (e.g. olivine_0, olivine_1) .
+
+    Parameters
+    -----------
+    phasename : :class:`str`
+        Phase ID for which to generate a line style.
+    markers : :class:`list`
+        List of markers for sequential phase ID numbers.
+        Added to allow reconfiguraiton where needed.
+
+    Returns
+    ---------
+    :class:`str`
+        Marker for the phase ID.
+    """
+    if "_" in phaseID:
+        return markers[int(phaseID[-1])]
+    else:
+        return markers[0]

@@ -16,6 +16,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
+np.random.seed(30)
 # sphinx_gallery_thumbnail_number = 2
 
 ########################################################################################
@@ -54,7 +55,7 @@ import pyrolite.geochem
 from pyrolite.util.text import slugify
 from pyrolite.util.pd import accumulate
 
-reps = 3  # increase this to perform more experiments
+reps = 10  # increase this to perform more experiments
 df = accumulate([MORB] * reps)
 df = df.reset_index().drop(columns="index")
 df[df.pyrochem.list_oxides] = (
@@ -84,13 +85,22 @@ env.DELTAT = -5
 env.MINP = 0
 env.MAXP = 10000
 ########################################################################################
+# Let's create a directory to run this experiment in - here we use an example folder:
+#
+from pyrolite_meltsutil.util.general import get_data_example
+
+experiment_dir = get_data_example("montecarlo")
+########################################################################################
+# Let's also set up logging we can see the progression:
+from pyrolite.util.meta import stream_log
+import logging
+
+logger = logging.Logger(__name__)
+stream_log(logger)
+########################################################################################
 # Next we setup the alphaMELTS configuration for each of the inputs:
 #
-from pyrolite.util.general import temp_path
 from pyrolite_meltsutil.automation import MeltsBatch
-
-# create a directory to run this experiment in
-tempdir = temp_path()
 
 batch = MeltsBatch(
     df,
@@ -106,7 +116,8 @@ batch = MeltsBatch(
         # "modifychem": [None, {"H2O": 0.5}],
     },
     env=env,
-    fromdir=tempdir,
+    fromdir=experiment_dir,
+    logger=logger,
 )
 
 batch.configs
@@ -118,11 +129,37 @@ batch.run(
 )  # overwrite=False if you don't want to update existing exp folders
 
 ########################################################################################
-# We can aggregate and import these results for simple visualisations:
+# We can first aggregate and import these results:
 #
-from pathlib import Path
 from pyrolite_meltsutil.tables.load import aggregate_tables, import_batch_config
 
-system, phases = aggregate_tables(tempdir)  # let's import the tables
-cfg = import_batch_config(tempdir)  # and also the configuration
-cfg
+
+system, phases = aggregate_tables(experiment_dir)  # let's import the tables
+cfg = import_batch_config(experiment_dir)  # and also the configuration
+########################################################################################
+# And now we can visualse these tables:
+#
+import matplotlib.pyplot as plt
+from pyrolite.util.plot import proxy_line
+from pyrolite_meltsutil.vis.style import phaseID_linestyle, phase_color
+
+phaselist = ["liquid", "clinopyroxene", "feldspar", "olivine"]
+
+fig, ax = plt.subplots(
+    len(phaselist) // 2, 2, sharex=True, sharey=True, figsize=(10, 8)
+)
+xvar, yvar = "temperature", "mass%"
+[a.set_xlabel(xvar) for a in ax[-1, :]]
+[a.set_ylabel(yvar) for a in ax[:, 0]]
+
+for p, pax in zip(phaselist, ax.flat):
+    pdf = phases.loc[phases.phase == p, :]
+    proxies = {}
+    for phaseID in pdf.phaseID.unique():
+        style = dict(ls=phaseID_linestyle(phaseID), color=phase_color(phaseID))
+        for expr in pdf.experiment.unique():
+            e_p_df = pdf.loc[((pdf.phaseID == phaseID) & (pdf.experiment == expr)), :]
+            pax.plot(e_p_df[xvar], e_p_df[yvar], **style)
+            proxies[phaseID] = proxy_line(**style)
+
+    pax.legend(proxies.values(), proxies.keys(), frameon=False, facecolor=None)

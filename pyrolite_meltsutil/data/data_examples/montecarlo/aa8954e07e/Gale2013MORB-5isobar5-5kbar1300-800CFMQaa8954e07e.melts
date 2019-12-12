@@ -1,0 +1,19 @@
+Title: Gale2013MORB-5
+Initial Composition: SiO2 48.77339977140815
+Initial Composition: Al2O3 16.420127639504745
+Initial Composition: FeO 9.894921788103119
+Initial Composition: MnO 0.16610323971059568
+Initial Composition: MgO 7.461640524181338
+Initial Composition: CaO 12.544291567672778
+Initial Composition: Na2O 2.85254297422584
+Initial Composition: TiO2 1.5933117866467235
+Initial Composition: K2O 0.13249509914973076
+Initial Composition: P2O5 0.161165609396982
+Initial Temperature: 1300
+Initial Pressure: 5000
+Final Temperature: 800
+Final Pressure: 5000
+Increment Temperature: -5
+Increment Pressure: 0
+Log fO2 Path: FMQ
+Mode: isobaric

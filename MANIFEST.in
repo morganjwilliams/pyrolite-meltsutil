@@ -1,3 +1,4 @@
 include versioneer.py
 include pyrolite_meltsutil/_version.py
+recursive-include pyrolite_meltsutil/data *
 include LICENSE

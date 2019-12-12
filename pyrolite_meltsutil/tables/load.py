@@ -16,6 +16,10 @@ from pathlib import Path
 from pyrolite.util.pd import zero_to_nan
 from ..parse import from_melts_cstr
 from ..util.tables import phasename, tuple_reindex, integrate_solids
+import logging
+
+logging.getLogger(__name__).addHandler(logging.NullHandler())
+logger = logging.getLogger(__name__)
 
 TABLES = {
     "Phase_mass_tbl.txt",
@@ -101,7 +105,7 @@ def read_phasemain(filepath, kelvin=False):
     """
     kelvin = False
     df = pd.DataFrame()
-    with open(filepath) as f:
+    with open(str(filepath)) as f:
         data = f.read().split("\n\n")[1:]
         for tab in data:
             lines = re.split(r"[\n\r]", tab)
@@ -110,7 +114,10 @@ def read_phasemain(filepath, kelvin=False):
             try:
                 table = pd.read_csv(buff, sep=" ")
             except:
-                print(phaseID, lines[1], lines[-1])
+                msg = "Read issue at: {}-{}\n{}\n{}".format(
+                    filepath, phaseID, lines[1], lines[-1]
+                )
+                logging.warning(msg)
             table["phaseID"] = phaseID
             table["phase"] = phasename(phaseID)
 

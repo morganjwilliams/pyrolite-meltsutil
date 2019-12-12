@@ -70,7 +70,7 @@ df.Title = df.Title.apply(slugify)
 import pyrolite.plot
 
 ax = df.loc[:, ["CaO", "MgO", "Al2O3"]].pyroplot.ternary(alpha=0.2, c="0.5")
-ax.figure
+plt.show()
 ########################################################################################
 # Now we can setup an environment for isobaric fractional crystallisation:
 #

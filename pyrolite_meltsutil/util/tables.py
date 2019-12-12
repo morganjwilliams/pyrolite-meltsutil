@@ -24,7 +24,7 @@ def phasename(phaseID):
     return n
 
 
-def tuple_reindex(df, columns=["Pressure", "Temperature"]):
+def tuple_reindex(df, columns=["pressure", "temperature"]):
     """
     Create an index based on tuples from multiple columns.
 
@@ -71,8 +71,8 @@ def integrate_solids(df, frac=True):
         cumulate = pd.DataFrame(columns=slds.columns, index=slds.index)
         cumulate["mass"] = np.cumsum(slds.mass.values)
         cumulate[chem.columns] = np.cumsum(increments, axis=1)
-        cumulate[["Pressure", "Temperature", "step"]] = slds.loc[
-            :, ["Pressure", "Temperature", "step"]
+        cumulate[["pressure", "temperature", "step"]] = slds.loc[
+            :, ["pressure", "temperature", "step"]
         ]
     cumulate.pyrochem.add_MgNo()
     return cumulate

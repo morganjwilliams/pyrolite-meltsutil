@@ -31,25 +31,23 @@ class TestReadPhasemain(unittest.TestCase):
         out = read_phasemain(src)
 
 
-class TestTableLoad(unittest.TestCase):
-    def setUp(self):
-        pass
-
-
 class TestImportTables(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / "test_melts_temp"
-        self.dir.mkdir()
+        self.fromdir = get_data_example("batch/363f3d0a0b/")
 
     def test_default(self):
-        pass
-        # summary = import_tables(self.dir)
+        src = self.fromdir
+        out = import_tables(src)
 
-    def tearDown(self):
-        if self.dir.exists():
-            remove_tempdir(self.dir)
+
+class TestAggregateTables(unittest.TestCase):
+    def setUp(self):
+        self.fromdir = get_data_example("batch/")
+
+    def test_default(self):
+        src = self.fromdir
+        out = aggregate_tables(src)
 
 
 if __name__ == "__main__":
-
     unittest.main()

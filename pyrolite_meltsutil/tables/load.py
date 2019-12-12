@@ -77,15 +77,39 @@ def read_melts_table(filepath, kelvin=False, **kwargs):
     df = pd.read_csv(filepath, sep=" ", **kwargs)
     df = df.dropna(how="all", axis=1)
 
-    if ("Temperature" in df.columns) and not kelvin:
-        df["Temperature"] -= 273.15
+    df = convert_thermo_names(df)
+
+    if ("temperature" in df.columns) and not kelvin:
+        df["temperature"] -= 273.15
     if ("MgO" in df.columns) and ("FeO" in df.columns):
         # should update this to be if there's both iron and magnesium species
         df.pyrochem.add_MgNo()
     df = zero_to_nan(df)
     df = tuple_reindex(df)
-    df = convert_thermo_names(df)
     return df
+
+
+def read_phase_table(tab):
+    """
+    Import a phase table to a dataframe.
+
+    Parameters
+    ------------
+    tab : :class:`str`
+        String containing the table to be imported, with its title.
+
+    Returns
+    -------
+    :class:`pandas.DataFrame`
+        DataFrame with phase table information.
+    """
+    lines = [i for i in re.split(r"[\n\r]", tab) if i]
+    phaseID = lines[0].split()[0].strip()
+    buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
+    table = pd.read_csv(buff, sep=" ")
+    table["phaseID"] = phaseID
+    table["phase"] = phasename(phaseID)
+    return table
 
 
 def read_alphamelts_table_phases(filepath, kelvin=False):
@@ -112,14 +136,7 @@ def read_alphamelts_table_phases(filepath, kelvin=False):
         _, *tables = re.split(title_line.strip(), data)
         system, liquidcomp, phases, phasemass, phasevol, solidcomp, bulkcomp = tables
         for tab in re.split(r"[\n\r][\n\r]+", phases.strip()):
-            lines = [i for i in re.split(r"[\n\r]", tab) if i]
-            phaseID = lines[0].split()[0].strip()
-            buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
-            table = pd.read_csv(buff, sep=" ")
-            table["phaseID"] = phaseID
-            table["phase"] = phasename(phaseID)
-
-            df = df.append(table, sort=False)
+            df = df.append(read_phase_table(tab), sort=False)
 
     df = convert_thermo_names(df)
     non_num = ["step", "structure", "phaseID", "phase", "formula"]
@@ -161,20 +178,7 @@ def read_phasemain(filepath, kelvin=False):
     with open(str(filepath)) as f:
         data = re.split(r"[\n\r][\n\r]+", f.read())[1:]  # double line sep
         for tab in data:
-            lines = [i for i in re.split(r"[\n\r]", tab) if i]
-            phaseID = lines[0].split()[0].strip()
-            buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
-            try:
-                table = pd.read_csv(buff, sep=" ")
-            except:
-                msg = "Read issue at: {}-{}\n{}\nFrom:\n{}".format(
-                    filepath, phaseID, tab, data
-                )
-                raise Exception(msg)
-            table["phaseID"] = phaseID
-            table["phase"] = phasename(phaseID)
-
-            df = df.append(table, sort=False)
+            df = df.append(read_phase_table(tab), sort=False)
 
     df = convert_thermo_names(df)
     non_num = ["step", "structure", "phaseID", "phase", "formula"]
@@ -220,13 +224,15 @@ def import_tables(pth, kelvin=False):
         columns=["step"] + [i for i in system.columns if i != "step"]
     )
 
-    phase = read_alphamelts_table_phases(pth / "Phase_main_tbl.txt", kelvin=kelvin)
+    try:
+        phase = read_alphamelts_table_phases(pth / "alphaMELTS_tbl.txt", kelvin=kelvin)
+        bulk = read_melts_table(pth / "Bulk_comp_tbl.txt", skiprows=3, kelvin=kelvin)
+        solid = read_melts_table(pth / "Solid_comp_tbl.txt", skiprows=3, kelvin=kelvin)
+    except FileNotFoundError:
+        msg = "File missing from: {}".format(",".join([i.name for i in pth.iterdir()]))
+        raise FileNotFoundError(msg)
 
-    # bulk composition
-    bulk = read_melts_table(pth / "Bulk_comp_tbl.txt", skiprows=3, kelvin=kelvin)
     bulk["phase"] = "bulk"
-    # solid composition
-    solid = read_melts_table(pth / "Solid_comp_tbl.txt", skiprows=3, kelvin=kelvin)
     solid["phase"] = "solid"
     solid = solid.loc[solid["mass"] > 0.0, :]  # drop where no solids present
     # integrated solids for fractionation

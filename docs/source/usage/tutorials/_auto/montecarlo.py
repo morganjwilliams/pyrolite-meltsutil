@@ -119,20 +119,19 @@ batch = MeltsBatch(
     fromdir=experiment_dir,
     logger=logger,
 )
-
-batch.configs
 ########################################################################################
-# The series of calls to alphaMELTS are now configured, and can be run as follows:
+# The series of calls to alphaMELTS are now configured, and could be run as follows
+# (::code:`overwrite=False` if you don't want to update existing experiment folders).
+# Here we've already run the experiment and will load local data for the experiment
+# to keep the documentation-building time low.
 #
-batch.run(
-    overwrite=False
-)  # overwrite=False if you don't want to update existing exp folders
+
+# batch.run(overwrite=False)
 
 ########################################################################################
 # We can first aggregate and import these results:
 #
 from pyrolite_meltsutil.tables.load import aggregate_tables, import_batch_config
-
 
 system, phases = aggregate_tables(experiment_dir)  # let's import the tables
 cfg = import_batch_config(experiment_dir)  # and also the configuration

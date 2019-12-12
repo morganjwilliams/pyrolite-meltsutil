@@ -20,51 +20,6 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 logger = logging.getLogger(__name__)
 
 
-def phase_linestyle(phasename):
-    """
-    Method for generating linestyles for delineating sequential phase names
-    (e.g. olivine_0, olivine_1) based on their names.
-
-    Parameters
-    -----------
-    phasename : :class:`str`
-        Phase name for which to generate a line style.
-
-    Returns
-    ---------
-    linestyle : :class:`str`
-        Line style for the phase name.
-    """
-    if "_" in phasename:
-        return ["-", "--", ":", "-."][int(phasename[-1])]
-    else:
-        return "-"
-
-
-def phase_color(phasename):
-    """
-    Method for generating colors for delineating phase names
-    (e.g. olivine_0, clinopyroxene_0) based on their names.
-    """
-
-    colors = dict(
-        olivine="green",
-        feldspar="pink",
-        clinopyroxene="teal",
-        water="lightblue",
-        spinel="0.5",
-        orthopyroxene="orange",
-        liquid="black",
-        biotite="brown",
-        garnet="red",
-        amphibole="",
-        hornblende="",
-        quartz="",
-    )
-
-    return colors.get(phasename, None)
-
-
 def plot_phasetable(
     summary,
     table="phasevol",

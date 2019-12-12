@@ -106,9 +106,9 @@ def read_phasemain(filepath, kelvin=False):
     kelvin = False
     df = pd.DataFrame()
     with open(str(filepath)) as f:
-        data = f.read().split("\n\n")[1:]
+        data = re.split(r"[\n\r][\n\r]", f.read())[1:]
         for tab in data:
-            lines = re.split(r"[\n\r]", tab)
+            lines = [i for i in re.split(r"[\n\r]", tab) if i]
             phaseID = lines[0].split()[0].strip()
             buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
             try:

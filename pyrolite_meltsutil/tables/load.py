@@ -107,7 +107,10 @@ def read_phasemain(filepath, kelvin=False):
             lines = re.split(r"[\n\r]", tab)
             phaseID = lines[0].split()[0].strip()
             buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
-            table = pd.read_csv(buff, sep=" ")
+            try:
+                table = pd.read_csv(buff, sep=" ")
+            except:
+                print(phaseID, lines[1], lines[-1])
             table["phaseID"] = phaseID
             table["phase"] = phasename(phaseID)
 

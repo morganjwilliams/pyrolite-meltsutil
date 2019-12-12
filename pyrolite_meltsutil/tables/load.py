@@ -106,9 +106,8 @@ def read_phasemain(filepath, kelvin=False):
         for tab in data:
             lines = re.split(r"[\n\r]", tab)
             phaseID = lines[0].split()[0].strip()
-            table = pd.read_csv(
-                io.BytesIO("\n".join(lines[1:]).encode("UTF-8")), sep=" "
-            )
+            buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
+            table = pd.read_csv(buff, sep=" ")
             table["phaseID"] = phaseID
             table["phase"] = phasename(phaseID)
 
@@ -138,6 +137,12 @@ def import_tables(pth, kelvin=False):
     -----------
     kelvin : :class:`bool`
         Whether to keep temperatures in kelvin.
+
+    Returns
+    --------
+    system : :class:`pandas.DataFrame`
+
+    phases : :class:`pandas.DataFrame`
     """
     # system table
     system = read_melts_table(pth / "System_main_tbl.txt", skiprows=3, kelvin=kelvin)
@@ -208,7 +213,7 @@ def import_batch_config(filepath):
     return cfg
 
 
-def aggregate_tables(lst):
+def aggregate_tables(lst, kelvin=False):
     """
     Aggregate a number of melts tables to a single dataframe.
 
@@ -216,6 +221,8 @@ def aggregate_tables(lst):
     ------------
     lst : :class:`str` | :class:`pathlib.Path` | :class:`list`
         Directory, list of directories or list of 2-dataframe tuples.
+    kelvin : :class:`bool`
+        Whether to keep temperatures in kelvin.
 
     Parameters
     ------------
@@ -231,7 +238,7 @@ def aggregate_tables(lst):
     if isinstance(lst[0], (str, Path)):
         # if the list is of filenames, aggregate the tables one by one
         for d in lst:
-            S, P = import_tables(d)
+            S, P = import_tables(d, kelvin=kelvin)
             # ensure the experiment name is incorporated
             S["experiment"] = d.name
             P["experiment"] = d.name

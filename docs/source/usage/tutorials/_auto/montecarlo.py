@@ -105,7 +105,6 @@ batch = MeltsBatch(
         # "modifychem": [None, {"H2O": 0.5}],
     },
     env=env,
-    logger=logger,
     fromdir=tempdir,
 )
 

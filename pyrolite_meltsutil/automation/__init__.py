@@ -212,7 +212,7 @@ class MeltsBatch(object):
             hsh: (exp_name(expr), expr, self.env) for hsh, expr in zip(exphashes, exprs)
         }  # this ensures that no duplicates are preserved
         self.est_duration = str(
-            datetime.timedelta(seconds=len(self.experiments) * 6)
+            datetime.timedelta(seconds=len(self.experiments) * 15)
         )  # 6s/run
         self.logger.info("Estimated Calculation Time: {}".format(self.est_duration))
 

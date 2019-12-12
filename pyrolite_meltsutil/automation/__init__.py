@@ -242,7 +242,7 @@ class MeltsBatch(object):
             ensure_ascii=False,
         ).encode("utf8")
 
-        with open(target, "wb") as f:
+        with open(str(target), "wb") as f:
             f.write(data)
 
     def run(self, overwrite=False, exclude=[], superliquidus_start=True, timeout=None):

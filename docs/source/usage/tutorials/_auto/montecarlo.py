@@ -15,13 +15,24 @@ should be modelled differently.
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from pyrolite.comp.codata import ilr, inverse_ilr
-from pyrolite.util.meta import stream_log
-import logging
 
 # sphinx_gallery_thumbnail_number = 2
-logger = logging.Logger(__name__)
-stream_log(logger)  # print the logging output
+
+########################################################################################
+# We'll use the major element composition of MORB from Gale et al (2013) for this
+# exercise:
+#
+from pyrolite_meltsutil.util.synthetic import isobaricGaleMORBexample
+
+MORB = isobaricGaleMORBexample(title="Gale2013MORB")
+MORB.T
+
+########################################################################################
+# As we're going to 'blur' compositions by adding compositional noise to them,
+# it'll be handy to have a function to do so. Here's a simple one which
+# achieves this and is sufficient for our purpose:
+#
+from pyrolite.comp.codata import ilr, inverse_ilr
 
 
 def blur_compositions(df, noise=0.05, scale=100):
@@ -35,24 +46,6 @@ def blur_compositions(df, noise=0.05, scale=100):
     return inverse_ilr(xvals) * scale
 
 
-########################################################################################
-# Here we can do a conditonal install - downloading alphamelts if it doesnt exist:
-#
-from pyrolite_meltsutil.download import install_melts
-from pyrolite_meltsutil.util.general import pyrolite_meltsutil_datafolder
-
-if not (pyrolite_meltsutil_datafolder(subfolder="localinstall")).exists():
-    stream_log("pyrolite-meltsutil", level="INFO")  # logger for output info
-    install_melts(local=True)  # install a copy of melts to pyrolite data folder
-
-########################################################################################
-# We'll use the major element composition of MORB from Gale et al (2013) for this
-# exercise:
-#
-from pyrolite_meltsutil.util.synthetic import isobaricGaleMORBexample
-
-MORB = isobaricGaleMORBexample(title="Gale2013MORB")
-MORB.T
 ########################################################################################
 # We'll replicate this composition a number of times, and then add gaussian noise
 # to each to create a range of plausible compositions:
@@ -75,6 +68,7 @@ df.Title = df.Title.apply(slugify)
 # We can visualise this variation in a ternary space:
 #
 import pyrolite.plot
+
 ax = df.loc[:, ["CaO", "MgO", "Al2O3"]].pyroplot.ternary(alpha=0.2, c="0.5")
 ax.figure
 ########################################################################################
@@ -128,6 +122,9 @@ batch.run(
 #
 from pathlib import Path
 from pyrolite_meltsutil.vis import xy_by_phase
+from pyrolite_meltsutil.tables.load import aggregate_tables, import_batch_config
 
+system, phases = import_tables(tempdir)  # let's import the tables
+name, cfg, env = import_batch_config(tempdir)  # and also the configuration
 
 # TODO

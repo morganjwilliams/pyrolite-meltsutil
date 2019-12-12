@@ -239,8 +239,7 @@ sphinx_gallery_conf = {
         "usage/examples/_auto/",
         "usage/tutorials/_auto/",
     ],  # path to your example scripts
-    "expected_failing_examples": ["usage/examples/_auto/web/meltsweb.py"],
-    "subsection_order": ExplicitOrder(["examples/_auto", "tutorials/_auto"]),
+    #"expected_failing_examples": ["usage/examples/_auto/web/meltsweb.py"],
     "subsection_order": ExplicitOrder(
         [
             "usage/examples/_auto/tables",

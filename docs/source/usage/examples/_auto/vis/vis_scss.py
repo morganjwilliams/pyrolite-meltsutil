@@ -56,7 +56,7 @@ xvar, colorvar = "mass%", "temperature"
 ax = liquid.loc[:, [xvar, "SCSS"]].pyroplot.scatter(
     c=liquid[colorvar], fontsize=12, figsize=(12, 6)
 )
-ax.set_ylim(0, 0.25)
+ax.set_ylim(0, 0.35)
 ########################################################################################
 # To this we can add a colorbar for the temperature color mapping:
 #

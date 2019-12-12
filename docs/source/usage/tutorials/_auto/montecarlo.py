@@ -121,7 +121,6 @@ batch.run(
 # We can aggregate and import these results for simple visualisations:
 #
 from pathlib import Path
-from pyrolite_meltsutil.vis import xy_by_phase
 from pyrolite_meltsutil.tables.load import aggregate_tables, import_batch_config
 
 system, phases = aggregate_tables(tempdir)  # let's import the tables

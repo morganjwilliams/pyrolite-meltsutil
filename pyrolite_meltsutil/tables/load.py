@@ -117,7 +117,7 @@ def read_phasemain(filepath, kelvin=False):
                 msg = "Read issue at: {}-{}\n{}\n{}".format(
                     filepath, phaseID, lines[1], lines[-1]
                 )
-                logging.warning(msg)
+                raise Exception(msg)
             table["phaseID"] = phaseID
             table["phase"] = phasename(phaseID)
 

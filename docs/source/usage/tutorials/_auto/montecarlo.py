@@ -68,6 +68,7 @@ df.Title = df.Title.apply(slugify)
 # We can visualise this variation in a ternary space:
 #
 import pyrolite.plot
+import matplotlib.pyplot as plt
 
 ax = df.loc[:, ["CaO", "MgO", "Al2O3"]].pyroplot.ternary(alpha=0.2, c="0.5")
 plt.show()

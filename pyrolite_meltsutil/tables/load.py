@@ -33,6 +33,7 @@ TABLES = {
 }
 
 THERMO = {"H": "enthalpy", "S": "entropy", "V": "volume"}
+THERMO.update({c: c.lower() for c in ["Pressure", "Temperature"]})
 
 
 def convert_thermo_names(df):
@@ -87,6 +88,59 @@ def read_melts_table(filepath, kelvin=False, **kwargs):
     return df
 
 
+def read_alphamelts_table_phases(filepath, kelvin=False):
+    """
+    Read the phasemain file into a single table. Note that the alphaMELTS table
+    includes all other tables also (except for traces).
+
+    Parameters
+    ------------
+    filepath : :class:`str` | :class:`pathlib.Path`
+        Filepath to the melts table.
+    kelvin : :class:`bool`
+        Whether the exported table has temperature listed in kelvin.
+
+    Returns
+    -------
+    :class:`pandas.DataFrame`
+        DataFrame with table information.
+    """
+    df = pd.DataFrame()
+    with open(str(filepath)) as f:
+        data = f.read()
+        title_line = re.split(r"[\n\r]+", data)[0]
+        _, *tables = re.split(title_line.strip(), data)
+        system, liquidcomp, phases, phasemass, phasevol, solidcomp, bulkcomp = tables
+        for tab in re.split(r"[\n\r][\n\r]+", phases.strip()):
+            lines = [i for i in re.split(r"[\n\r]", tab) if i]
+            phaseID = lines[0].split()[0].strip()
+            buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
+            table = pd.read_csv(buff, sep=" ")
+            table["phaseID"] = phaseID
+            table["phase"] = phasename(phaseID)
+
+            df = df.append(table, sort=False)
+
+    df = convert_thermo_names(df)
+    non_num = ["step", "structure", "phaseID", "phase", "formula"]
+    num = [i for i in df.columns if i not in non_num]
+    df[num] = df[num].apply(pd.to_numeric, errors="coerce")
+
+    if "formula" in df.columns:
+        df.loc[:, "formula"] = df.loc[:, "formula"].apply(from_melts_cstr)
+
+    if ("temperature" in df.columns) and not kelvin:
+        df["temperature"] -= 273.15
+
+    if ("MgO" in df.columns) and ("FeO" in df.columns):
+        # should update this to be if there's both iron and magnesium species
+        df.pyrochem.add_MgNo()
+
+    df = zero_to_nan(df)
+    df = tuple_reindex(df)
+    return df
+
+
 def read_phasemain(filepath, kelvin=False):
     """
     Read the phasemain file into a single table.
@@ -96,14 +150,13 @@ def read_phasemain(filepath, kelvin=False):
     filepath : :class:`str` | :class:`pathlib.Path`
         Filepath to the melts table.
     kelvin : :class:`bool`
-        Whether the imported table has temperature listed in kelvin.
+        Whether the exported table has temperature listed in kelvin.
 
     Returns
     -------
     :class:`pandas.DataFrame`
         DataFrame with table information.
     """
-    kelvin = False
     df = pd.DataFrame()
     with open(str(filepath)) as f:
         data = re.split(r"[\n\r][\n\r]+", f.read())[1:]  # double line sep
@@ -123,11 +176,16 @@ def read_phasemain(filepath, kelvin=False):
 
             df = df.append(table, sort=False)
 
+    df = convert_thermo_names(df)
+    non_num = ["step", "structure", "phaseID", "phase", "formula"]
+    num = [i for i in df.columns if i not in non_num]
+    df[num] = df[num].apply(pd.to_numeric, errors="coerce")
+
     if "formula" in df.columns:
         df.loc[:, "formula"] = df.loc[:, "formula"].apply(from_melts_cstr)
 
-    if ("Temperature" in df.columns) and not kelvin:
-        df["Temperature"] -= 273.15
+    if ("temperature" in df.columns) and not kelvin:
+        df["temperature"] -= 273.15
 
     if ("MgO" in df.columns) and ("FeO" in df.columns):
         # should update this to be if there's both iron and magnesium species
@@ -135,7 +193,6 @@ def read_phasemain(filepath, kelvin=False):
 
     df = zero_to_nan(df)
     df = tuple_reindex(df)
-    df = convert_thermo_names(df)
     return df
 
 
@@ -163,10 +220,7 @@ def import_tables(pth, kelvin=False):
         columns=["step"] + [i for i in system.columns if i != "step"]
     )
 
-    phase = read_phasemain(pth / "Phase_main_tbl.txt", kelvin=kelvin)
-    # column management
-    non_num = ["step", "structure", "phaseID", "phase", "formula"]
-    num = [i for i in phase.columns if i not in non_num]
+    phase = read_alphamelts_table_phases(pth / "Phase_main_tbl.txt", kelvin=kelvin)
 
     # bulk composition
     bulk = read_melts_table(pth / "Bulk_comp_tbl.txt", skiprows=3, kelvin=kelvin)
@@ -186,14 +240,8 @@ def import_tables(pth, kelvin=False):
     phase["step"] = system.loc[phase.index, "step"]
     phase = phase.reindex(columns=["step"] + [i for i in phase.columns if i != "step"])
 
-    phase[num] = phase[num].apply(pd.to_numeric, errors="coerce")
-
     phase["mass%"] = phase["mass"] / system.loc[phase.index, "mass"].values[0] * 100
     phase["volume%"] = phase["volume"] / system.loc[phase.index, "volume"].values[0]
-
-    cls = {c: c.lower() for c in ["Pressure", "Temperature"]}
-    system = system.rename(columns=cls)
-    phase = phase.rename(columns=cls)
     return system, phase
 
 

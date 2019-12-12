@@ -2,9 +2,10 @@ import unittest
 from pyrolite.util.general import temp_path, remove_tempdir
 from pyrolite_meltsutil.tables.load import (
     import_tables,
-    read_phasemain,
-    read_melts_table,
-    read_alphamelts_table_phases,
+    read_phase_table,
+    read_melts_tablefile,
+    phasetable_from_phasemain,
+    phasetable_from_alphameltstxt,
     aggregate_tables,
 )
 from pyrolite_meltsutil.util.general import get_data_example
@@ -13,22 +14,22 @@ import logging
 logger = logging.Logger(__name__)
 
 
-class TestReadalphaMELTSTable(unittest.TestCase):
+class TestPhasetableFromalphaMELTS(unittest.TestCase):
     def setUp(self):
         self.file = get_data_example("batch/363f3d0a0b/alphaMELTS_tbl.txt")
 
     def test_default(self):
         src = self.file
-        out = read_alphamelts_table_phases(src)
+        out = phasetable_from_alphameltstxt(src)
 
 
-class TestReadPhasemain(unittest.TestCase):
+class TestPhasetableFromPhasemain(unittest.TestCase):
     def setUp(self):
         self.file = get_data_example("batch/363f3d0a0b/Phase_main_tbl.txt")
 
     def test_default(self):
         src = self.file
-        out = read_phasemain(src)
+        out = phasetable_from_phasemain(src)
 
 
 class TestImportTables(unittest.TestCase):

@@ -55,7 +55,30 @@ def convert_thermo_names(df):
     return df
 
 
-def read_melts_table(filepath, kelvin=False, **kwargs):
+def read_phase_table(tab):
+    """
+    Import a phase table to a dataframe.
+
+    Parameters
+    ------------
+    tab : :class:`str`
+        String containing the table to be imported, with its title.
+
+    Returns
+    -------
+    :class:`pandas.DataFrame`
+        DataFrame with phase table information.
+    """
+    lines = [i for i in re.split(r"[\n\r]", tab) if i]
+    phaseID = lines[0].split()[0].strip()
+    buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
+    table = pd.read_csv(buff, sep=" ")
+    table["phaseID"] = phaseID
+    table["phase"] = phasename(phaseID)
+    return table
+
+
+def read_melts_tablefile(filepath, kelvin=False, **kwargs):
     """
     Read a melts table (a space-separated value file).
 
@@ -89,30 +112,7 @@ def read_melts_table(filepath, kelvin=False, **kwargs):
     return df
 
 
-def read_phase_table(tab):
-    """
-    Import a phase table to a dataframe.
-
-    Parameters
-    ------------
-    tab : :class:`str`
-        String containing the table to be imported, with its title.
-
-    Returns
-    -------
-    :class:`pandas.DataFrame`
-        DataFrame with phase table information.
-    """
-    lines = [i for i in re.split(r"[\n\r]", tab) if i]
-    phaseID = lines[0].split()[0].strip()
-    buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
-    table = pd.read_csv(buff, sep=" ")
-    table["phaseID"] = phaseID
-    table["phase"] = phasename(phaseID)
-    return table
-
-
-def read_alphamelts_table_phases(filepath, kelvin=False):
+def phasetable_from_alphameltstxt(filepath, kelvin=False):
     """
     Read the phasemain file into a single table. Note that the alphaMELTS table
     includes all other tables also (except for traces).
@@ -158,7 +158,7 @@ def read_alphamelts_table_phases(filepath, kelvin=False):
     return df
 
 
-def read_phasemain(filepath, kelvin=False):
+def phasetable_from_phasemain(filepath, kelvin=False):
     """
     Read the phasemain file into a single table.
 
@@ -216,7 +216,9 @@ def import_tables(pth, kelvin=False):
     phases : :class:`pandas.DataFrame`
     """
     # system table
-    system = read_melts_table(pth / "System_main_tbl.txt", skiprows=3, kelvin=kelvin)
+    system = read_melts_tablefile(
+        pth / "System_main_tbl.txt", skiprows=3, kelvin=kelvin
+    )
     system["step"] = np.arange(system.index.size)  # generate the step index
     system["mass%"] = system["mass"] / system["mass"].values[0]
     system["volume%"] = system["volume"] / system["volume"].values[0]
@@ -225,11 +227,17 @@ def import_tables(pth, kelvin=False):
     )
 
     try:
-        phase = read_alphamelts_table_phases(pth / "alphaMELTS_tbl.txt", kelvin=kelvin)
-        bulk = read_melts_table(pth / "Bulk_comp_tbl.txt", skiprows=3, kelvin=kelvin)
-        solid = read_melts_table(pth / "Solid_comp_tbl.txt", skiprows=3, kelvin=kelvin)
+        phase = phasetable_from_alphameltstxt(pth / "alphaMELTS_tbl.txt", kelvin=kelvin)
+        bulk = read_melts_tablefile(
+            pth / "Bulk_comp_tbl.txt", skiprows=3, kelvin=kelvin
+        )
+        solid = read_melts_tablefile(
+            pth / "Solid_comp_tbl.txt", skiprows=3, kelvin=kelvin
+        )
     except FileNotFoundError:
-        msg = "File missing from: {}".format(",".join([i.name for i in pth.iterdir()]))
+        msg = "File missing from {}: {}".format(
+            pth, ",".join([i.name for i in pth.iterdir()])
+        )
         raise FileNotFoundError(msg)
 
     bulk["phase"] = "bulk"

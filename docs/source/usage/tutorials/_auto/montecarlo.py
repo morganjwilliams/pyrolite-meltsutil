@@ -123,7 +123,6 @@ from pathlib import Path
 from pyrolite_meltsutil.vis import xy_by_phase
 from pyrolite_meltsutil.tables.load import aggregate_tables, import_batch_config
 
-system, phases = import_tables(tempdir)  # let's import the tables
-name, cfg, env = import_batch_config(tempdir)  # and also the configuration
-
-# TODO
+system, phases = aggregate_tables(tempdir)  # let's import the tables
+cfg = import_batch_config(tempdir)  # and also the configuration
+cfg

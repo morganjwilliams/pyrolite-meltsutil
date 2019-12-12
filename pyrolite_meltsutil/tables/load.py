@@ -106,7 +106,7 @@ def read_phasemain(filepath, kelvin=False):
     kelvin = False
     df = pd.DataFrame()
     with open(str(filepath)) as f:
-        data = re.split(r"[\n\r][\n\r]", f.read())[1:]
+        data = re.split(r"[\n\r][\n\r]+", f.read())[1:]  # double line sep
         for tab in data:
             lines = [i for i in re.split(r"[\n\r]", tab) if i]
             phaseID = lines[0].split()[0].strip()
@@ -114,8 +114,8 @@ def read_phasemain(filepath, kelvin=False):
             try:
                 table = pd.read_csv(buff, sep=" ")
             except:
-                msg = "Read issue at: {}-{}\n{}\n{}".format(
-                    filepath, phaseID, lines[1], lines[-1]
+                msg = "Read issue at: {}-{}\n{}\nFrom:\n{}".format(
+                    filepath, phaseID, tab, data
                 )
                 raise Exception(msg)
             table["phaseID"] = phaseID

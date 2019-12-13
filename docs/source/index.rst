@@ -7,7 +7,7 @@ The python package includes functions to install and run melts with specific con
 to import output tables, and to visualise these results.
 
 - On this site you can browse the  `API <./api/API.html>`__, or look
-  through some of the `usage examples <./examples.html>`__.
+  through some of the `usage examples <./examples/index.html>`__.
 
 - There's also a quick `installation guide <./installation.html>`__ and some notes on
   where the project is heading in the near `future <./dev/future.html>`__.

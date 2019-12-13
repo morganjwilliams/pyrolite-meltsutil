@@ -20,7 +20,8 @@ def plot_sulfur_saturation_point(liquid, ax=None, start=1000, xvar="mass%"):
 
     xvar : :class:`str`
     """
-
+    if ax is None:
+        fig, ax = plt.subplots(1)
     ax2 = get_twins(ax)
     if not ax2:
         ax2 = ax.twinx()

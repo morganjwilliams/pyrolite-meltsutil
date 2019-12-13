@@ -47,7 +47,8 @@ def tuple_reindex(df, columns=["pressure", "temperature"]):
 def integrate_solids(df, frac=True):
     """
     Integrate solid compositions to return a 'cumulate' like
-    composition.
+    composition. Note that in the case of non-fractional crystallisation
+    this will correspond to the solid composition.
 
     Parameters
     -----------
@@ -74,5 +75,8 @@ def integrate_solids(df, frac=True):
         cumulate[["pressure", "temperature", "step"]] = slds.loc[
             :, ["pressure", "temperature", "step"]
         ]
+
+    else:
+        cumulate = slds.copy()
     cumulate.pyrochem.add_MgNo()
     return cumulate

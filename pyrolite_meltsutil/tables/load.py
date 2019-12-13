@@ -243,8 +243,10 @@ def import_tables(pth, kelvin=False):
     bulk["phase"] = "bulk"
     solid["phase"] = "solid"
     solid = solid.loc[solid["mass"] > 0.0, :]  # drop where no solids present
-    # integrated solids for fractionation
-    cumulate = integrate_solids(solid)
+    # integrated solids for fractionation - if the system mass changes significantly
+    # could add this threshold as a parameter
+    frac = system.mass.max() / system.mass.min() > 1.05
+    cumulate = integrate_solids(solid, frac=frac)
     cumulate["phase"] = "cumulate"
     # traces could be imported here
 

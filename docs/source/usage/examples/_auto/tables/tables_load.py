@@ -44,7 +44,6 @@ cumulate.sample(3).dropna(how="all", axis="columns").T
 # reindex and calcuate relative percentages using the system table). You should get
 # similar results with:
 from pyrolite_meltsutil.util.tables import integrate_solids
-
 cumulate = integrate_solids(phases)
 ########################################################################################
 # .. seealso:: `Aggregating Tables <tables_aggregate.html>`__,

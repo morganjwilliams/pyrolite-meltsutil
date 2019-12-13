@@ -10,6 +10,7 @@ experiment results.
 # crystallisation experiments from the montecarlo tutorial, and import the tables:
 from pyrolite_meltsutil.util.general import get_data_example
 from pyrolite_meltsutil.tables import import_tables
+# sphinx_gallery_thumbnail_number = 2
 
 exp_dir = get_data_example("montecarlo/0ef62e8e55")
 system, phases = import_tables(exp_dir)

@@ -11,4 +11,4 @@ dependencies:
   - scipy>=1.2
   - pandas>=0.23
   - pip:
-      - -e .[dev]
+      - pyrolite-meltsutil

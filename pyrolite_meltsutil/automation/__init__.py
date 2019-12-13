@@ -130,6 +130,34 @@ class MeltsExperiment(object):
         pass
 
 
+def process_modifications(cfg):
+    """
+    Process modifications to an configuration composition.
+
+    Parameters
+    -----------
+    cfg : :class:`dict`
+        Configuratiion dictionary.
+
+    Returns
+    --------
+    cfg : :class:`dict`
+        Configuratiion dictionary.
+    """
+    if "modifychem" in cfg:
+        modifications = cfg.pop("modifychem", {})  # remove modify chem
+        ek, mk = set(cfg.keys()), set(modifications.keys())
+        for k, v in modifications.items():
+            cfg[k] = v
+        allchem = (ek | mk) & __chem__
+        unmodified = (ek - mk) & __chem__
+
+        offset = np.array(list(modifications.values())).sum()
+        for uk in unmodified:
+            cfg[uk] = np.round(cfg[uk] * (100.0 - offset) / 100, 4)
+    return cfg
+
+
 class MeltsBatch(object):
     """
     Batch of :class:`MeltsExperiment`, which may represent evaluation over a grid of
@@ -204,6 +232,7 @@ class MeltsBatch(object):
             {**cfg, **cmp}
             for (cfg, cmp) in itertools.product(self.configs, self.compositions)
         ]
+        exprs = [process_modifications(cfg) for cfg in exprs]
         exphashes = np.array([exp_hash(i) for i in exprs])
         _, cnts = np.unique(exphashes, return_counts=True)
         if (cnts > 1).any():
@@ -211,6 +240,7 @@ class MeltsBatch(object):
         self.experiments = {
             hsh: (exp_name(expr), expr, self.env) for hsh, expr in zip(exphashes, exprs)
         }  # this ensures that no duplicates are preserved
+
         self.est_duration = str(
             datetime.timedelta(seconds=len(self.experiments) * 15)
         )  # 6s/run
@@ -263,24 +293,10 @@ class MeltsBatch(object):
         for hsh, (title, exp, env) in tqdm(
             experiments.items(), file=ToLogger(self.logger), mininterval=2
         ):
-            if "modifychem" in exp:
-                modifications = exp.pop("modifychem", {})  # remove modify chem
-                ek, mk = set(exp.keys()), set(modifications.keys())
-                for k, v in modifications.items():
-                    exp[k] = v
-                allchem = (ek | mk) & __chem__
-                unmodified = (ek - mk) & __chem__
-
-                offset = np.array(list(modifications.values())).sum()
-                for uk in unmodified:
-                    exp[uk] = np.round(exp[uk] * (100.0 - offset) / 100, 4)
-
             exp_exclude = exclude
             if "exclude" in exp:
                 exp_exclude += exp.pop("exclude")  # remove exclude
 
-            # expdir = self.dir / name  # experiment dir
-            # paths.append(expdir)
             self.logger.debug("Start {}.".format(title))
             meltsfile = dict_to_meltsfile(exp, modes=exp["modes"], exclude=exp_exclude)
             M = MeltsExperiment(

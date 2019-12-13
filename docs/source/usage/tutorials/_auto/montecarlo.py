@@ -136,11 +136,12 @@ from pyrolite_meltsutil.tables.load import aggregate_tables, import_batch_config
 system, phases = aggregate_tables(experiment_dir)  # let's import the tables
 cfg = import_batch_config(experiment_dir)  # and also the configuration
 ########################################################################################
-# And now we can visualse these tables:
+# And now we can visualse these tables. Let's first look at how the relative phase
+# masses change with temperature (i.e. during crystallisation).
 #
 import matplotlib.pyplot as plt
 from pyrolite.util.plot import proxy_line
-from pyrolite_meltsutil.vis.style import phaseID_linestyle, phase_color
+from pyrolite_meltsutil.vis.style import phaseID_linestyle, phaseID_marker, phase_color
 
 phaselist = ["liquid", "clinopyroxene", "feldspar", "olivine"]
 
@@ -162,3 +163,31 @@ for p, pax in zip(phaselist, ax.flat):
             proxies[phaseID] = proxy_line(**style)
 
     pax.legend(proxies.values(), proxies.keys(), frameon=False, facecolor=None)
+
+########################################################################################
+# We can also see how variable the chemistry of these phases might be.
+#
+
+fig, ax = plt.subplots(1, figsize=(6, 6))
+vars = "FeO", "Al2O3", "MgO"
+
+proxies = {}
+for p in phaselist:
+    pdf = phases.loc[phases.phase == p, :]
+    for phaseID in pdf.phaseID.unique():
+        style = dict(
+            marker=phaseID_marker(phaseID), c=phase_color(phaseID), markersize=3
+        )
+        proxies[phaseID] = proxy_line(**style)
+        for expr in pdf.experiment.unique():
+            e_p_df = pdf.loc[((pdf.phaseID == phaseID) & (pdf.experiment == expr)), :]
+            e_p_df.loc[:, vars].pyroplot.scatter(s=3, **style, ax=ax)
+proxies = {k: proxies[k] for k in sorted(proxies.keys())}
+ax.legend(
+    proxies.values(),
+    proxies.keys(),
+    frameon=False,
+    facecolor=None,
+    bbox_to_anchor=(1, 1),
+    loc="upper left",
+);

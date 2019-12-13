@@ -5,7 +5,9 @@ from pyrolite.util.plot import get_twins, share_axes
 from pyrolite.geochem.magma import SCSS
 
 
-def plot_sulfur_saturation_point(liquid, ax=None, start=1000, xvar="mass%"):
+def plot_sulfur_saturation_point(
+    liquid, ax=None, start=1000, xvar="mass%", mode="sulfide"
+):
     """
     Plot a perfectly incompatbile trend for sulfur in a melt, and
     indicate the point at which it crosses a previously-calculated
@@ -14,12 +16,21 @@ def plot_sulfur_saturation_point(liquid, ax=None, start=1000, xvar="mass%"):
     Parameters
     -------------
     liquid : :class:`pandas.DataFrame`
-
+        Liquid composition table.
     ax : :class:`matplotlib.axes.Axes`
-
+        Optionally specify an axis to plot on.
     start : :class:`float` | :class:`list`
-
+        Starting abundance of sulfur in ppm.
     xvar : :class:`str`
+        X-variable for the plot.
+    mode : :class:`str`
+        Where SCSS is missing, add the value from either the `sulfide` saturation or
+        `sulfate` saturation model.
+
+    Returns
+    -------
+    ax : :class:`matplotlib.axes.Axes`
+        Axes with saturation points indicated.
     """
     if ax is None:
         fig, ax = plt.subplots(1)
@@ -29,6 +40,15 @@ def plot_sulfur_saturation_point(liquid, ax=None, start=1000, xvar="mass%"):
     else:
         ax2 = ax2[0]
     ax2.set_ylabel("Free S (Mass %)")
+
+    if not "SCSS" in liquid.columns: # add SCSS if its missing
+        liquid["SCSS"] = SCSS(
+            liquid,
+            T=liquid.temperature,
+            P=liquid.pressure / 1000,
+            grid=None,
+            kelvin=False,
+        )[mode == "sulfide"]
     # plot the SCSS
     ax.plot(liquid[xvar], liquid["SCSS"], color="k", zorder=-1)
     # plot the sulfur abundance in the melt

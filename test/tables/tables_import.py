@@ -59,7 +59,7 @@ class TestImportBatchConfig(unittest.TestCase):
         src = self.fromdir
         out = import_batch_config(src)
         self.assertIsInstance(out, dict)
-        self.assertIn("363f3d0a0b", batch.keys())
+        self.assertIn("363f3d0a0b", out.keys())
 
 
 if __name__ == "__main__":

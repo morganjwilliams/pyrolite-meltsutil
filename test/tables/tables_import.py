@@ -7,6 +7,7 @@ from pyrolite_meltsutil.tables.load import (
     phasetable_from_phasemain,
     phasetable_from_alphameltstxt,
     aggregate_tables,
+    import_batch_config,
 )
 from pyrolite_meltsutil.util.general import get_data_example
 import logging
@@ -48,6 +49,17 @@ class TestAggregateTables(unittest.TestCase):
     def test_default(self):
         src = self.fromdir
         out = aggregate_tables(src)
+
+
+class TestImportBatchConfig(unittest.TestCase):
+    def setUp(self):
+        self.fromdir = get_data_example("batch/")
+
+    def test_default(self):
+        src = self.fromdir
+        out = import_batch_config(src)
+        self.assertIsInstance(out, dict)
+        self.assertIn("363f3d0a0b", batch.keys())
 
 
 if __name__ == "__main__":

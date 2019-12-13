@@ -38,7 +38,6 @@ COLORS = {
     "whitlockite": None,
 }
 
-
 def phase_color(phase, rgb=False):
     """
     Method for generating colors for delineating phase names

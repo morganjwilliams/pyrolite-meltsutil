@@ -220,8 +220,8 @@ def import_tables(pth, kelvin=False):
         pth / "System_main_tbl.txt", skiprows=3, kelvin=kelvin
     )
     system["step"] = np.arange(system.index.size)  # generate the step index
-    system["mass%"] = system["mass"] / system["mass"].values[0]
-    system["volume%"] = system["volume"] / system["volume"].values[0]
+    system["mass%"] = (system["mass"] / system["mass"].values[0]) * 100
+    system["volume%"] = (system["volume"] / system["volume"].values[0]) * 100
     system = system.reindex(
         columns=["step"] + [i for i in system.columns if i != "step"]
     )
@@ -257,7 +257,9 @@ def import_tables(pth, kelvin=False):
     phase = phase.reindex(columns=["step"] + [i for i in phase.columns if i != "step"])
 
     phase["mass%"] = phase["mass"] / system.loc[phase.index, "mass"].values[0] * 100
-    phase["volume%"] = phase["volume"] / system.loc[phase.index, "volume"].values[0]
+    phase["volume%"] = (
+        phase["volume"] / system.loc[phase.index, "volume"].values[0] * 100
+    )
     return system, phase
 
 

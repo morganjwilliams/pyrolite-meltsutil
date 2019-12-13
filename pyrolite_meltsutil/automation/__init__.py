@@ -261,6 +261,7 @@ class MeltsBatch(object):
         experiments = experiments or self.experiments
 
         target = Path(to_dir) / "meltsBatchConfig.json"
+        target.mkdir(parents=True) # may not exist yet?
         target.touch()
 
         data = json.dumps(

@@ -74,4 +74,5 @@ from .download import install_melts
 
 from . import env
 from . import automation
-from . import plottemplates
+from . import vis
+from . import tables

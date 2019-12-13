@@ -4,16 +4,15 @@ executable and associated tabular data. Note that these are
 currently experimental and not affiliated with alphaMELTS. In the future, these
 utilities will likely also make use of the under-development `python-melts`.
 
-See the `alphaMELTS site <https://magmasource.caltech.edu/alphamelts/>`__ for more info
-[#ref_1]_  [#ref_2]_  [#ref_3]_  [#ref_4]_ [#ref_5]_ [#ref_6]_ [#ref_7]_.
-
 Todo
 -----
      * As it is developed, also make use of python-melts.
-     * MeltsBatch object
      * Develop functions for automation over a grid (of P, T, H2O, fO2, X)
      * Have an option to aggregate summary data, and options to discard experiment data
      * Expansion of documentation
+
+See the `alphaMELTS site <https://magmasource.caltech.edu/alphamelts/>`__ for more info
+[#ref_1]_  [#ref_2]_  [#ref_3]_  [#ref_4]_ [#ref_5]_ [#ref_6]_ [#ref_7]_.
 
 References
 -----------
@@ -71,11 +70,9 @@ from ._version import get_versions
 __version__ = get_versions()["version"]
 del get_versions
 
-from .download import *
-from .meltsfile import *
-from .parse import *
-from .tables import *
-from .util import *
-from .web import *
-from .env import *
-from .automation import *
+from .download import install_melts
+
+from . import env
+from . import automation
+from . import vis
+from . import tables

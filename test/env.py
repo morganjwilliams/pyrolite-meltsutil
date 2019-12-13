@@ -1,5 +1,5 @@
 import unittest
-from pyrolite_meltsutil.data.env import MELTS_environment_variables
+from pyrolite_meltsutil.data.environment import MELTS_environment_variables
 from pyrolite.util.text import remove_prefix
 from pyrolite_meltsutil.env import *
 

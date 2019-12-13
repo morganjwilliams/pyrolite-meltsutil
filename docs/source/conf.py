@@ -133,7 +133,8 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
-
+# from pandas-dev theme
+html_css_files = ["css/custom.css"]
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
 html_sidebars = {
@@ -227,6 +228,7 @@ intersphinx_mapping = {
     "pathlib": ("https://pathlib.readthedocs.io/en/pep428/", None),
     "periodictable": ("https://periodictable.readthedocs.io/en/latest/", None),
     "pytest": ("https://docs.pytest.org/en/latest/", None),
+    "pyrolite": ("https://pyrolite.readthedocs.io/en/develop/", None),
 }
 
 # sphinx_gallery config
@@ -234,19 +236,29 @@ from sphinx_gallery.sorting import ExplicitOrder
 
 sphinx_gallery_conf = {
     "examples_dirs": [
-        "examples/_auto/",
-        "tutorials/_auto/",
+        "usage/examples/_auto/",
+        "usage/tutorials/_auto/",
     ],  # path to your example scripts
-    "subsection_order": ExplicitOrder(["examples/_auto", "tutorials/_auto"]),
+    #"expected_failing_examples": ["usage/examples/_auto/web/meltsweb.py"],
+    "subsection_order": ExplicitOrder(
+        [
+            "usage/examples/_auto/tables",
+            "usage/examples/_auto/automation",
+            "usage/examples/_auto/vis",
+            "usage/examples/_auto/install",
+            "usage/examples/_auto/web",
+            "usage/tutorials/_auto",
+        ]
+    ),
     "gallery_dirs": [
-        "galleries/examples",
-        "galleries/tutorials",
+        "examples",
+        "tutorials",
     ],  # path to where to save gallery generated output
     "capture_repr": ("_repr_html_", "__repr__", "__str__"),
-    "backreferences_dir": "galleries/backreferences",
+    "backreferences_dir": "_backreferences",
     "doc_module": ("pyrolite_meltsutil"),
     "filename_pattern": r"\.py",
-    "default_thumb_file": "./_static/icon_small.png",
+    "default_thumb_file": str(Path("./_static/icon_small.png").resolve()),
     "remove_config_comments": True,
     "download_all_examples": False,
     "reference_url": {"pyrolite-meltsutil": None},

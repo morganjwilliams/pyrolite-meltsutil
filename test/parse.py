@@ -1,33 +1,19 @@
 import unittest
 import numpy as np
 import periodictable as pt
-from pyrolite_meltsutil.download import install_melts
-from pyrolite.util.meta import stream_log
 from pyrolite.util.general import check_perl, temp_path, remove_tempdir
 from pyrolite_meltsutil.parse import *
-from pyrolite_meltsutil.util import pyrolite_meltsutil_datafolder
+from pyrolite_meltsutil.util.general import get_local_example
 
-_env = (
-    pyrolite_meltsutil_datafolder(subfolder="localinstall")
-    / "examples"
-    / "alphamelts_default_env.txt"
-)
-
-_melts = (
-    pyrolite_meltsutil_datafolder(subfolder="localinstall") / "examples" / "Morb.melts"
-)
-
-if not pyrolite_meltsutil_datafolder(subfolder="localinstall").exists():
-    stream_log("pyrolite.ext.alphamelts")
-    install_melts(local=True)  # install melts for example files etc
-
+MELTSFILE = get_local_example("Morb.melts")
+ENV = get_local_example("alphamelts_default_env.txt")
 
 class TestReadMeltsfile(unittest.TestCase):
     def setUp(self):
         pass
 
     def test_default(self):
-        file, path = read_meltsfile(_melts)
+        file, path = read_meltsfile(MELTSFILE)
 
 
 class TestReadEnvfile(unittest.TestCase):
@@ -35,7 +21,7 @@ class TestReadEnvfile(unittest.TestCase):
         pass
 
     def test_default(self):
-        file, path = read_meltsfile(_env)
+        file, path = read_meltsfile(ENV)
 
 
 class TestParseMELTSComposition(unittest.TestCase):

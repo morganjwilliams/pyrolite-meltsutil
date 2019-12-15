@@ -314,18 +314,22 @@ def aggregate_tables(lst, kelvin=False):
     if isinstance(lst[0], (str, Path)):
         # if the list is of filenames, aggregate the tables one by one
         for d in lst:
-            S, P = import_tables(d, kelvin=kelvin)
-            # ensure the experiment name is incorporated
-            S["experiment"] = d.name
-            P["experiment"] = d.name
+            try:
+                S, P = import_tables(d, kelvin=kelvin)
+                # ensure the experiment name is incorporated
+                S["experiment"] = d.name
+                P["experiment"] = d.name
 
-            system = system.append(S, sort=False)
-            phases = phases.append(P, sort=False)
+                system = system.append(S, sort=False)
+                phases = phases.append(P, sort=False)
+            except FileNotFoundError:
+                logger.warning("File issue with {}.".format(d.name))
     elif isinstance(lst[0], (list, tuple)) and isinstance(lst[0][0], (pd.DataFrame)):
         # if the list is of tuples of dataframes,
         # aggregate them to a single table
         Sagg, Pagg = pd.DataFrame(), pd.DataFrame()
         for ix, d in enumerate(lst):
+
             S, P = d
             # ensure the experiment index is incorporated
             S["experiment"] = ix

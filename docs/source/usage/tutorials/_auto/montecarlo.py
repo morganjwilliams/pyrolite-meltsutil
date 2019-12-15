@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
-np.random.seed(30)
+np.random.seed(23)
 # sphinx_gallery_thumbnail_number = 2
 
 ########################################################################################

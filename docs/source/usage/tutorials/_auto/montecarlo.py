@@ -125,7 +125,8 @@ batch = MeltsBatch(
 # Here we've already run the experiment and will load local data for the experiment
 # to keep the documentation-building time low.
 #
-batch.run(overwrite=False)
+
+# batch.run(overwrite=False)
 
 ########################################################################################
 # We can first aggregate and import these results:
@@ -136,7 +137,6 @@ from pyrolite_meltsutil.tables.load import (
     import_batch_config,
 )
 
-# [(print(t), import_tables(t)) for t in experiment_dir.iterdir()]
 system, phases = aggregate_tables(experiment_dir)  # let's import the tables
 cfg = import_batch_config(experiment_dir)  # and also the configuration
 ########################################################################################

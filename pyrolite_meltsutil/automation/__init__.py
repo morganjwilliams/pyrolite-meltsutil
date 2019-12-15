@@ -259,11 +259,6 @@ class MeltsBatch(object):
         """
         to_dir = to_dir or self.dir
         experiments = experiments or self.experiments
-
-        target = Path(to_dir) / "meltsBatchConfig.json"
-        target.mkdir(parents=True) # may not exist yet?
-        target.touch()
-
         data = json.dumps(
             {
                 h: (t, exp, env.dump(unset_variables=False))
@@ -273,8 +268,17 @@ class MeltsBatch(object):
             ensure_ascii=False,
         ).encode("utf8")
 
-        with open(str(target), "wb") as f:
-            f.write(data)
+        target = Path(to_dir) / "meltsBatchConfig.json"
+        if not target.exists():
+            target.mkdir(parents=True) # may not exist yet?
+            target.touch()
+
+            with open(str(target), "wb") as f:
+                f.write(data)
+        else:
+            # consider reading old data and leaving updated version here
+            with open(str(target), "wb") as f:
+                f.write(data)
 
     def run(self, overwrite=False, exclude=[], superliquidus_start=True, timeout=None):
         self.dump()  # Serialize the config first

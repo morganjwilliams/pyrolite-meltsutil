@@ -125,14 +125,18 @@ batch = MeltsBatch(
 # Here we've already run the experiment and will load local data for the experiment
 # to keep the documentation-building time low.
 #
-
-# batch.run(overwrite=False)
+batch.run(overwrite=False)
 
 ########################################################################################
 # We can first aggregate and import these results:
 #
-from pyrolite_meltsutil.tables.load import aggregate_tables, import_batch_config
+from pyrolite_meltsutil.tables.load import (
+    aggregate_tables,
+    import_tables,
+    import_batch_config,
+)
 
+# [(print(t), import_tables(t)) for t in experiment_dir.iterdir()]
 system, phases = aggregate_tables(experiment_dir)  # let's import the tables
 cfg = import_batch_config(experiment_dir)  # and also the configuration
 ########################################################################################
@@ -183,11 +187,11 @@ for p in phaselist:
             e_p_df = pdf.loc[((pdf.phaseID == phaseID) & (pdf.experiment == expr)), :]
             e_p_df.loc[:, vars].pyroplot.scatter(s=3, **style, ax=ax)
 proxies = {k: proxies[k] for k in sorted(proxies.keys())}
-ax.legend(
+legend = ax.legend(
     proxies.values(),
     proxies.keys(),
     frameon=False,
     facecolor=None,
     bbox_to_anchor=(1, 1),
     loc="upper left",
-);
+)

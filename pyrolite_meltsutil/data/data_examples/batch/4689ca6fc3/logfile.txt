@@ -17,6 +17,6 @@ ALPHAMELTS_HK_PXGT_TRACE_H2O True
 ALPHAMELTS_FAILED_ITER_PATIENCE 10
 
 ! alphamelts run by wil9dh 
-! Time: Dec 11 2019 at 15:54 
-! Command line: -m Gale2013MORBisobarfrac5-5kbar1300-800CFMQH2O059738d19744.melts -f environment.txt 
+! Time: Dec 15 2019 at 09:57 
+! Command line: -m Gale2013MORBisobarfrac5-5kbar1300-800CFMQ4689ca6fc3.melts -f environment.txt 
 ! Settings file: environment.txt

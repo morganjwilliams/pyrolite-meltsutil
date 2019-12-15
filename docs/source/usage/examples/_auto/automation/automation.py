@@ -33,11 +33,11 @@ env.MAXT = 1500
 env.DELTAT = -10
 env.DELTAP = 0
 ########################################################################################
-# Let's create a directory to run the experiment in:
+# Let's create a directory to run this experiment in - here we use an example folder:
 #
-from pyrolite.util.general import temp_path
+from pyrolite_meltsutil.util.general import get_data_example
 
-tempdir = temp_path()
+experiment_dir = get_data_example("batch")
 ########################################################################################
 # Now we can set up the experiment. We're going to run a
 # :class:`~pyrolite_meltsutil.automation.MeltsBatch`, and we'll provide:
@@ -63,15 +63,13 @@ batch = MeltsBatch(
         "modifychem": [None, {"H2O": 0.5}],
     },
     env=env,
-    fromdir=tempdir,
+    fromdir=experiment_dir,
 )
 ########################################################################################
 # Now the experiment is configured, we can run it:
 #
 
-batch.run(
-    overwrite=True
-)  # overwrite=False if you don't want to update existing exp folders
+batch.run(overwrite=False)  # overwrite=True if you want to update existing exp folders
 ########################################################################################
 # .. seealso::
 #

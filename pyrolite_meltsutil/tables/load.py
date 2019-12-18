@@ -72,22 +72,29 @@ def read_phase_table(tab):
     lines = [i for i in re.split(r"[\n\r]", tab) if i]
     phaseID = lines[0].split()[0].strip()
     headers = lines[1].strip().split()
-    line0 = lines[2].strip().split()
-    if (len(headers) == (len(line0) - 1)) and any([
-        phase in phaseID for phase in ["nepheline", 'kalsilite']]
-    ):  # inconsistent headers
-        expect = [
-            "Pressure",
-            "Temperature",
-            "mass",
-            "S",
-            "H",
-            "V",
-            "Cp",
-            "structure",
-            "formula",
-        ]
-        headers = [i for i in expect] + [i for i in headers if i not in expect]
+    linelen = [len(l.strip().split()) for l in lines[1:]]
+    if not all([l == linelen[0] for l in linelen]):
+        logger.warning(
+            "Inconsistent line lengths for {} table: {}".format(
+                phaseID, "".join([str(i) for i in linelen])
+            )
+        )
+    if linelen[0] == (linelen[1] - 1):
+        if any(
+            [phase in phaseID for phase in ["nepheline", "kalsilite"]]
+        ):  # inconsistent headers
+            expect = [
+                "Pressure",
+                "Temperature",
+                "mass",
+                "S",
+                "H",
+                "V",
+                "Cp",
+                "structure",
+                "formula",
+            ]
+            headers = [i for i in expect] + [i for i in headers if i not in expect]
     buff = io.BytesIO("\n".join([" ".join(headers)] + lines[2:]).encode("UTF-8"))
     table = pd.read_csv(buff, sep=" ")
     table["phaseID"] = phaseID
@@ -95,7 +102,7 @@ def read_phase_table(tab):
     return table
 
 
-def read_melts_tablefile(filepath, kelvin=False, **kwargs):
+def read_melts_tablefile(filepath, kelvin=False, skiprows=3, **kwargs):
     """
     Read a melts table (a space-separated value file).
 
@@ -105,6 +112,8 @@ def read_melts_tablefile(filepath, kelvin=False, **kwargs):
         Filepath to the melts table.
     kelvin : :class:`bool`
         Whether the imported table has temperature listed in kelvin.
+    skiprows : :class:`int`
+        Number of rows above the table headers.
 
     Returns
     -------
@@ -112,9 +121,18 @@ def read_melts_tablefile(filepath, kelvin=False, **kwargs):
         DataFrame with table information.
     """
     path = Path(filepath)
-
-    # title = get_table_title(filepath)
-    df = pd.read_csv(filepath, sep=" ", **kwargs)
+    with open(path) as tab:
+        lines = [i for i in tab.readlines()[skiprows:] if i]
+        headers = lines[0].strip().split()
+        linelen = [len(l.strip().split()) for l in lines]
+        if not all([l == linelen[0] for l in linelen]):
+            logger.debug(  # debug here because these tables are often left-empty
+                "Inconsistent line lengths for table: {}".format(
+                    "-".join([str(i) for i in linelen])
+                )
+            )
+    buff = io.BytesIO("".join(lines[1:]).encode("UTF-8"))
+    df = pd.read_csv(buff, sep=" ", names=headers, **kwargs)
     df = df.dropna(how="all", axis=1)
 
     df = convert_thermo_names(df)

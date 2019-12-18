@@ -310,10 +310,10 @@ class MeltsBatch(object):
             )
             try:
                 M.run(superliquidus_start=superliquidus_start)
-                self.logger.info("Finished {}.".format(title))
+                self.logger.debug("Finished {}.".format(title))
             except OSError:
                 try:
-                    self.logger.info("Errored @ {}.".format(M.mp.callstring))
+                    self.logger.warning("Errored @ {}.".format(M.mp.callstring))
                 except:
                     pass
                 failed.append(title)

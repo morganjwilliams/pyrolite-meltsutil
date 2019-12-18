@@ -31,3 +31,7 @@ installation. For example:
 .. code-block:: bash
 
    pip install pyrolite-meltsutil[dev]
+
+
+.. seealso::
+      `Development Installation <./dev/development.html#development-installation>`__

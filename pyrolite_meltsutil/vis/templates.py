@@ -21,7 +21,7 @@ def plot_xy_phase_groupby(ax, df, xvar, yvar, legend=True, markersize=3, **kwarg
     """
 
     if "experiment" in df.columns:
-        assert len(df.experiment.unique()) == 1
+        assert len(df.experiment.unique()) <= 1
     if ax is None:
         fig, ax = plt.subplots(1)
     phaseIDlist = sorted([i for i in df.phaseID.unique() if not pd.isnull(i)])

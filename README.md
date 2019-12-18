@@ -11,6 +11,8 @@ Extension for pyrolite for working with alphaMELTS and its outputs.
        alt="License: MIT License"></a>
 </p>
 
+[![DOI](https://zenodo.org/badge/218411692.svg)](https://zenodo.org/badge/latestdoi/218411692)
+
 <p align="left">
   <a href="https://pypi.python.org/pypi/pyrolite-meltsutil/">
     <img src="https://img.shields.io/pypi/pyversions/pyrolite-meltsutil.svg"

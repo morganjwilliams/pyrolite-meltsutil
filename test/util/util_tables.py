@@ -20,7 +20,7 @@ class TestTupleReindex(unittest.TestCase):
 class TestIntegrateSolids(unittest.TestCase):
     def setUp(self):
         self.fracdir = get_data_example("batch/363f3d0a0b/")
-        self.nofracdir = get_data_example("montecarlo/aa8954e07e")
+        self.nofracdir = get_data_example("montecarlo/97ed8127d9")
         self.fracsystem, self.fracphases = import_tables(self.fracdir)
         self.nofracsystem, self.nofracphases = import_tables(self.nofracdir)
 

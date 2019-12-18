@@ -10,7 +10,29 @@ __abbrv__ = {"fractionate solids": "frac", "isobaric": "isobar"}
 
 
 def exp_hash(d, algorithm="sha1", length=10):
-    """Get the hash of an experiment config."""
+    """
+    Get the hash of an experiment configuration dictionary.
+
+    Parameters
+    ----------
+    d : :class:`dict`
+        Configuration dictonary.
+    algorithm : :class:`str`
+        Name of hash algorithm to use.
+    length : :class:`int`
+        Length of the returned index generated from the hash.
+
+    Returns
+    --------
+    :class:`str`
+        Hash-based index for the configuration.
+
+    Todo
+    -------
+
+        * Consider rounding floats to 4-5 decimal places to minimise floating point
+            errors and potential differences across systems
+    """
     length = length or -0
     hsh = hashlib.new(algorithm)
     hsh.update(json.dumps(d, sort_keys=True, ensure_ascii=False).encode("utf8"))

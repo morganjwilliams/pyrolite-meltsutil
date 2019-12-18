@@ -1,0 +1,86 @@
+Title: Gale2013MORB
+
+Pressure 5000.00 Temperature 1573.15 
+Partition 99.399075 ---
+Bulk 99.399075 
+Liquid 99.399075 
+Solid 0.000000 ---
+Pressure 5000.00 Temperature 1563.15 
+Partition 99.399374 ---
+Bulk 99.399374 
+Liquid 99.399374 
+Solid 0.000000 ---
+Pressure 5000.00 Temperature 1553.15 
+Partition 99.399695 ---
+Bulk 99.399695 
+Liquid 99.399695 
+Solid 0.000000 ---
+Pressure 5000.00 Temperature 1543.15 
+Partition 99.400037 ---
+Bulk 99.400037 
+Liquid 99.400037 
+Solid 0.000000 ---
+Pressure 5000.00 Temperature 1533.15 
+Partition 99.400402 ---
+Bulk 99.400402 
+Liquid 99.400402 
+Solid 0.000000 ---
+Pressure 5000.00 Temperature 1523.15 
+Partition 99.400791 ---
+Bulk 99.400791 
+Liquid 99.400791 
+Solid 0.000000 ---
+Pressure 5000.00 Temperature 1513.15 
+Partition 99.400328 
+Bulk 99.400328 
+Liquid 94.353936 
+Solid 5.046392 
+clinopyroxene_0 5.046392 
+Pressure 5000.00 Temperature 1503.15 
+Partition 94.354770 
+Bulk 94.354770 
+Liquid 89.476840 
+Solid 4.877930 
+clinopyroxene_0 4.877930 
+Pressure 5000.00 Temperature 1493.15 
+Partition 89.477986 
+Bulk 89.477986 
+Liquid 85.115578 
+Solid 4.362408 
+clinopyroxene_0 4.362408 
+Pressure 5000.00 Temperature 1483.15 
+Partition 85.116992 
+Bulk 85.116992 
+Liquid 81.199697 
+Solid 3.917296 
+clinopyroxene_0 3.917296 
+Pressure 5000.00 Temperature 1473.15 
+Partition 81.201281 
+Bulk 81.201281 
+Liquid 77.438865 
+Solid 3.762416 
+clinopyroxene_0 3.540026 
+feldspar_0 0.222390 
+Pressure 5000.00 Temperature 1463.15 
+Partition 77.440625 
+Bulk 77.440625 
+Liquid 71.071572 
+Solid 6.369052 
+clinopyroxene_0 3.218715 
+feldspar_0 3.150338 
+Pressure 5000.00 Temperature 1453.15 
+Partition 71.072387 
+Bulk 71.072387 
+Liquid 64.814779 
+Solid 6.257608 
+clinopyroxene_0 1.630539 
+clinopyroxene_1 1.194687 
+feldspar_0 3.432382 
+Pressure 5000.00 Temperature 1443.15 
+Partition 64.816566 
+Bulk 64.816566 
+Liquid 59.382509 
+Solid 5.434057 
+clinopyroxene_0 1.715252 
+clinopyroxene_1 0.653983 
+feldspar_0 3.064821 

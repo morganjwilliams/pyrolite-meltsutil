@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
-np.random.seed(30)
+np.random.seed(23)
 # sphinx_gallery_thumbnail_number = 2
 
 ########################################################################################
@@ -131,7 +131,11 @@ batch = MeltsBatch(
 ########################################################################################
 # We can first aggregate and import these results:
 #
-from pyrolite_meltsutil.tables.load import aggregate_tables, import_batch_config
+from pyrolite_meltsutil.tables.load import (
+    aggregate_tables,
+    import_tables,
+    import_batch_config,
+)
 
 system, phases = aggregate_tables(experiment_dir)  # let's import the tables
 cfg = import_batch_config(experiment_dir)  # and also the configuration
@@ -183,11 +187,11 @@ for p in phaselist:
             e_p_df = pdf.loc[((pdf.phaseID == phaseID) & (pdf.experiment == expr)), :]
             e_p_df.loc[:, vars].pyroplot.scatter(s=3, **style, ax=ax)
 proxies = {k: proxies[k] for k in sorted(proxies.keys())}
-ax.legend(
+legend = ax.legend(
     proxies.values(),
     proxies.keys(),
     frameon=False,
     facecolor=None,
     bbox_to_anchor=(1, 1),
     loc="upper left",
-);
+)

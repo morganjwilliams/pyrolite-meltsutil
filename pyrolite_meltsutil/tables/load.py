@@ -128,15 +128,30 @@ def phasetable_from_alphameltstxt(filepath, kelvin=False):
     -------
     :class:`pandas.DataFrame`
         DataFrame with table information.
+
+    Todo
+    ------
+
+    * If this file exists and is properly formatted, we can pull in alomst all
+        the data here.
     """
-    df = pd.DataFrame()
-    with open(str(filepath)) as f:
-        data = f.read()
-        title_line = re.split(r"[\n\r]+", data)[0]
-        _, *tables = re.split(title_line.strip(), data)
-        system, liquidcomp, phases, phasemass, phasevol, solidcomp, bulkcomp = tables
-        for tab in re.split(r"[\n\r][\n\r]+", phases.strip()):
-            df = df.append(read_phase_table(tab), sort=False)
+
+    filepath = Path(filepath)
+    assert filepath.exists()
+    with open(str(filepath), "r") as f:
+        df = pd.DataFrame()
+        data = f.read().strip()
+        tables = re.split("Title: ", data)
+        tables = [t for t in re.split(r"Title: .*[\n\r][\n\r]+", data, re.DOTALL) if t]
+        phasetbl = [t for t in tables if t[0] == t[0].lower()]
+        if len(phasetbl) != 1:
+            logger.warning("Imported alphaMELTS_tbl.txt incorrectly formatted.")
+            return df  # return empty dataframe
+        else:
+            phasetbl = phasetbl[0]
+            for tab in re.split(r"[\n\r][\n\r]+", phasetbl.strip()):
+                tabdf = read_phase_table(tab)
+                df = df.append(tabdf, sort=False)
 
     df = convert_thermo_names(df)
     non_num = ["step", "structure", "phaseID", "phase", "formula"]
@@ -215,10 +230,25 @@ def import_tables(pth, kelvin=False):
 
     phases : :class:`pandas.DataFrame`
     """
+    sysfile, bulkfile, solidfile, alphafile = [
+        pth / t
+        for t in [
+            "System_main_tbl.txt",
+            "Bulk_comp_tbl.txt",
+            "Solid_comp_tbl.txt",
+            "alphaMELTS_tbl.txt",
+        ]
+    ]
+    try:
+        for f in [sysfile, bulkfile, solidfile, alphafile]:
+            assert f.exists()
+    except AssertionError:
+        msg = "File missing from {}: {}".format(
+            pth, ",".join([i.name for i in pth.iterdir()])
+        )
+        raise FileNotFoundError(msg)
     # system table
-    system = read_melts_tablefile(
-        pth / "System_main_tbl.txt", skiprows=3, kelvin=kelvin
-    )
+    system = read_melts_tablefile(sysfile, skiprows=3, kelvin=kelvin)
     system["step"] = np.arange(system.index.size)  # generate the step index
     system["mass%"] = (system["mass"] / system["mass"].values[0]) * 100
     system["volume%"] = (system["volume"] / system["volume"].values[0]) * 100
@@ -226,19 +256,9 @@ def import_tables(pth, kelvin=False):
         columns=["step"] + [i for i in system.columns if i != "step"]
     )
 
-    try:
-        phase = phasetable_from_alphameltstxt(pth / "alphaMELTS_tbl.txt", kelvin=kelvin)
-        bulk = read_melts_tablefile(
-            pth / "Bulk_comp_tbl.txt", skiprows=3, kelvin=kelvin
-        )
-        solid = read_melts_tablefile(
-            pth / "Solid_comp_tbl.txt", skiprows=3, kelvin=kelvin
-        )
-    except FileNotFoundError:
-        msg = "File missing from {}: {}".format(
-            pth, ",".join([i.name for i in pth.iterdir()])
-        )
-        raise FileNotFoundError(msg)
+    phase = phasetable_from_alphameltstxt(pth / "alphaMELTS_tbl.txt", kelvin=kelvin)
+    bulk = read_melts_tablefile(pth / "Bulk_comp_tbl.txt", skiprows=3, kelvin=kelvin)
+    solid = read_melts_tablefile(pth / "Solid_comp_tbl.txt", skiprows=3, kelvin=kelvin)
 
     bulk["phase"] = "bulk"
     solid["phase"] = "solid"
@@ -289,7 +309,9 @@ def import_batch_config(filepath):
     return cfg
 
 
-def aggregate_tables(lst, kelvin=False):
+def aggregate_tables(
+    lst=Path("./"), kelvin=False, validate_path=lambda x: len(x.name) == 10
+):
     """
     Aggregate a number of melts tables to a single dataframe.
 
@@ -299,6 +321,8 @@ def aggregate_tables(lst, kelvin=False):
         Directory, list of directories or list of 2-dataframe tuples.
     kelvin : :class:`bool`
         Whether to keep temperatures in kelvin.
+    validate_path :
+        Function to validate path names.
 
     Parameters
     ------------
@@ -307,25 +331,30 @@ def aggregate_tables(lst, kelvin=False):
     phases : :class:`pandas.DataFrame`
         Phases aggregate table.
     """
-    # if the input is a directory, aggregate subfolders
     if isinstance(lst, (str, Path)):
-        lst = [x for x in Path(lst).rglob("*") if x.is_dir()]
+        # if the input is a directory, aggregate subfolders
+        lst = [x for x in Path(lst).rglob("*") if (x.is_dir() and validate_path(x))]
+
     system, phases = pd.DataFrame(), pd.DataFrame()
     if isinstance(lst[0], (str, Path)):
         # if the list is of filenames, aggregate the tables one by one
         for d in lst:
-            S, P = import_tables(d, kelvin=kelvin)
-            # ensure the experiment name is incorporated
-            S["experiment"] = d.name
-            P["experiment"] = d.name
+            try:
+                S, P = import_tables(d, kelvin=kelvin)
+                # ensure the experiment name is incorporated
+                S["experiment"] = d.name
+                P["experiment"] = d.name
 
-            system = system.append(S, sort=False)
-            phases = phases.append(P, sort=False)
+                system = system.append(S, sort=False)
+                phases = phases.append(P, sort=False)
+            except Exception as e:
+                logger.warning("{} at {}.".format(e, d.name)) # record the error
     elif isinstance(lst[0], (list, tuple)) and isinstance(lst[0][0], (pd.DataFrame)):
         # if the list is of tuples of dataframes,
         # aggregate them to a single table
         Sagg, Pagg = pd.DataFrame(), pd.DataFrame()
         for ix, d in enumerate(lst):
+
             S, P = d
             # ensure the experiment index is incorporated
             S["experiment"] = ix

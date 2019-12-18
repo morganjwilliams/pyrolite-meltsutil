@@ -71,7 +71,24 @@ def read_phase_table(tab):
     """
     lines = [i for i in re.split(r"[\n\r]", tab) if i]
     phaseID = lines[0].split()[0].strip()
-    buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
+    headers = lines[1].strip().split()
+    line0 = lines[2].strip().split()
+    if (len(headers) == (len(line0) - 1)) and any([
+        phase in phaseID for phase in ["nepheline", 'kalsilite']]
+    ):  # inconsistent headers
+        expect = [
+            "Pressure",
+            "Temperature",
+            "mass",
+            "S",
+            "H",
+            "V",
+            "Cp",
+            "structure",
+            "formula",
+        ]
+        headers = [i for i in expect] + [i for i in headers if i not in expect]
+    buff = io.BytesIO("\n".join([" ".join(headers)] + lines[2:]).encode("UTF-8"))
     table = pd.read_csv(buff, sep=" ")
     table["phaseID"] = phaseID
     table["phase"] = phasename(phaseID)
@@ -146,10 +163,10 @@ def phasetable_from_alphameltstxt(filepath, kelvin=False):
         phasetbl = [t for t in tables if t[0] == t[0].lower()]
         if len(phasetbl) != 1:
             logger.warning("Imported alphaMELTS_tbl.txt incorrectly formatted.")
-            return df  # return empty dataframe
         else:
             phasetbl = phasetbl[0]
-            for tab in re.split(r"[\n\r][\n\r]+", phasetbl.strip()):
+            phasettlbs = re.split(r"[\n\r][\n\r]+", phasetbl.strip())
+            for tab in phasettlbs:
                 tabdf = read_phase_table(tab)
                 df = df.append(tabdf, sort=False)
 
@@ -348,7 +365,7 @@ def aggregate_tables(
                 system = system.append(S, sort=False)
                 phases = phases.append(P, sort=False)
             except Exception as e:
-                logger.warning("{} at {}.".format(e, d.name)) # record the error
+                logger.warning("{} at {}.".format(e, d.name))  # record the error
     elif isinstance(lst[0], (list, tuple)) and isinstance(lst[0][0], (pd.DataFrame)):
         # if the list is of tuples of dataframes,
         # aggregate them to a single table

@@ -148,11 +148,12 @@ def process_modifications(cfg):
         modifications = cfg.pop("modifychem", {})  # remove modify chem
         ek, mk = set(cfg.keys()), set(modifications.keys())
         for k, v in modifications.items():
-            cfg[k] = v
+            if not np.isnan(v):
+                cfg[k] = v
         allchem = (ek | mk) & __chem__
         unmodified = (ek - mk) & __chem__
 
-        offset = np.array(list(modifications.values())).sum()
+        offset = np.nansum(np.array(list(modifications.values())))
         for uk in unmodified:
             cfg[uk] = np.round(cfg[uk] * (100.0 - offset) / 100, 4)
     return cfg
@@ -220,13 +221,13 @@ class MeltsBatch(object):
         self.default = default_config
         self.env = env or MELTS_Env()
         # let's establish the grid of configurations
-        self.configs = [{**self.default}]
+        self.configs = []
         grid = combine_choices(config_grid)
         for i in grid:  # unique configurations
             _cfg = {**self.default, **i}
             if _cfg not in self.configs:
                 self.configs.append(_cfg)
-        self.compositions = comp_df.to_dict("records")
+        self.compositions = comp_df.fillna(0).to_dict("records")
         # combine these to create full experiment configs
         exprs = [
             {**cfg, **cmp}

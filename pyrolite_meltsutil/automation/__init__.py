@@ -107,7 +107,7 @@ class MeltsExperiment(object):
             name=self.name,
             title=self.title,
             meltsfile=self.meltsfile,
-            dir=self.fromdir,
+            indir=self.fromdir,
             env=self.envfile,
         )
         self.meltsfilepath = self.folder / (self.title + ".melts")

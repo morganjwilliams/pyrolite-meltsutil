@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def make_meltsfolder(
-    name, title=None, meltsfile=None, dir=None, env="./alphamelts_default_env.txt"
+    name, title=None, meltsfile=None, indir=None, env="./alphamelts_default_env.txt"
 ):
     """
     Create a folder for a given meltsfile, including the default environment file.
@@ -22,7 +22,7 @@ def make_meltsfolder(
         Title of the experiment. This will be the meltsfile name.
     meltsfile : :class:`str`
         String containing meltsfile info.
-    dir : :class:`str` | :class:`pathlib.Path`
+    indir : :class:`str` | :class:`pathlib.Path`
         Path to the base directory to create melts folders in.
     env : :class:`str` | :class:`pathlib.Path`
         Path to a specific environment file to use as the default environment for the
@@ -37,15 +37,15 @@ def make_meltsfolder(
     ------
         * Options for naming environment files
     """
-    if dir is None:
-        dir = Path("./")
+    if indir is None:
+        indir = Path("./")
     else:
-        dir = Path(dir)
+        indir = Path(indir)
     assert meltsfile is not None
     name = str(name)  # need to pathify this!
     title = title or name
     title = str(title)  # need to pathify this!
-    experiment_folder = dir / name
+    experiment_folder = indir / name
     if not experiment_folder.exists():
         experiment_folder.mkdir(parents=True)
 

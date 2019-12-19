@@ -5,7 +5,9 @@ from pyrolite.util.pd import to_numeric
 from pyrolite.util.general import check_perl, temp_path, remove_tempdir
 from pyrolite.geochem.norm import get_reference_composition
 
-from pyrolite_meltsutil.automation import *
+from pyrolite_meltsutil.env import MELTS_Env
+from pyrolite_meltsutil.automation import MeltsProcess, MeltsExperiment, MeltsBatch
+from pyrolite_meltsutil.automation.org import make_meltsfolder
 from pyrolite_meltsutil.util.general import get_local_example
 import logging
 
@@ -25,28 +27,11 @@ with open(str(get_local_example("Morb.melts"))) as f:
     MELTSFILE = f.read()
 
 
-class TestMakeMeltsFolder(unittest.TestCase):
-    def setUp(self):
-        self.dir = temp_path() / ("testmelts" + self.__class__.__name__)
-        self.dir.mkdir(parents=True)
-        self.meltsfile = MELTSFILE
-        self.env = ENV  # use default
-
-    def test_default(self):
-        folder = make_meltsfolder(
-            "MORB", "MORB", self.meltsfile, env=self.env, dir=self.dir
-        )
-
-    def tearDown(self):
-        if self.dir.exists():
-            remove_tempdir(self.dir)
-
-
 @unittest.skipIf(not check_perl(), "Perl is not installed.")
 class TestMeltsProcess(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("testmelts" + self.__class__.__name__)
-        self.dir.mkdir(parents=True)
+        self.fromdir = temp_path() / ("testmelts" + self.__class__.__name__)
+        self.fromdir.mkdir(parents=True)
         self.meltsfile = MELTSFILE
         self.env = ENV  # use default
 
@@ -57,22 +42,22 @@ class TestMeltsProcess(unittest.TestCase):
             meltsfile=self.meltsfile,
             title=title,
             env=self.env,
-            dir=self.dir,
+            indir=self.fromdir,
         )
         process = MeltsProcess(
             meltsfile="{}.melts".format(title),
             env="environment.txt",
             fromdir=str(folder),
         )
-        txtfiles = list(self.dir.glob("**/*.txt"))
-        meltsfiles = list(self.dir.glob("**/*.melts"))
+        txtfiles = list(self.fromdir.glob("**/*.txt"))
+        meltsfiles = list(self.fromdir.glob("**/*.melts"))
         process.write([3, 1, 4], wait=True, log=False)
         process.terminate()
 
     def tearDown(self):
-        if self.dir.exists():
+        if self.fromdir.exists():
             try:
-                remove_tempdir(self.dir)
+                remove_tempdir(self.fromdir)
             except FileNotFoundError:
                 pass
 
@@ -80,8 +65,8 @@ class TestMeltsProcess(unittest.TestCase):
 @unittest.skipIf(not check_perl(), "Perl is not installed.")
 class TestMeltsExperiment(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("testmelts" + self.__class__.__name__)
-        self.dir.mkdir(parents=True)
+        self.fromdir = temp_path() / ("testmelts" + self.__class__.__name__)
+        self.fromdir.mkdir(parents=True)
         self.meltsfile = MELTSFILE
         self.env = ENV  # use default
 
@@ -90,18 +75,18 @@ class TestMeltsExperiment(unittest.TestCase):
             meltsfile=self.meltsfile,
             title="TestMeltsExperiment",
             env=self.env,
-            dir=self.dir,
+            fromdir=self.fromdir,
         )
         # check the folder has been created correctly
-        txtfiles = list(self.dir.glob("**/*.txt"))
-        meltsfiles = list(self.dir.glob("**/*.melts"))
+        txtfiles = list(self.fromdir.glob("**/*.txt"))
+        meltsfiles = list(self.fromdir.glob("**/*.melts"))
         exp.run()
         exp.cleanup()
 
     def tearDown(self):
-        if self.dir.exists():
+        if self.fromdir.exists():
             try:
-                remove_tempdir(self.dir)
+                remove_tempdir(self.fromdir)
             except FileNotFoundError:
                 pass
 
@@ -109,8 +94,8 @@ class TestMeltsExperiment(unittest.TestCase):
 @unittest.skipIf(not check_perl(), "Perl is not installed.")
 class TestMeltsBatch(unittest.TestCase):
     def setUp(self):
-        self.dir = temp_path() / ("testmelts" + self.__class__.__name__)
-        self.dir.mkdir(parents=True)
+        self.fromdir = temp_path() / ("testmelts" + self.__class__.__name__)
+        self.fromdir.mkdir(parents=True)
         Gale_MORB = get_reference_composition("MORB_Gale2013")
         majors = [
             "SiO2",
@@ -151,15 +136,15 @@ class TestMeltsBatch(unittest.TestCase):
             },
             config_grid={"Initial Pressure": [5000]},
             env=self.env,
-            fromdir=self.dir,
+            fromdir=self.fromdir,
             logger=logger,
         )
         batch.run()
 
     def tearDown(self):
-        if self.dir.exists():
+        if self.fromdir.exists():
             try:
-                remove_tempdir(self.dir)
+                remove_tempdir(self.fromdir)
             except FileNotFoundError:
                 pass
 

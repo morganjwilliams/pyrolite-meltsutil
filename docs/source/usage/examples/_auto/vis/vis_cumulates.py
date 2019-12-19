@@ -38,6 +38,7 @@ plt.colorbar(
     mappable_from_values(cumulate_phases.temperature, cmap="magma"),
     label="Temperature (C)",
 )
+plt.show()
 ########################################################################################
 # Similarly, we can plot the phase proportions:
 #
@@ -50,3 +51,4 @@ plt.colorbar(
     mappable_from_values(cumulate_phases.temperature, cmap="magma"),
     label="Temperature (C)",
 )
+plt.show()

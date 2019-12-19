@@ -111,19 +111,26 @@ def integrate_solid_proportions(df, frac=True):
             if (not pd.isnull(pID)) and ("liquid" not in pID)
         ]
     )
-    idx = df.step.drop_duplicates().sort_values().index
-    mindf = pd.DataFrame(columns=phaseIDs, index=idx)  # empty dataframe
+    idx = (
+        df.loc[:, ["pressure", "temperature", "step"]]
+        .dropna()
+        .drop_duplicates()
+        .sort_values("step")
+    )
+    # empty dataframe
+    mindf = pd.DataFrame(
+        columns=["pressure", "temperature", "step"] + phaseIDs, index=idx.index
+    )
     for p in phaseIDs:  # integrate cumulate mass per phase
         masses = df.loc[df.phaseID == p, "mass"]
         mindf.loc[df.loc[df.phaseID == p, "mass"].index.values, p] = masses.values
-    mindf = mindf.loc[idx, :]  # sort index
+    mindf = mindf.loc[idx.index, :]  # sort index
     if frac:
         mindf = mindf.apply(np.nancumsum, axis=0)  # accumulate minerals
     # fractioal mass of total cumulate
     mindf = mindf.div(mindf.sum(axis=1).replace(0, np.nan), axis=0) * 100.0
+    PTS = idx
+    mindf.loc[idx.index, ["pressure", "temperature", "step"]] = PTS
 
-    mindf[["pressure", "temperature", "step"]] = df.loc[
-        idx, ["pressure", "temperature", "step"]
-    ].drop_duplicates()
     mindf = mindf.fillna(0)
     return mindf

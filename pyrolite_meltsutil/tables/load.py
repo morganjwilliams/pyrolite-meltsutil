@@ -15,7 +15,12 @@ import numpy as np
 from pathlib import Path
 from pyrolite.util.pd import zero_to_nan
 from ..parse import from_melts_cstr
-from ..util.tables import phasename, tuple_reindex, integrate_solids
+from ..util.tables import (
+    phasename,
+    tuple_reindex,
+    integrate_solid_composition,
+    integrate_solid_proportions,
+)
 import logging
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -71,14 +76,38 @@ def read_phase_table(tab):
     """
     lines = [i for i in re.split(r"[\n\r]", tab) if i]
     phaseID = lines[0].split()[0].strip()
-    buff = io.BytesIO("\n".join(lines[1:]).encode("UTF-8"))
+    headers = lines[1].strip().split()
+    linelen = [len(l.strip().split()) for l in lines[1:]]
+    if not all([l == linelen[0] for l in linelen]):
+        logger.warning(
+            "Inconsistent line lengths for {} table: {}".format(
+                phaseID, "".join([str(i) for i in linelen])
+            )
+        )
+    if linelen[0] == (linelen[1] - 1):
+        if any(
+            [phase in phaseID for phase in ["nepheline", "kalsilite"]]
+        ):  # inconsistent headers
+            expect = [
+                "Pressure",
+                "Temperature",
+                "mass",
+                "S",
+                "H",
+                "V",
+                "Cp",
+                "structure",
+                "formula",
+            ]
+            headers = [i for i in expect] + [i for i in headers if i not in expect]
+    buff = io.BytesIO("\n".join([" ".join(headers)] + lines[2:]).encode("UTF-8"))
     table = pd.read_csv(buff, sep=" ")
     table["phaseID"] = phaseID
     table["phase"] = phasename(phaseID)
     return table
 
 
-def read_melts_tablefile(filepath, kelvin=False, **kwargs):
+def read_melts_tablefile(filepath, kelvin=False, skiprows=3, **kwargs):
     """
     Read a melts table (a space-separated value file).
 
@@ -88,6 +117,8 @@ def read_melts_tablefile(filepath, kelvin=False, **kwargs):
         Filepath to the melts table.
     kelvin : :class:`bool`
         Whether the imported table has temperature listed in kelvin.
+    skiprows : :class:`int`
+        Number of rows above the table headers.
 
     Returns
     -------
@@ -95,9 +126,25 @@ def read_melts_tablefile(filepath, kelvin=False, **kwargs):
         DataFrame with table information.
     """
     path = Path(filepath)
+    with open(path) as tab:
+        lines = [i for i in tab.readlines()[skiprows:] if i]
+        headers = lines[0].strip().split()
+        for ix, h in enumerate(headers):
+            if headers[:ix].count(h) > 1:
+                headers[ix] = h + ".1"  # silence duplicate
 
-    # title = get_table_title(filepath)
-    df = pd.read_csv(filepath, sep=" ", **kwargs)
+        linelen = [len(l.strip().split()) for l in lines]
+        if not all([l == linelen[0] for l in linelen]):
+            logger.debug(  # debug here because these tables are often left-empty
+                "Inconsistent line lengths for table: {}".format(
+                    "-".join([str(i) for i in linelen])
+                )
+            )
+    buff = io.BytesIO("".join(lines[1:]).encode("UTF-8"))
+    df = pd.read_csv(buff, sep=" ", names=headers, **kwargs)
+    df = df.loc[
+        :, ~df.columns.str.replace("(\.\d+)$", "").duplicated()
+    ]  # remove duplicate columns
     df = df.dropna(how="all", axis=1)
 
     df = convert_thermo_names(df)
@@ -146,10 +193,10 @@ def phasetable_from_alphameltstxt(filepath, kelvin=False):
         phasetbl = [t for t in tables if t[0] == t[0].lower()]
         if len(phasetbl) != 1:
             logger.warning("Imported alphaMELTS_tbl.txt incorrectly formatted.")
-            return df  # return empty dataframe
         else:
             phasetbl = phasetbl[0]
-            for tab in re.split(r"[\n\r][\n\r]+", phasetbl.strip()):
+            phasettlbs = re.split(r"[\n\r][\n\r]+", phasetbl.strip())
+            for tab in phasettlbs:
                 tabdf = read_phase_table(tab)
                 df = df.append(tabdf, sort=False)
 
@@ -260,18 +307,27 @@ def import_tables(pth, kelvin=False):
     bulk = read_melts_tablefile(pth / "Bulk_comp_tbl.txt", skiprows=3, kelvin=kelvin)
     solid = read_melts_tablefile(pth / "Solid_comp_tbl.txt", skiprows=3, kelvin=kelvin)
 
+    phase["step"] = system.loc[phase.index, "step"]
+    bulk["step"] = system.loc[bulk.index, "step"]
+    solid["step"] = system.loc[solid.index, "step"]
+
     bulk["phase"] = "bulk"
     solid["phase"] = "solid"
+
     solid = solid.loc[solid["mass"] > 0.0, :]  # drop where no solids present
+    # traces could be imported here
+
+    for tb in [bulk, solid]:
+        phase = phase.append(tb, sort=False)
     # integrated solids for fractionation - if the system mass changes significantly
     # could add this threshold as a parameter
     frac = system.mass.max() / system.mass.min() > 1.05
-    cumulate = integrate_solids(solid, frac=frac)
-    cumulate["phase"] = "cumulate"
-    # traces could be imported here
+    cumulate_comp = integrate_solid_composition(phase, frac=frac)
+    cumulate_comp["phase"] = "cumulate"
+    phase = phase.append(cumulate_comp, sort=False)
 
-    for tb in [bulk, solid, cumulate]:
-        phase = phase.append(tb, sort=False)
+    cumulate_phases = integrate_solid_proportions(phase, frac=frac)
+    cumulate_comp["phase"] = "cumulate"
 
     phase["step"] = system.loc[phase.index, "step"]
     phase = phase.reindex(columns=["step"] + [i for i in phase.columns if i != "step"])
@@ -348,7 +404,7 @@ def aggregate_tables(
                 system = system.append(S, sort=False)
                 phases = phases.append(P, sort=False)
             except Exception as e:
-                logger.warning("{} at {}.".format(e, d.name)) # record the error
+                logger.warning("{} at {}.".format(e, d.name))  # record the error
     elif isinstance(lst[0], (list, tuple)) and isinstance(lst[0][0], (pd.DataFrame)):
         # if the list is of tuples of dataframes,
         # aggregate them to a single table

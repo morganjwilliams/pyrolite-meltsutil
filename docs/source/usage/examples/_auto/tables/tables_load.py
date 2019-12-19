@@ -39,12 +39,23 @@ cumulate = phases.loc[phases.phase == "cumulate", :]
 cumulate.sample(3).dropna(how="all", axis="columns").T
 ########################################################################################
 # These cumulate compositions are generated with the
-# :func:`~pyrolite_meltsutil.util.tables.integrate_solids` function (along with a few
-# additions provided in :func:`~pyrolite_meltsutil.tables.load.import_tables` which
+# :func:`~pyrolite_meltsutil.util.tables.integrate_solid_composition` function
+# (along with a few additions provided in
+# :func:`~pyrolite_meltsutil.tables.load.import_tables` which
 # reindex and calcuate relative percentages using the system table). You should get
 # similar results with:
-from pyrolite_meltsutil.util.tables import integrate_solids
-cumulate = integrate_solids(phases)
+from pyrolite_meltsutil.util.tables import integrate_solid_composition
+
+cumulate_comp = integrate_solid_composition(phases)
+cumulate_comp.tail()
+#########################################################################################
+# Similarly, you can integrate phase proportions using
+# :func:`~pyrolite_meltsutil.util.tables.integrate_solid_proportions`:
+#
+from pyrolite_meltsutil.util.tables import integrate_solid_proportions
+
+cumulate_phases = integrate_solid_proportions(phases)
+cumulate_phases.tail()
 ########################################################################################
 # .. seealso:: `Aggregating Tables <tables_aggregate.html>`__,
 #              `Import Batch Configuration <tables_config.html>`__,

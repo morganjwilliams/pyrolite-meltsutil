@@ -1,7 +1,13 @@
 import unittest
+import numpy as np
 from pyrolite_meltsutil.util.general import get_data_example
 from pyrolite_meltsutil.tables.load import import_tables
-from pyrolite_meltsutil.util.tables import phasename, tuple_reindex, integrate_solids
+from pyrolite_meltsutil.util.tables import (
+    phasename,
+    tuple_reindex,
+    integrate_solid_proportions,
+    integrate_solid_composition,
+)
 import logging
 
 logger = logging.Logger(__name__)
@@ -24,11 +30,47 @@ class TestIntegrateSolids(unittest.TestCase):
         self.fracsystem, self.fracphases = import_tables(self.fracdir)
         self.nofracsystem, self.nofracphases = import_tables(self.nofracdir)
 
-    def test_frac(self):
-        cumulate = integrate_solids(self.fracphases)
+    def test_frac_compositions(self):
+        cumulate = integrate_solid_composition(self.fracphases, frac=True)
+        # should have an index equivalent to the system index
+        self.assertTrue(cumulate.index.size == self.fracsystem.index.size)
+        self.assertTrue((cumulate.index == self.fracsystem.index).all())
 
-    def test_non_frac(self):
-        cumulate = integrate_solids(self.nofracphases)
+    def test_non_frac_compositions(self):
+        cumulate = integrate_solid_composition(self.nofracphases, frac=False)
+        # should have an index equivalent to the system index
+        self.assertTrue(cumulate.index.size == self.nofracsystem.index.size)
+        self.assertTrue((cumulate.index == self.nofracsystem.index).all())
+
+    def test_frac_proportions(self):
+        cumulate = integrate_solid_proportions(self.fracphases, frac=True)
+        # should have an index equivalent to the system index
+        self.assertTrue(cumulate.index.size == self.fracsystem.index.size)
+        self.assertTrue((cumulate.index == self.fracsystem.index).all())
+        mincols = [
+            i for i in cumulate.columns if i not in ["pressure", "temperature", "step"]
+        ]
+        self.assertTrue(  # sums are 100% or nan/0
+            all(
+                np.isclose(cumulate[mincols].sum(axis=1).values, 100, atol=10e-3)
+                + np.isclose(cumulate[mincols].sum(axis=1).values, 0, atol=10e-3)
+            )
+        )
+
+    def test_non_frac_proportions(self):
+        cumulate = integrate_solid_proportions(self.nofracphases, frac=False)
+        # should have an index equivalent to the system index
+        self.assertTrue(cumulate.index.size == self.nofracsystem.index.size)
+        self.assertTrue((cumulate.index == self.nofracsystem.index).all())
+        mincols = [
+            i for i in cumulate.columns if i not in ["pressure", "temperature", "step"]
+        ]
+        self.assertTrue(  # sums are 100% or nan/0
+            all(
+                np.isclose(cumulate[mincols].sum(axis=1).values, 100, atol=10e-2)
+                + np.isclose(cumulate[mincols].sum(axis=1).values, 0, atol=10e-2)
+            )
+        )
 
 
 if __name__ == "__main__":

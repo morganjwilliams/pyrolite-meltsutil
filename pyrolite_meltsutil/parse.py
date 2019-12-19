@@ -145,7 +145,8 @@ def from_melts_cstr(composition_str, formula=True):
             "{" + str(m.group(0).count("""'""")) + "+" + "}"
         )  # replace ' with count(')
 
-    tfm = lambda s: re.sub(sub, repl, s)
+    # replace iron valences
+    tfm = lambda s: re.sub(sub, repl, s).replace('[]', '')
     if not formula:
         result = re.findall(regex, composition_str)
         result = [(tfm(el), float(val)) for el, val in result]

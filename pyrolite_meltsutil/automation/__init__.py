@@ -55,14 +55,14 @@ class MeltsExperiment(object):
         self,
         name="MeltsExperiment",
         title="MeltsExperiment",
-        dir="./",
+        fromdir="./",
         meltsfile=None,
         env=None,
         timeout=None,
     ):
         self.name = name  # folder name
         self.title = title  # meltsfile title
-        self.dir = dir  # create an experiment directory here
+        self.fromdir = fromdir  # create an experiment directory here
         self.log = []
         self.timeout = timeout
 
@@ -107,7 +107,7 @@ class MeltsExperiment(object):
             name=self.name,
             title=self.title,
             meltsfile=self.meltsfile,
-            dir=self.dir,
+            indir=self.fromdir,
             env=self.envfile,
         )
         self.meltsfilepath = self.folder / (self.title + ".melts")
@@ -148,11 +148,12 @@ def process_modifications(cfg):
         modifications = cfg.pop("modifychem", {})  # remove modify chem
         ek, mk = set(cfg.keys()), set(modifications.keys())
         for k, v in modifications.items():
-            cfg[k] = v
+            if not np.isnan(v):
+                cfg[k] = v
         allchem = (ek | mk) & __chem__
         unmodified = (ek - mk) & __chem__
 
-        offset = np.array(list(modifications.values())).sum()
+        offset = np.nansum(np.array(list(modifications.values())))
         for uk in unmodified:
             cfg[uk] = np.round(cfg[uk] * (100.0 - offset) / 100, 4)
     return cfg
@@ -208,25 +209,26 @@ class MeltsBatch(object):
     ):
         self.timeout = timeout
         self.logger = logger
+        self.fromdir = Path(fromdir)
         # make a file logger
-        fh = logging.FileHandler("autolog.log")
+        fh = logging.FileHandler(self.fromdir / "autolog.log")
         fh.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         )
         fh.setFormatter(formatter)
         self.logger.addHandler(fh)
-        self.dir = fromdir
+
         self.default = default_config
         self.env = env or MELTS_Env()
         # let's establish the grid of configurations
-        self.configs = [{**self.default}]
+        self.configs = []
         grid = combine_choices(config_grid)
         for i in grid:  # unique configurations
             _cfg = {**self.default, **i}
             if _cfg not in self.configs:
                 self.configs.append(_cfg)
-        self.compositions = comp_df.to_dict("records")
+        self.compositions = comp_df.fillna(0).to_dict("records")
         # combine these to create full experiment configs
         exprs = [
             {**cfg, **cmp}
@@ -257,7 +259,7 @@ class MeltsBatch(object):
         to_dir : :class:`str` | :class:`pathlib.Path`
             Directory to export file to.
         """
-        to_dir = to_dir or self.dir
+        to_dir = to_dir or self.fromdir
         experiments = experiments or self.experiments
         data = json.dumps(
             {
@@ -284,7 +286,7 @@ class MeltsBatch(object):
             experiments = {
                 h: (t, exp, env)
                 for h, (t, exp, env) in experiments.items()
-                if not (self.dir / h).exists()
+                if not (self.fromdir / h).exists()
             }
 
         self.logger.info("Starting {} Calculations.".format(len(experiments)))
@@ -304,15 +306,15 @@ class MeltsBatch(object):
                 title=title,
                 meltsfile=meltsfile,
                 env=env,
-                dir=self.dir,
+                fromdir=self.fromdir,
                 timeout=timeout,
             )
             try:
                 M.run(superliquidus_start=superliquidus_start)
-                self.logger.info("Finished {}.".format(title))
+                self.logger.debug("Finished {}.".format(title))
             except OSError:
                 try:
-                    self.logger.info("Errored @ {}.".format(M.mp.callstring))
+                    self.logger.warning("Errored @ {}.".format(M.mp.callstring))
                 except:
                     pass
                 failed.append(title)

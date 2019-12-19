@@ -33,11 +33,13 @@ def exp_hash(d, algorithm="sha1", length=10):
         * Consider rounding floats to 4-5 decimal places to minimise floating point
             errors and potential differences across systems
     """
-    length = length or -0
+
     hsh = hashlib.new(algorithm)
-    hsh.update(json.dumps(d, sort_keys=True, ensure_ascii=False).encode("utf8"))
+    # sort keys for consistency regardless of insertion order (e.g. default/cfg_grid)
+    cfg = {k: d[k] for k in sorted(d.keys())}
+    hsh.update(json.dumps(cfg, sort_keys=True, ensure_ascii=False).encode("utf8"))
     hex = hsh.hexdigest()
-    length = length or len(hex)
+    length = length or len(hex) or -0
     return hex[:length]
 
 

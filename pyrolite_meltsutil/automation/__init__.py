@@ -55,14 +55,14 @@ class MeltsExperiment(object):
         self,
         name="MeltsExperiment",
         title="MeltsExperiment",
-        dir="./",
+        fromdir="./",
         meltsfile=None,
         env=None,
         timeout=None,
     ):
         self.name = name  # folder name
         self.title = title  # meltsfile title
-        self.dir = dir  # create an experiment directory here
+        self.fromdir = fromdir  # create an experiment directory here
         self.log = []
         self.timeout = timeout
 
@@ -107,7 +107,7 @@ class MeltsExperiment(object):
             name=self.name,
             title=self.title,
             meltsfile=self.meltsfile,
-            dir=self.dir,
+            dir=self.fromdir,
             env=self.envfile,
         )
         self.meltsfilepath = self.folder / (self.title + ".melts")
@@ -209,15 +209,16 @@ class MeltsBatch(object):
     ):
         self.timeout = timeout
         self.logger = logger
+        self.fromdir = Path(fromdir)
         # make a file logger
-        fh = logging.FileHandler("autolog.log")
+        fh = logging.FileHandler(self.fromdir / "autolog.log")
         fh.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         )
         fh.setFormatter(formatter)
         self.logger.addHandler(fh)
-        self.dir = fromdir
+
         self.default = default_config
         self.env = env or MELTS_Env()
         # let's establish the grid of configurations
@@ -258,7 +259,7 @@ class MeltsBatch(object):
         to_dir : :class:`str` | :class:`pathlib.Path`
             Directory to export file to.
         """
-        to_dir = to_dir or self.dir
+        to_dir = to_dir or self.fromdir
         experiments = experiments or self.experiments
         data = json.dumps(
             {
@@ -285,7 +286,7 @@ class MeltsBatch(object):
             experiments = {
                 h: (t, exp, env)
                 for h, (t, exp, env) in experiments.items()
-                if not (self.dir / h).exists()
+                if not (self.fromdir / h).exists()
             }
 
         self.logger.info("Starting {} Calculations.".format(len(experiments)))
@@ -305,7 +306,7 @@ class MeltsBatch(object):
                 title=title,
                 meltsfile=meltsfile,
                 env=env,
-                dir=self.dir,
+                fromdir=self.fromdir,
                 timeout=timeout,
             )
             try:

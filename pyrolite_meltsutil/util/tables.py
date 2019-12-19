@@ -44,7 +44,7 @@ def tuple_reindex(df, columns=["pressure", "temperature"]):
     return df
 
 
-def integrate_solids(df, frac=True):
+def integrate_solid_composition(df, frac=True):
     """
     Integrate solid compositions to return a 'cumulate' like
     composition. Note that in the case of non-fractional crystallisation
@@ -75,8 +75,40 @@ def integrate_solids(df, frac=True):
         cumulate[["pressure", "temperature", "step"]] = slds.loc[
             :, ["pressure", "temperature", "step"]
         ]
-
     else:
         cumulate = slds.copy()
     cumulate.pyrochem.add_MgNo()
     return cumulate
+
+def integrate_solid_proportions(df, frac=True):
+    """
+    Integrate solid proportions to return a 'cumulates' split by integrated phase
+    masses. Note that in the case of non-fractional crystallisation
+    this will correspond to the overall solid phase abundances.
+
+    Parameters
+    -----------
+    df : :class:`pandas.DataFrame`
+        DataFrame to integrate.
+    frac : :class:`bool`
+        Whether the experiment is a fractional crystallisation experiment.
+
+    Returns
+    -----------
+    df : :class:`pandas.DataFrame`
+        DataFrame containing integrated solid phase proportions.
+    """
+    # another dataframe for integrated minerals
+    phases = sorted([pID for pID in df.phaseID.unique() if not pd.isnull(pID)])
+    mindf = pd.DataFrame(
+        columns=phases, index=df.loc[df.phase == "solid", :].index
+    )  # empty dataframe
+    for p in phases:  # integrate cumulate mass per phase
+        phasemass = df.loc[df.phase == p, "mass"]
+
+    mindf = mindf.apply(np.cumsum, axis=1)  # check the axis
+
+    mindf = mindf.div(
+        mindf.apply(np.nansum, axis=0)
+    )  # fractioal mass of total cumulate
+    return mindf

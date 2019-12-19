@@ -1,7 +1,12 @@
 import unittest
 from pyrolite_meltsutil.util.general import get_data_example
 from pyrolite_meltsutil.tables.load import import_tables
-from pyrolite_meltsutil.util.tables import phasename, tuple_reindex, integrate_solids
+from pyrolite_meltsutil.util.tables import (
+    phasename,
+    tuple_reindex,
+    integrate_solid_proportions,
+    integrate_solid_composition,
+)
 import logging
 
 logger = logging.Logger(__name__)
@@ -24,11 +29,17 @@ class TestIntegrateSolids(unittest.TestCase):
         self.fracsystem, self.fracphases = import_tables(self.fracdir)
         self.nofracsystem, self.nofracphases = import_tables(self.nofracdir)
 
-    def test_frac(self):
-        cumulate = integrate_solids(self.fracphases)
+    def test_frac_compositions(self):
+        cumulate = integrate_solid_composition(self.fracphases)
 
-    def test_non_frac(self):
-        cumulate = integrate_solids(self.nofracphases)
+    def test_non_frac_compositions(self):
+        cumulate = integrate_solid_composition(self.nofracphases)
+
+    def test_frac_proportions(self):
+        cumulate = integrate_solid_proportions(self.fracphases)
+
+    def test_non_frac_proportions(self):
+        cumulate = integrate_solid_proportions(self.nofracphases)
 
 
 if __name__ == "__main__":

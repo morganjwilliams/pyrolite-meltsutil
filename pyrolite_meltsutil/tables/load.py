@@ -15,7 +15,12 @@ import numpy as np
 from pathlib import Path
 from pyrolite.util.pd import zero_to_nan
 from ..parse import from_melts_cstr
-from ..util.tables import phasename, tuple_reindex, integrate_solids
+from ..util.tables import (
+    phasename,
+    tuple_reindex,
+    integrate_solid_composition,
+    integrate_solid_proportions,
+)
 import logging
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
@@ -124,6 +129,10 @@ def read_melts_tablefile(filepath, kelvin=False, skiprows=3, **kwargs):
     with open(path) as tab:
         lines = [i for i in tab.readlines()[skiprows:] if i]
         headers = lines[0].strip().split()
+        for ix, h in enumerate(headers):
+            if headers[:ix].count(h) > 1:
+                headers[ix] = h + ".1"  # silence duplicate
+
         linelen = [len(l.strip().split()) for l in lines]
         if not all([l == linelen[0] for l in linelen]):
             logger.debug(  # debug here because these tables are often left-empty
@@ -133,6 +142,9 @@ def read_melts_tablefile(filepath, kelvin=False, skiprows=3, **kwargs):
             )
     buff = io.BytesIO("".join(lines[1:]).encode("UTF-8"))
     df = pd.read_csv(buff, sep=" ", names=headers, **kwargs)
+    df = df.loc[
+        :, ~df.columns.str.replace("(\.\d+)$", "").duplicated()
+    ]  # remove duplicate columns
     df = df.dropna(how="all", axis=1)
 
     df = convert_thermo_names(df)
@@ -298,15 +310,19 @@ def import_tables(pth, kelvin=False):
     bulk["phase"] = "bulk"
     solid["phase"] = "solid"
     solid = solid.loc[solid["mass"] > 0.0, :]  # drop where no solids present
+    # traces could be imported here
+
+    for tb in [bulk, solid]:
+        phase = phase.append(tb, sort=False)
     # integrated solids for fractionation - if the system mass changes significantly
     # could add this threshold as a parameter
     frac = system.mass.max() / system.mass.min() > 1.05
-    cumulate = integrate_solids(solid, frac=frac)
-    cumulate["phase"] = "cumulate"
-    # traces could be imported here
+    cumulate_comp = integrate_solid_composition(phase, frac=frac)
+    cumulate_comp["phase"] = "cumulate"
+    phase = phase.append(cumulate_comp, sort=False)
 
-    for tb in [bulk, solid, cumulate]:
-        phase = phase.append(tb, sort=False)
+    cumulate_phases = integrate_solid_proportions(phase, frac=frac)
+    cumulate_comp["phase"] = "cumulate"
 
     phase["step"] = system.loc[phase.index, "step"]
     phase = phase.reindex(columns=["step"] + [i for i in phase.columns if i != "step"])

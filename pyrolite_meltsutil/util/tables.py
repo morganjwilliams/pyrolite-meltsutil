@@ -121,4 +121,9 @@ def integrate_solid_proportions(df, frac=True):
         mindf = mindf.apply(np.nancumsum, axis=0)  # accumulate minerals
     # fractioal mass of total cumulate
     mindf = mindf.div(mindf.sum(axis=1).replace(0, np.nan), axis=0) * 100.0
+
+    mindf[["pressure", "temperature", "step"]] = df.loc[
+        idx, ["pressure", "temperature", "step"]
+    ].drop_duplicates()
+    mindf = mindf.fillna(0)
     return mindf

@@ -85,13 +85,9 @@ def integrate_solid_composition(df, frac=True):
     return cumulate
 
 
-def get_solid_proportions(df, frac=True):
-    pass
-
-
 def integrate_solid_proportions(df, frac=True):
     """
-    Integrate solid proportions to return a 'cumulates' split by integrated phase
+    Integrate solid proportions to return a 'cumulate' split by integrated phase
     masses. Note that in the case of non-fractional crystallisation
     this will correspond to the overall solid phase abundances.
 

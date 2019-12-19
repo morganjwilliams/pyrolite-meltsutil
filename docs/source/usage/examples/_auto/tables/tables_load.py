@@ -46,14 +46,16 @@ cumulate.sample(3).dropna(how="all", axis="columns").T
 # similar results with:
 from pyrolite_meltsutil.util.tables import integrate_solid_composition
 
-cumulate = integrate_solid_composition(phases)
+cumulate_comp = integrate_solid_composition(phases)
+cumulate_comp.tail()
 #########################################################################################
 # Similarly, you can integrate phase proportions using
 # :func:`~pyrolite_meltsutil.util.tables.integrate_solid_proportions`:
 #
 from pyrolite_meltsutil.util.tables import integrate_solid_proportions
 
-cumulate_phases = integrate_solid_composition(phases)
+cumulate_phases = integrate_solid_proportions(phases)
+cumulate_phases.tail()
 ########################################################################################
 # .. seealso:: `Aggregating Tables <tables_aggregate.html>`__,
 #              `Import Batch Configuration <tables_config.html>`__,

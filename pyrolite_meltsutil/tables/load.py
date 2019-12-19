@@ -307,8 +307,13 @@ def import_tables(pth, kelvin=False):
     bulk = read_melts_tablefile(pth / "Bulk_comp_tbl.txt", skiprows=3, kelvin=kelvin)
     solid = read_melts_tablefile(pth / "Solid_comp_tbl.txt", skiprows=3, kelvin=kelvin)
 
+    phase["step"] = system.loc[phase.index, "step"]
+    bulk["step"] = system.loc[bulk.index, "step"]
+    solid["step"] = system.loc[solid.index, "step"]
+
     bulk["phase"] = "bulk"
     solid["phase"] = "solid"
+
     solid = solid.loc[solid["mass"] > 0.0, :]  # drop where no solids present
     # traces could be imported here
 

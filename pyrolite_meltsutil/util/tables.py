@@ -63,15 +63,19 @@ def integrate_solid_composition(df, frac=True):
         DataFrame containing an integrated solid composition.
     """
     slds = df.loc[df.phase == "solid", :]
+    idx = df.step.drop_duplicates().sort_values().index
     if frac:
+        cumulate = pd.DataFrame(columns=slds.columns, index=idx)
+        cumulate["mass"] = np.nancumsum(slds.loc[idx, "mass"].values)
+
         chem = slds.loc[
-            :, [i for i in slds.pyrochem.list_compositional if i not in ["S", "H", "V"]]
+            idx,
+            [i for i in slds.pyrochem.list_compositional if i not in ["S", "H", "V"]],
         ]
         chem = chem.apply(pd.to_numeric, errors="coerce")
-        increments = slds["mass"].values[:, np.newaxis] * chem.values
-        cumulate = pd.DataFrame(columns=slds.columns, index=slds.index)
-        cumulate["mass"] = np.cumsum(slds.mass.values)
-        cumulate[chem.columns] = np.cumsum(increments, axis=1)
+        increments = slds.loc[idx, "mass"].values[:, np.newaxis] * chem.values
+
+        cumulate[chem.columns] = np.nancumsum(increments, axis=1)
         cumulate[["pressure", "temperature", "step"]] = slds.loc[
             :, ["pressure", "temperature", "step"]
         ]
@@ -79,6 +83,11 @@ def integrate_solid_composition(df, frac=True):
         cumulate = slds.copy()
     cumulate.pyrochem.add_MgNo()
     return cumulate
+
+
+def get_solid_proportions(df, frac=True):
+    pass
+
 
 def integrate_solid_proportions(df, frac=True):
     """
@@ -99,16 +108,21 @@ def integrate_solid_proportions(df, frac=True):
         DataFrame containing integrated solid phase proportions.
     """
     # another dataframe for integrated minerals
-    phases = sorted([pID for pID in df.phaseID.unique() if not pd.isnull(pID)])
-    mindf = pd.DataFrame(
-        columns=phases, index=df.loc[df.phase == "solid", :].index
-    )  # empty dataframe
-    for p in phases:  # integrate cumulate mass per phase
-        phasemass = df.loc[df.phase == p, "mass"]
-
-    mindf = mindf.apply(np.cumsum, axis=1)  # check the axis
-
-    mindf = mindf.div(
-        mindf.apply(np.nansum, axis=0)
-    )  # fractioal mass of total cumulate
+    phaseIDs = sorted(
+        [
+            pID
+            for pID in df.phaseID.unique()
+            if (not pd.isnull(pID)) and ("liquid" not in pID)
+        ]
+    )
+    idx = df.step.drop_duplicates().sort_values().index
+    mindf = pd.DataFrame(columns=phaseIDs, index=idx)  # empty dataframe
+    for p in phaseIDs:  # integrate cumulate mass per phase
+        masses = df.loc[df.phaseID == p, "mass"]
+        mindf.loc[df.loc[df.phaseID == p, "mass"].index.values, p] = masses.values
+    mindf = mindf.loc[idx, :]  # sort index
+    if frac:
+        mindf = mindf.apply(np.nancumsum, axis=0)  # accumulate minerals
+    # fractioal mass of total cumulate
+    mindf = mindf.div(mindf.sum(axis=1).replace(0, np.nan), axis=0) * 100.0
     return mindf

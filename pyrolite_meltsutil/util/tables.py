@@ -63,24 +63,29 @@ def integrate_solid_composition(df, frac=True):
         DataFrame containing an integrated solid composition.
     """
     slds = df.loc[df.phase == "solid", :]
-    idx = df.step.drop_duplicates().sort_values().index
+    idx = (
+        df.loc[:, ["pressure", "temperature", "step"]]
+        .dropna()
+        .drop_duplicates()
+        .sort_values("step")
+    )
     if frac:
-        cumulate = pd.DataFrame(columns=slds.columns, index=idx)
-        cumulate["mass"] = np.nancumsum(slds.loc[idx, "mass"].values)
+        cumulate = pd.DataFrame(columns=slds.columns, index=idx.index)
+        cumulate["mass"] = np.nancumsum(slds.loc[idx.index, "mass"].values)
 
         chem = slds.loc[
-            idx,
+            idx.index,
             [i for i in slds.pyrochem.list_compositional if i not in ["S", "H", "V"]],
         ]
         chem = chem.apply(pd.to_numeric, errors="coerce")
-        increments = slds.loc[idx, "mass"].values[:, np.newaxis] * chem.values
+        increments = slds.loc[idx.index, "mass"].values[:, np.newaxis] * chem.values
 
         cumulate[chem.columns] = np.nancumsum(increments, axis=1)
         cumulate[["pressure", "temperature", "step"]] = slds.loc[
             :, ["pressure", "temperature", "step"]
         ]
     else:
-        cumulate = slds.copy()
+        cumulate = slds.reindex(index=idx.index)
     cumulate.pyrochem.add_MgNo()
     return cumulate
 
@@ -122,8 +127,9 @@ def integrate_solid_proportions(df, frac=True):
         columns=["pressure", "temperature", "step"] + phaseIDs, index=idx.index
     )
     for p in phaseIDs:  # integrate cumulate mass per phase
-        masses = df.loc[df.phaseID == p, "mass"]
-        mindf.loc[df.loc[df.phaseID == p, "mass"].index.values, p] = masses.values
+        mindf.loc[df.loc[df.phaseID == p, "mass"].index.values, p] = df.loc[
+            df.phaseID == p, "mass"
+        ].values
     mindf = mindf.loc[idx.index, :]  # sort index
     if frac:
         mindf = mindf.apply(np.nancumsum, axis=0)  # accumulate minerals

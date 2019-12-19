@@ -43,8 +43,8 @@ cumulate.sample(3).dropna(how="all", axis="columns").T
 # additions provided in :func:`~pyrolite_meltsutil.tables.load.import_tables` which
 # reindex and calcuate relative percentages using the system table). You should get
 # similar results with:
-from pyrolite_meltsutil.util.tables import integrate_solids
-cumulate = integrate_solids(phases)
+from pyrolite_meltsutil.util.tables import integrate_solid_composition
+cumulate = integrate_solid_composition(phases)
 ########################################################################################
 # .. seealso:: `Aggregating Tables <tables_aggregate.html>`__,
 #              `Import Batch Configuration <tables_config.html>`__,

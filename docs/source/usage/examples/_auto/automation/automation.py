@@ -51,14 +51,13 @@ experiment_dir = get_data_example("batch")
 #
 batch = MeltsBatch(
     MORB,
-    default_config={
-        "Initial Pressure": 7000,
+    default_config={  # things that won't change between experiments
         "Initial Temperature": 1400,
         "Final Temperature": 800,
         "modes": ["isobaric", "fractionate solids"],
     },
-    config_grid={
-        "Initial Pressure": [5000],
+    config_grid={  # things that change between experiments
+        "Initial Pressure": [5000, 7000],
         "Log fO2 Path": [None, "FMQ"],
         "modifychem": [None, {"H2O": 0.5}],
     },

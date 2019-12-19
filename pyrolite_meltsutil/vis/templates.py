@@ -28,8 +28,11 @@ def plot_xy_phase_groupby(ax, df, xvar, yvar, legend=True, markersize=3, **kwarg
     ax.set_xlabel(xvar)
     ax.set_ylabel(yvar)
     proxies = {}
+
+    xinds = df.step.drop_duplicates().sort_values().index  # steps are unique
+
     for phaseID in phaseIDlist:
-        phasedf = df.loc[df.phaseID == phaseID, :]
+        phasedf = df.loc[df.phaseID == phaseID, :].loc[xinds, :]
         style = dict(
             ls=phaseID_linestyle(phaseID),
             color=phase_color(phaseID),
@@ -39,7 +42,7 @@ def plot_xy_phase_groupby(ax, df, xvar, yvar, legend=True, markersize=3, **kwarg
         )
         style = {**{k: v for k, v in style.items() if v is not None}, **kwargs}
         proxies[phaseID] = proxy_line(**style)
-        ax.plot(phasedf[xvar], phasedf[yvar], **style)
+        ax.plot(phasedf[xvar].values, phasedf[yvar].values, **style)
 
     if legend:
         ax.legend(

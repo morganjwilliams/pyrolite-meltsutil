@@ -64,6 +64,7 @@ def integrate_solid_composition(df, frac=True):
     df : :class:`pandas.DataFrame`
         DataFrame containing an integrated solid composition.
     """
+    assert not 'experiment' in df.columns, 'Designed for single tables.'
     slds = df.loc[df.phase == "solid", :]
     idx = (
         df.loc[:, ["pressure", "temperature", "step"]]

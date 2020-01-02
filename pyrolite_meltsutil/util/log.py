@@ -1,5 +1,6 @@
 import logging
 
+
 def Handle(
     logger,
     handler=logging.NullHandler(),
@@ -18,7 +19,7 @@ def Handle(
     formatter : :class:`str` | :class:`logging.Formatter`
         Formatter for the logging handler. Strings will be passed to
         the :class:`logging.Formatter` constructor.
-    level : :class:`str` | :class:`logging.`
+    level : :class:`str`
         Logging level for the handler.
 
     Returns
@@ -36,5 +37,5 @@ def Handle(
         formatter = logging.Formatter(formatter)
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    logger.setLevel(level)
+    logger.setLevel(getattr(logging, level))
     return logger

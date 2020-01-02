@@ -21,10 +21,9 @@ from ..util.tables import (
     integrate_solid_composition,
     integrate_solid_proportions,
 )
-import logging
+from ..util.log import Handle
 
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-logger = logging.getLogger(__name__)
+logger = Handle(__name__)
 
 TABLES = {
     "Phase_mass_tbl.txt",
@@ -289,11 +288,11 @@ def import_tables(pth, kelvin=False):
     try:
         for f in [sysfile, bulkfile, solidfile, alphafile]:
             assert f.exists()
-    except AssertionError:
+    except AssertionError as err:
         msg = "File missing from {}: {}".format(
-            pth, ",".join([i.name for i in pth.iterdir()])
+            pth, ", ".join([i.name for i in pth.iterdir()])
         )
-        raise FileNotFoundError(msg)
+        raise FileNotFoundError(msg) from err
     # system table
     system = read_melts_tablefile(sysfile, skiprows=3, kelvin=kelvin)
     system["step"] = np.arange(system.index.size)  # generate the step index

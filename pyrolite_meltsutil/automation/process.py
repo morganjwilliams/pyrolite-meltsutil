@@ -8,11 +8,9 @@ import time
 from pathlib import Path
 from pyrolite.util.general import get_process_tree
 from ..util.general import get_local_link
+from ..util.log import Handle
 
-import logging
-
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-logger = logging.getLogger(__name__)
+logger = Handle(__name__)
 
 
 def enqueue_output(out, queue):

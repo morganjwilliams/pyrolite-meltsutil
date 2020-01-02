@@ -1,5 +1,8 @@
 from ..util.tables import phasename
 import matplotlib.colors as mcolors
+from ..util.log import Handle
+
+logger = Handle(__name__)
 
 COLORS = {
     "aegirine": None,

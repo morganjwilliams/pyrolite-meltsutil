@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 import pyrolite.geochem
+from ..util.log import Handle
 
+logger = Handle(__name__)
 
 def phasename(phaseID):
     """

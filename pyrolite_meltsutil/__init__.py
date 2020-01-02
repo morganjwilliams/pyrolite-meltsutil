@@ -49,10 +49,9 @@ References
         website: educational and research tools for studying the petrology and
         geochemistry of plate margins. AGU Fall Meeting Abstracts 41, ED41B-0644.
 """
-import logging
+from .util.log import Handle
 
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-logger = logging.getLogger(__name__)
+logger = Handle(__name__)
 
 from pyrolite.util.meta import sphinx_doi_link
 

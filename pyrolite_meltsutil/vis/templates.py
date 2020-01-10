@@ -64,7 +64,7 @@ def plot_phasevolumes(phasetable, xvar="temperature", legend=True, ax=None, **kw
     ax, proxies = plot_xy_phase_groupby(
         ax, phasetable, xvar, "volume%", legend=legend, **kwargs
     )
-    return ax
+    return ax, proxies
 
 
 def plot_phasemasses(phasetable, xvar="temperature", legend=True, ax=None, **kwargs):
@@ -73,4 +73,4 @@ def plot_phasemasses(phasetable, xvar="temperature", legend=True, ax=None, **kwa
     ax, proxies = plot_xy_phase_groupby(
         ax, phasetable, xvar, "mass%", legend=legend, **kwargs
     )
-    return ax
+    return ax, proxies

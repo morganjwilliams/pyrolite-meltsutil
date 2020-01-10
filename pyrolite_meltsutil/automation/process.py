@@ -6,8 +6,7 @@ import psutil
 import queue
 import time
 from pathlib import Path
-from pyrolite.util.general import get_process_tree
-from ..util.general import get_local_link
+from ..util.general import get_local_link, get_process_tree
 from ..util.log import Handle
 
 logger = Handle(__name__)

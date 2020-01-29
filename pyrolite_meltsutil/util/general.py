@@ -1,9 +1,29 @@
 import psutil
+import subprocess
 from pyrolite.util.meta import get_module_datafolder
 from ..util.log import Handle
 
 logger = Handle(__name__)
 
+def check_perl():
+    """
+    Checks whether perl is installed on the system.
+
+    Returns
+    -------
+    :class:`bool`
+        Boolean indication of whether there is an executable perl installation.
+    """
+    try:
+        p = subprocess.check_output(["perl", "-v"])
+        returncode = 0
+    except subprocess.CalledProcessError as e:
+        output = e.output
+        returncode = e.returncode
+    except FileNotFoundError:
+        returncode = 1
+
+    return returncode == 0
 
 def get_process_tree(process, levels_up=1):
     """

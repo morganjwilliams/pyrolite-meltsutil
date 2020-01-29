@@ -1,10 +1,10 @@
 import io
 import unittest
 import pandas as pd
-from pyrolite.util.general import check_perl, temp_path, remove_tempdir
+from pyrolite.util.general import temp_path, remove_tempdir
 from pyrolite_meltsutil.env import MELTS_Env
 from pyrolite_meltsutil.automation.org import make_meltsfolder
-from pyrolite_meltsutil.util.general import get_local_example
+from pyrolite_meltsutil.util.general import get_local_example, check_perl
 import logging
 
 logger = logging.Logger(__name__)

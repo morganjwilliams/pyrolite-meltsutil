@@ -4,7 +4,7 @@ from pyrolite_meltsutil.util.synthetic import default_data_dictionary
 from pyrolite_meltsutil.web import *
 
 
-# @unittest.skip("Web service down.")
+@unittest.skip("Web service shut down.")
 @unittest.skipIf(not internet_connection(), "Needs internet connection.")
 class TestWebService(unittest.TestCase):
     """Tests the current MELTS webservice interactivity with default data."""

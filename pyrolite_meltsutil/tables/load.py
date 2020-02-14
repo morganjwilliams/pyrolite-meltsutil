@@ -21,10 +21,9 @@ from ..util.tables import (
     integrate_solid_composition,
     integrate_solid_proportions,
 )
-import logging
+from ..util.log import Handle
 
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-logger = logging.getLogger(__name__)
+logger = Handle(__name__)
 
 TABLES = {
     "Phase_mass_tbl.txt",
@@ -79,27 +78,28 @@ def read_phase_table(tab):
     headers = lines[1].strip().split()
     linelen = [len(l.strip().split()) for l in lines[1:]]
     if not all([l == linelen[0] for l in linelen]):
-        logger.warning(
-            "Inconsistent line lengths for {} table: {}".format(
-                phaseID, "".join([str(i) for i in linelen])
+        if linelen[0] == (linelen[1] - 1): # known errors for neph, kals
+            if any(
+                [phase in phaseID for phase in ["nepheline", "kalsilite"]]
+            ):  # inconsistent headers
+                expect = [
+                    "Pressure",
+                    "Temperature",
+                    "mass",
+                    "S",
+                    "H",
+                    "V",
+                    "Cp",
+                    "structure",
+                    "formula",
+                ]
+                headers = [i for i in expect] + [i for i in headers if i not in expect]
+        else:
+            logger.warning( # unkonwn line length error
+                "Inconsistent line lengths for {} table: {}".format(
+                    phaseID, " ".join([str(i) for i in linelen])
+                )
             )
-        )
-    if linelen[0] == (linelen[1] - 1):
-        if any(
-            [phase in phaseID for phase in ["nepheline", "kalsilite"]]
-        ):  # inconsistent headers
-            expect = [
-                "Pressure",
-                "Temperature",
-                "mass",
-                "S",
-                "H",
-                "V",
-                "Cp",
-                "structure",
-                "formula",
-            ]
-            headers = [i for i in expect] + [i for i in headers if i not in expect]
     buff = io.BytesIO("\n".join([" ".join(headers)] + lines[2:]).encode("UTF-8"))
     table = pd.read_csv(buff, sep=" ")
     table["phaseID"] = phaseID
@@ -289,11 +289,11 @@ def import_tables(pth, kelvin=False):
     try:
         for f in [sysfile, bulkfile, solidfile, alphafile]:
             assert f.exists()
-    except AssertionError:
+    except AssertionError as err:
         msg = "File missing from {}: {}".format(
-            pth, ",".join([i.name for i in pth.iterdir()])
+            pth, ", ".join([i.name for i in pth.iterdir()])
         )
-        raise FileNotFoundError(msg)
+        raise FileNotFoundError(msg) from err
     # system table
     system = read_melts_tablefile(sysfile, skiprows=3, kelvin=kelvin)
     system["step"] = np.arange(system.index.size)  # generate the step index
@@ -328,6 +328,7 @@ def import_tables(pth, kelvin=False):
 
     cumulate_phases = integrate_solid_proportions(phase, frac=frac)
     cumulate_comp["phase"] = "cumulate"
+    # TODO: Integrate these?
 
     phase["step"] = system.loc[phase.index, "step"]
     phase = phase.reindex(columns=["step"] + [i for i in phase.columns if i != "step"])

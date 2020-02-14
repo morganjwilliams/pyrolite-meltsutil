@@ -1,5 +1,8 @@
 from ..util.tables import phasename
 import matplotlib.colors as mcolors
+from ..util.log import Handle
+
+logger = Handle(__name__)
 
 COLORS = {
     "aegirine": None,
@@ -38,6 +41,7 @@ COLORS = {
     "whitlockite": None,
 }
 
+
 def phase_color(phase, rgb=False):
     """
     Method for generating colors for delineating phase names
@@ -59,7 +63,7 @@ def phase_color(phase, rgb=False):
     return c
 
 
-def phaseID_linestyle(phaseID, linestyles=["-", "--", ":", "-."]):
+def phaseID_linestyle(phaseID, linestyles=["-", "--", ":", "-."]*2):
     """
     Method for generating linestyles for delineating sequential phases
     based on their phase IDs (e.g. olivine_0, olivine_1) .
@@ -83,7 +87,7 @@ def phaseID_linestyle(phaseID, linestyles=["-", "--", ":", "-."]):
         return linestyles[0]
 
 
-def phaseID_marker(phaseID, markers=["D", "s", "o", "+", "*"]):
+def phaseID_marker(phaseID, markers=["D", "s", "o", "+", "*"]*2):
     """
     Method for generating markers for delineating sequential phases
     based on their phase IDs (e.g. olivine_0, olivine_1) .

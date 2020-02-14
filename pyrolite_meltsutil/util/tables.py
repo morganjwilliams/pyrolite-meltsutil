@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 import pyrolite.geochem
+from ..util.log import Handle
 
+logger = Handle(__name__)
 
 def phasename(phaseID):
     """
@@ -62,6 +64,7 @@ def integrate_solid_composition(df, frac=True):
     df : :class:`pandas.DataFrame`
         DataFrame containing an integrated solid composition.
     """
+    assert not 'experiment' in df.columns, 'Designed for single tables.'
     slds = df.loc[df.phase == "solid", :]
     idx = (
         df.loc[:, ["pressure", "temperature", "step"]]

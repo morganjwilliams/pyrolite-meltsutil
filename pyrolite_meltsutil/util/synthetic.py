@@ -1,12 +1,11 @@
 """
 Generating synthetic data for use with alphaMELTS.
 """
-import logging
 from collections import OrderedDict
 from pyrolite.geochem.norm import get_reference_composition
+from ..util.log import Handle
 
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-logger = logging.getLogger(__name__)
+logger = Handle(__name__)
 
 
 def default_data_dictionary():

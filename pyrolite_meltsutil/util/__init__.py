@@ -2,6 +2,6 @@
 Utility functions for pyrolite-meltsutil.
 """
 import logging
+from .log import Handle
 
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-logger = logging.getLogger(__name__)
+logger = Handle(__name__)

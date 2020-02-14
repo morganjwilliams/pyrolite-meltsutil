@@ -1,8 +1,56 @@
-import logging
+import psutil
+import subprocess
 from pyrolite.util.meta import get_module_datafolder
+from ..util.log import Handle
 
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-logger = logging.getLogger(__name__)
+logger = Handle(__name__)
+
+def check_perl():
+    """
+    Checks whether perl is installed on the system.
+
+    Returns
+    -------
+    :class:`bool`
+        Boolean indication of whether there is an executable perl installation.
+    """
+    try:
+        p = subprocess.check_output(["perl", "-v"])
+        returncode = 0
+    except subprocess.CalledProcessError as e:
+        output = e.output
+        returncode = e.returncode
+    except FileNotFoundError:
+        returncode = 1
+
+    return returncode == 0
+
+def get_process_tree(process, levels_up=1):
+    """
+    Get a process tree from an active process or process ID.
+
+    Parameters
+    -----------
+    process : :class:`int` | :class:`psutil.Process`
+        Process to search for.
+    levels_up : :class:`int`
+        How many levels up the tree to search for parent processes.
+
+    Returns
+    -------
+    :class:`list`
+        List of processes associated with the given process tree.
+    """
+    if isinstance(process, int):
+        top = psutil.Process(process)
+    elif isinstance(process, psutil.Process):
+        top = process
+    for i in range(levels_up):
+        if top.parent() is not None:
+            top = top.parent()
+        else:
+            break
+    return [top, *top.children(recursive=True)]
 
 
 def pyrolite_meltsutil_datafolder(subfolder=None):

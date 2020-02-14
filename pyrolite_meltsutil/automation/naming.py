@@ -1,10 +1,9 @@
 import json
 import hashlib
 from pyrolite.util.text import slugify
-import logging
+from ..util.log import Handle
 
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-logger = logging.getLogger(__name__)
+logger = Handle(__name__)
 
 __abbrv__ = {"fractionate solids": "frac", "isobaric": "isobar"}
 

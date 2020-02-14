@@ -8,7 +8,9 @@ import matplotlib.pyplot as plt
 from pyrolite.util.meta import subkwargs
 from pyrolite.util.plot import proxy_line
 from .style import phase_color, phaseID_linestyle, phaseID_marker
+from ..util.log import Handle
 
+logger = Handle(__name__)
 
 def plot_xy_phase_groupby(ax, df, xvar, yvar, legend=True, markersize=3, **kwargs):
     """
@@ -62,7 +64,7 @@ def plot_phasevolumes(phasetable, xvar="temperature", legend=True, ax=None, **kw
     ax, proxies = plot_xy_phase_groupby(
         ax, phasetable, xvar, "volume%", legend=legend, **kwargs
     )
-    return ax
+    return ax, proxies
 
 
 def plot_phasemasses(phasetable, xvar="temperature", legend=True, ax=None, **kwargs):
@@ -71,4 +73,4 @@ def plot_phasemasses(phasetable, xvar="temperature", legend=True, ax=None, **kwa
     ax, proxies = plot_xy_phase_groupby(
         ax, phasetable, xvar, "mass%", legend=legend, **kwargs
     )
-    return ax
+    return ax, proxies

@@ -1,3 +1,7 @@
+from ..util.log import Handle
+
+logger = Handle(__name__)
+
 def get_phaselist(folder):
     """
     Get the list of phases from an experiment.

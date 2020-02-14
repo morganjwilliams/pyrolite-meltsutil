@@ -9,7 +9,7 @@ from pyrolite_meltsutil.util.general import get_data_example
 from pyrolite_meltsutil.tables.load import import_tables
 
 # sphinx_gallery_thumbnail_number = 2
-hsh = "0cc4d1315d"  # the hash index of our experiment
+hsh = "3149b39eee"  # the hash index of our experiment
 batchdir = get_data_example("montecarlo")  # let's use the example batch data for this
 system, phases = import_tables(batchdir / hsh)  # let's import the tables
 ########################################################################################

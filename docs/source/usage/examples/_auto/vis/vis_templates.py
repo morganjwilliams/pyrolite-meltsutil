@@ -13,7 +13,7 @@ from pyrolite_meltsutil.tables import import_tables
 
 # sphinx_gallery_thumbnail_number = 2
 
-exp_dir = get_data_example("montecarlo/97ed8127d9")
+exp_dir = get_data_example("montecarlo/3149b39eee")
 system, phases = import_tables(exp_dir)
 ########################################################################################
 # We can quickly visualise the phase volume relationships versus temperature:

@@ -30,8 +30,7 @@ for ix, phs in enumerate(phasenames):
     phase_data = phases.loc[phases.phase == phs, :]
     for (phaseID, phaseID_data) in phase_data.groupby("phaseID"):
         style = dict(c=phase_color(phaseID), marker=phaseID_marker(phaseID))
-
-        phaseID_data.loc[:, ["SiO2", "MgO", "Al2O3"]].pyroplot.scatter(ax=ax, **style)
+        ax = phaseID_data.loc[:, ["CaO", "MgO", "Al2O3"]].pyroplot.scatter(ax=ax, **style)
 
         proxies[phaseID] = proxy_line(
             ls="-", color=phase_color(phaseID), marker=phaseID_marker(phaseID)

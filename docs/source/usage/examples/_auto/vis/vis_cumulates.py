@@ -33,7 +33,9 @@ from pyrolite.util.plot import mappable_from_values
 
 chemvars = ["MgO", "Al2O3", "FeO"]
 cumulate_comp = phases.loc[phases.phase == "cumulate", :]
-cumulate_comp.loc[:, chemvars].pyroplot.scatter(c=cumulate_comp.temperature, cmap="magma")
+ax = cumulate_comp.loc[:, chemvars].pyroplot.scatter(
+    c=cumulate_comp.temperature, cmap="magma"
+)
 plt.colorbar(
     mappable_from_values(cumulate_phases.temperature, cmap="magma"),
     label="Temperature (C)",
@@ -44,7 +46,7 @@ plt.show()
 #
 
 phaselist = ["clinopyroxene_0", "clinopyroxene_1", "feldspar_0"]
-cumulate_phases.loc[:, phaselist].pyroplot.scatter(
+ax = cumulate_phases.loc[:, phaselist].pyroplot.scatter(
     c=cumulate_phases.temperature, cmap="magma"
 )
 plt.colorbar(

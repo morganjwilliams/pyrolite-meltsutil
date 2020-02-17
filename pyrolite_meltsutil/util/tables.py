@@ -79,10 +79,12 @@ def integrate_solid_composition(df, frac=True):
         # rather than .loc[<index list>, :]
         cumulate["mass"] = np.nancumsum(slds.reindex(index=idx.index)["mass"].values)
 
-        chem = slds.loc[
-            idx.index,
-            [i for i in slds.pyrochem.list_compositional if i not in ["S", "H", "V"]],
-        ]
+        chem = slds.reindex(
+            index=idx.index,
+            columns=[
+                i for i in slds.pyrochem.list_compositional if i not in ["S", "H", "V"]
+            ],
+        )
         chem = chem.apply(pd.to_numeric, errors="coerce")
         increments = slds.loc[idx.index, "mass"].values[:, np.newaxis] * chem.values
 
@@ -133,6 +135,7 @@ def integrate_solid_proportions(df, frac=True):
         columns=["pressure", "temperature", "step"] + phaseIDs, index=idx.index
     )
     for p in phaseIDs:  # integrate cumulate mass per phase
+        # mindf should have all of the mineral index values
         mindf.loc[df.loc[df.phaseID == p, "mass"].index.values, p] = df.loc[
             df.phaseID == p, "mass"
         ].values

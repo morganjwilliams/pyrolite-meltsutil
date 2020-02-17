@@ -77,7 +77,7 @@ def integrate_solid_composition(df, frac=True):
         cumulate = pd.DataFrame(columns=slds.columns, index=idx.index)
         # solids typically don't exist for part of the history, so we need reindex here
         # rather than .loc[<index list>, :]
-        cumulate["mass"] = np.nancumsum(slds.reindex(index=idx.index)["mass"].values)
+        cumulate["mass"] = np.nancumsum(slds["mass"].reindex(index=idx.index).values)
 
         chem = slds.reindex(
             index=idx.index,
@@ -86,8 +86,9 @@ def integrate_solid_composition(df, frac=True):
             ],
         )
         chem = chem.apply(pd.to_numeric, errors="coerce")
-        increments = slds.loc[idx.index, "mass"].values[:, np.newaxis] * chem.values
-
+        increments = (
+            slds["mass"].reindex(index=idx.index).values[:, np.newaxis] * chem.values
+        )
         cumulate[chem.columns] = np.nancumsum(increments, axis=1)
         cumulate[["pressure", "temperature", "step"]] = slds.loc[
             :, ["pressure", "temperature", "step"]

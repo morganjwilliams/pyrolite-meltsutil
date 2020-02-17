@@ -341,6 +341,12 @@ def import_tables(pth, kelvin=False):
     phase["volume%"] = (
         phase["volume"] / system.loc[phase.index, "volume"].values[0] * 100
     )
+    # Convert column dtypes where necessary
+    obj_columns = ["phaseID", "phase", "formula", "structure"]
+    numeric_columns = [col for col in phase.columns if col not in obj_columns]
+    phase[numeric_columns] = phase[numeric_columns].apply(
+        pd.to_numeric, errors="coerce"
+    )
     return system, phase
 
 

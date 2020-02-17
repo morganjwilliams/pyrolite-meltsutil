@@ -11,10 +11,42 @@ All notable changes to this project will be documented here.
         If you're keen to check something out before its released, you can use a
         `development install <installation.html#development-installation>`__.
 
-`0.1.0`_
+
+`0.1.4`_
 --------------
 
-`0.0.4`_
+`0.1.3`_
+--------------
+
+`0.1.2`_
+--------------
+
+* Updated data examples under :mod:`pyrolite_meltsutil.data.data_examples`
+
+:mod:`pyrolite_meltsutil.automation`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* Added :func:`~pyrolite_meltsutil.automation.process_modifications`
+  to deal with modifications to config (e.g. chemistry), and moved modifications
+  such that they're included in the experiment configuration grid before it's
+  serialized.
+* Bugfix for config serialization
+
+
+:mod:`pyrolite_meltsutil.tables`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Added try-except loop to deal with missing experiment files (e.g. if an experiment
+  failed to run in the middle of an set of experiments)
+* Improved error handling for bad tables
+
+`0.1.1`_
+--------------
+
+* Bugfix for :mod:`pyrolite_meltsutil.util`
+* Fixed broken link on docs index page
+* Removed support for Python 3.5
+
+`0.1.0`_
 --------------
 
 * Added :mod:`pyrolite_meltsutil.data`
@@ -114,5 +146,10 @@ All notable changes to this project will be documented here.
 * Updated and refactored documentation
 
 
-.. _Development: https://github.com/morganjwilliams/pyrolite/compare/0.0.2...develop
+.. _Development: https://github.com/morganjwilliams/pyrolite/compare/0.1.4...develop
+.. _0.1.4: https://github.com/morganjwilliams/pyrolite/compare/0.1.3...0.1.4
+.. _0.1.3: https://github.com/morganjwilliams/pyrolite/compare/0.1.2...0.1.3
+.. _0.1.2: https://github.com/morganjwilliams/pyrolite/compare/0.1.1...0.1.2
+.. _0.1.1: https://github.com/morganjwilliams/pyrolite/compare/0.1.0...0.1.1
+.. _0.1.0: https://github.com/morganjwilliams/pyrolite/compare/0.0.2...0.1.0
 .. _0.0.2: https://github.com/morganjwilliams/pyrolite/compare/0.0.1...0.0.2

@@ -130,9 +130,8 @@ def read_melts_tablefile(filepath, kelvin=False, skiprows=3, **kwargs):
         lines = [i for i in tab.readlines()[skiprows:] if i]
         headers = lines[0].strip().split()
         for ix, h in enumerate(headers):
-            if headers[:ix].count(h) > 1:
+            if headers[:ix+1].count(h) > 1: # logfO2(absolute) is sometimes duplicated
                 headers[ix] = h + ".1"  # silence duplicate
-
         linelen = [len(l.strip().split()) for l in lines]
         if not all([l == linelen[0] for l in linelen]):
             logger.debug(  # debug here because these tables are often left-empty

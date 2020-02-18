@@ -11,7 +11,33 @@ All notable changes to this project will be documented here.
         If you're keen to check something out before its released, you can use a
         `development install <installation.html#development-installation>`__.
 
+* MELTS web service functionality archived.
 
+* Updated data examples within :mod:`pyrolite_meltsutil.data.data_examples`
+
+:mod:`pyrolite_meltsutil.tables`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Bugfix for duplicated columns ('logfO2(absolute)').
+* Added 'alloy-solid' to bug phases where 'structure' is not included as a header name.
+* Bugfix for non-numeric columns produced via
+  :mod:`~pyrolite_meltsutil.tables.load.import_tables` (which was breaking
+  :mod:`~pyrolite_meltsutil.vis.scss.plot_sulfur_saturation_point`)
+
+:mod:`pyrolite_meltsutil.vis`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Updated relevant visualisation docs examples to refer to the (:code:`(ax, proxies)`)
+  syntax where :mod:`~pyrolite_meltsutil.vis.templates` are used
+* pandas-1.0 related bugfix for :mod:`~pyrolite_meltsutil.vis.templates`
+  (`#6 <https://github.com/morganjwilliams/pyrolite-meltsutil/issues/6>`__).
+
+:mod:`pyrolite_meltsutil.util`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* pandas-1.0 related bugfix for cumulate integration functions
+  (`#6 <https://github.com/morganjwilliams/pyrolite-meltsutil/issues/6>`__).
+  
 
 `0.1.4`_
 --------------

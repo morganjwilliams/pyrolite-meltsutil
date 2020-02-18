@@ -12,16 +12,57 @@ All notable changes to this project will be documented here.
         `development install <installation.html#development-installation>`__.
 
 
+
 `0.1.4`_
 --------------
 
 `0.1.3`_
 --------------
 
+* Updated :func:`~pyrolite_meltsutil.parse.from_melts_cstr` to ignore vacancies
+  (:code:`[]`)
+
+:mod:`pyrolite_meltsutil.automation`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Updated :func:`~pyrolite_meltsutil.automation.naming.exp_hash` for consistent
+  naming by sorting dictionary keys before taking a hash of a json-encoded configuration
+* Update chemistry modifications to better handle :code:`np.nan` in compositions,
+  where it is now replaced by zero.
+* Directory keyword argument updated to :code:`fromdir` from :code:`dir`, to avoid
+  any potential conflict with the python function.
+* Updated :func:`~pyrolite_meltsutil.automation.org.make_meltsfolder` directory keyword
+  argument to :code:`indir` from :code:`dir`
+
+:mod:`pyrolite_meltsutil.tables`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Table files now checked for inconsistent line lengths before import into
+  :class:`pandas.DataFrame`. Bug fix to deal with alphaMELTS omitting a
+  column header for 'structure' for specific minerals (here nepheline and kalsilite)
+* Bug fix for dealing with duplicated column headers (specifically, this is typically
+  'logfO2(absolute)')
+
+:mod:`pyrolite_meltsutil.vis`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Updated templates to make plots including missing intervals.
+
+:mod:`pyrolite_meltsutil.util`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Integrate solids updated to
+  :func:`~pyrolite_meltsutil.util.tables.integrate_solid_composition`
+* Added :func:`~pyrolite_meltsutil.util.tables.integrate_solid_proportions`
+  for integrating mineral mass proportions.
+* Updated indexing for cumulate integration functions to include all experiment
+  steps
+
 `0.1.2`_
 --------------
 
 * Updated data examples under :mod:`pyrolite_meltsutil.data.data_examples`
+* Added DOI badge to readme.
 
 :mod:`pyrolite_meltsutil.automation`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -117,6 +117,7 @@ def integrate_solid_proportions(df, frac=True):
     df : :class:`pandas.DataFrame`
         DataFrame containing integrated solid phase proportions.
     """
+    assert not "experiment" in df.columns, "Designed for single tables."
     # another dataframe for integrated minerals
     phaseIDs = sorted(
         [

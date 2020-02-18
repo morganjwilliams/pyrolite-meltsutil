@@ -16,6 +16,33 @@ All notable changes to this project will be documented here.
 `0.1.4`_
 --------------
 
+* Web tests switched off, as the MELTS web service appears to be retired.
+
+:mod:`pyrolite_meltsutil.tables`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Added note to :func:`~pyrolite_meltsutil.util.tables.integrate_solid_composition`
+  to assert that it's for use with singular experiments, not aggregations of
+  experiments.
+
+:mod:`pyrolite_meltsutil.vis`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Updated :mod:`pyrolite_meltsutil.vis.templates` functions to return a tuple
+  of axes and proxies (:code:`(ax, proxies)`) for easier legend creation.
+  The proxies object is a dictionary of :code:`phaseID` : :code:`{**styling}`.
+* Updated :mod:`pyrolite_meltsutil.vis.style` functions to have expanded
+  sets of linestyles/markers for plotting up to 8 different series (note that
+  half of these would be duplicates)
+
+:mod:`pyrolite_meltsutil.util`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Added :mod:`~pyrolite_meltsutil.util.log` for consistent logging handling.
+* Move :func:`~pyrolite_meltsutil.util.general.get_process_tree` and
+  :func:`~pyrolite_meltsutil.util.general.check_perl`
+  over from :mod:`pyrolite`
+
 `0.1.3`_
 --------------
 

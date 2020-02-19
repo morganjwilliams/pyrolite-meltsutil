@@ -88,7 +88,7 @@ def unmix_compositions(X, components, bdl=10 * -5):
 mixed = otpt.liquidcomp.loc[:, components.columns]
 U = unmix_compositions(mixed, components)
 U
-ax = U.pyroplot.ternary(c=otpt.liquidcomp.Temperature.values, cmap=cmap)
+ax = U.pyroplot.scatter(c=otpt.liquidcomp.Temperature.values, cmap=cmap)
 add_colorbar(ax.collections[-1], norm=norm, cmap=cmap)
 
 # %%

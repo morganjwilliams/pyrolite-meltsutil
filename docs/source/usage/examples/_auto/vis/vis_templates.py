@@ -10,9 +10,10 @@ experiment results.
 # crystallisation experiments from the montecarlo tutorial, and import the tables:
 from pyrolite_meltsutil.util.general import get_data_example
 from pyrolite_meltsutil.tables import import_tables
+
 # sphinx_gallery_thumbnail_number = 2
 
-exp_dir = get_data_example("montecarlo/97ed8127d9")
+exp_dir = get_data_example("montecarlo/3149b39eee")
 system, phases = import_tables(exp_dir)
 ########################################################################################
 # We can quickly visualise the phase volume relationships versus temperature:
@@ -20,13 +21,13 @@ system, phases = import_tables(exp_dir)
 import matplotlib.pyplot as plt
 from pyrolite_meltsutil.vis.templates import plot_phasevolumes
 
-ax = plot_phasevolumes(phases)
+ax, proxies = plot_phasevolumes(phases)
 plt.show()
 ########################################################################################
 # Similarly, for the phase mass relationships versus temperature:
 #
 from pyrolite_meltsutil.vis.templates import plot_phasemasses
 
-ax = plot_phasemasses(phases, marker=None)
+ax, proxies = plot_phasemasses(phases, marker=None)
 ax.set_yscale("log")
 plt.show()

@@ -78,9 +78,12 @@ def read_phase_table(tab):
     headers = lines[1].strip().split()
     linelen = [len(l.strip().split()) for l in lines[1:]]
     if not all([l == linelen[0] for l in linelen]):
-        if linelen[0] == (linelen[1] - 1): # known errors for neph, kals
+        if linelen[0] == (linelen[1] - 1):  # known errors for neph, kals, alloy
             if any(
-                [phase in phaseID for phase in ["nepheline", "kalsilite"]]
+                [
+                    phase in phaseID
+                    for phase in ["nepheline", "kalsilite", "alloy-solid"]
+                ]
             ):  # inconsistent headers
                 expect = [
                     "Pressure",
@@ -95,7 +98,7 @@ def read_phase_table(tab):
                 ]
                 headers = [i for i in expect] + [i for i in headers if i not in expect]
         else:
-            logger.warning( # unkonwn line length error
+            logger.warning(  # unkonwn line length error
                 "Inconsistent line lengths for {} table: {}".format(
                     phaseID, " ".join([str(i) for i in linelen])
                 )
@@ -130,9 +133,10 @@ def read_melts_tablefile(filepath, kelvin=False, skiprows=3, **kwargs):
         lines = [i for i in tab.readlines()[skiprows:] if i]
         headers = lines[0].strip().split()
         for ix, h in enumerate(headers):
-            if headers[:ix].count(h) > 1:
+            if (
+                headers[: ix + 1].count(h) > 1
+            ):  # logfO2(absolute) is sometimes duplicated
                 headers[ix] = h + ".1"  # silence duplicate
-
         linelen = [len(l.strip().split()) for l in lines]
         if not all([l == linelen[0] for l in linelen]):
             logger.debug(  # debug here because these tables are often left-empty
@@ -336,6 +340,12 @@ def import_tables(pth, kelvin=False):
     phase["mass%"] = phase["mass"] / system.loc[phase.index, "mass"].values[0] * 100
     phase["volume%"] = (
         phase["volume"] / system.loc[phase.index, "volume"].values[0] * 100
+    )
+    # Convert column dtypes where necessary
+    obj_columns = ["phaseID", "phase", "formula", "structure"]
+    numeric_columns = [col for col in phase.columns if col not in obj_columns]
+    phase[numeric_columns] = phase[numeric_columns].apply(
+        pd.to_numeric, errors="coerce"
     )
     return system, phase
 

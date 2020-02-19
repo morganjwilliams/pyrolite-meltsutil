@@ -12,6 +12,7 @@ from ..util.log import Handle
 
 logger = Handle(__name__)
 
+
 def plot_xy_phase_groupby(ax, df, xvar, yvar, legend=True, markersize=3, **kwargs):
     """
     Utility function for plotting phases on an axis.
@@ -34,7 +35,7 @@ def plot_xy_phase_groupby(ax, df, xvar, yvar, legend=True, markersize=3, **kwarg
     xinds = df.step.drop_duplicates().sort_values().index  # steps are unique
 
     for phaseID in phaseIDlist:
-        phasedf = df.loc[df.phaseID == phaseID, :].loc[xinds, :]
+        phasedf = df.loc[df.phaseID == phaseID, :].reindex(index=xinds)
         style = dict(
             ls=phaseID_linestyle(phaseID),
             color=phase_color(phaseID),

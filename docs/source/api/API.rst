@@ -41,20 +41,14 @@ pyrolite_meltsutil\.tables
       :members:
       :undoc-members:
 
-pyrolite_meltsutil\.plottemplates
+pyrolite_meltsutil\.vis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  .. automodule:: pyrolite_meltsutil.plottemplates
+  .. automodule:: pyrolite_meltsutil.vis
       :members:
       :undoc-members:
 
 pyrolite_meltsutil\.util
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   .. automodule:: pyrolite_meltsutil.util
-      :members:
-      :undoc-members:
-
-pyrolite_meltsutil\.web
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  .. automodule:: pyrolite_meltsutil.web
       :members:
       :undoc-members:

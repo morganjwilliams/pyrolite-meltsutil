@@ -5,6 +5,7 @@ from ..util.log import Handle
 
 logger = Handle(__name__)
 
+
 def phasename(phaseID):
     """
     Take a phase ID and return the name of the phase.
@@ -64,7 +65,7 @@ def integrate_solid_composition(df, frac=True):
     df : :class:`pandas.DataFrame`
         DataFrame containing an integrated solid composition.
     """
-    assert not 'experiment' in df.columns, 'Designed for single tables.'
+    assert not "experiment" in df.columns, "Designed for single tables."
     slds = df.loc[df.phase == "solid", :]
     idx = (
         df.loc[:, ["pressure", "temperature", "step"]]
@@ -74,15 +75,20 @@ def integrate_solid_composition(df, frac=True):
     )
     if frac:
         cumulate = pd.DataFrame(columns=slds.columns, index=idx.index)
-        cumulate["mass"] = np.nancumsum(slds.loc[idx.index, "mass"].values)
+        # solids typically don't exist for part of the history, so we need reindex here
+        # rather than .loc[<index list>, :]
+        cumulate["mass"] = np.nancumsum(slds["mass"].reindex(index=idx.index).values)
 
-        chem = slds.loc[
-            idx.index,
-            [i for i in slds.pyrochem.list_compositional if i not in ["S", "H", "V"]],
-        ]
+        chem = slds.reindex(
+            index=idx.index,
+            columns=[
+                i for i in slds.pyrochem.list_compositional if i not in ["S", "H", "V"]
+            ],
+        )
         chem = chem.apply(pd.to_numeric, errors="coerce")
-        increments = slds.loc[idx.index, "mass"].values[:, np.newaxis] * chem.values
-
+        increments = (
+            slds["mass"].reindex(index=idx.index).values[:, np.newaxis] * chem.values
+        )
         cumulate[chem.columns] = np.nancumsum(increments, axis=1)
         cumulate[["pressure", "temperature", "step"]] = slds.loc[
             :, ["pressure", "temperature", "step"]
@@ -111,6 +117,7 @@ def integrate_solid_proportions(df, frac=True):
     df : :class:`pandas.DataFrame`
         DataFrame containing integrated solid phase proportions.
     """
+    assert not "experiment" in df.columns, "Designed for single tables."
     # another dataframe for integrated minerals
     phaseIDs = sorted(
         [
@@ -130,6 +137,7 @@ def integrate_solid_proportions(df, frac=True):
         columns=["pressure", "temperature", "step"] + phaseIDs, index=idx.index
     )
     for p in phaseIDs:  # integrate cumulate mass per phase
+        # mindf should have all of the mineral index values
         mindf.loc[df.loc[df.phaseID == p, "mass"].index.values, p] = df.loc[
             df.phaseID == p, "mass"
         ].values

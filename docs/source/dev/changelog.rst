@@ -11,8 +11,9 @@ All notable changes to this project will be documented here.
         If you're keen to check something out before its released, you can use a
         `development install <installation.html#development-installation>`__.
 
+`0.1.5`_
+----------
 * MELTS web service functionality archived.
-
 * Updated data examples within :mod:`pyrolite_meltsutil.data.data_examples`
 
 :mod:`pyrolite_meltsutil.tables`
@@ -37,7 +38,7 @@ All notable changes to this project will be documented here.
 
 * pandas-1.0 related bugfix for cumulate integration functions
   (`#6 <https://github.com/morganjwilliams/pyrolite-meltsutil/issues/6>`__).
-  
+
 
 `0.1.4`_
 --------------
@@ -240,7 +241,8 @@ All notable changes to this project will be documented here.
 * Updated and refactored documentation
 
 
-.. _Development: https://github.com/morganjwilliams/pyrolite/compare/0.1.4...develop
+.. _Development: https://github.com/morganjwilliams/pyrolite/compare/0.1.5...develop
+.. _0.1.5: https://github.com/morganjwilliams/pyrolite/compare/0.1.4...0.1.5
 .. _0.1.4: https://github.com/morganjwilliams/pyrolite/compare/0.1.3...0.1.4
 .. _0.1.3: https://github.com/morganjwilliams/pyrolite/compare/0.1.2...0.1.3
 .. _0.1.2: https://github.com/morganjwilliams/pyrolite/compare/0.1.1...0.1.2

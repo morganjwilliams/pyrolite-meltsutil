@@ -13,6 +13,7 @@ All notable changes to this project will be documented here.
 
 `0.1.5`_
 ----------
+
 * MELTS web service functionality archived.
 * Updated data examples within :mod:`pyrolite_meltsutil.data.data_examples`
 

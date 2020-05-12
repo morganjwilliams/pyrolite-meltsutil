@@ -45,7 +45,7 @@ setup(
     keywords=["geochemistry", "compositional data", "visualisation", "petrology"],
     packages=find_packages(exclude=["test*"]),
     install_requires=[
-        "pyrolite>=0.2.2",
+        "pyrolite>=0.2.7",
         "requests",
         "psutil",
         "xmljson",

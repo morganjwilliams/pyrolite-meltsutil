@@ -60,7 +60,8 @@ ax.set_ylim(0, 0.35)
 ########################################################################################
 # To this we can add a colorbar for the temperature color mapping:
 #
-from pyrolite.util.plot import mappable_from_values, add_colorbar
+from pyrolite.util.plot.style import mappable_from_values
+from pyrolite.util.plot.axes import add_colorbar
 
 plt.colorbar(mappable_from_values(liquid[colorvar]), ax=ax, pad=0.1, label=colorvar)
 plt.show()

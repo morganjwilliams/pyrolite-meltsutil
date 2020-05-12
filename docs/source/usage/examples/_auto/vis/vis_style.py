@@ -34,7 +34,7 @@ styles = [
 ########################################################################################
 import numpy as np
 import matplotlib.pyplot as plt
-from pyrolite.util.plot import proxy_line
+from pyrolite.util.plot.legend import proxy_line
 
 np.random.seed(27)
 

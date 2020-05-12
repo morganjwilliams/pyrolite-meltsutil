@@ -5,7 +5,7 @@ from pathlib import Path
 def mvar(**kwargs):
     """A data dictonary specifying MELTS environment variables."""
     d = dict(
-        validate=None,
+        validator=None,
         desc=None,
         type=None,
         units=None,
@@ -58,7 +58,7 @@ def typecast(type, item):
 MELTS_environment_variables = {  # Solution Models
     "VERSION": mvar(
         default="pMELTS",
-        validate=lambda x: x in ["MELTS", "pMELTS"],
+        validator=lambda x: x in ["MELTS", "pMELTS"],
         desc=description(
             """Set to choose the liquid thermodynamic model.
            pMELTS is only recommended for peridotite bulk
@@ -133,7 +133,7 @@ MELTS_environment_variables = {  # Solution Models
     ),
     # P-T Path and fO2 control
     "MODE": mvar(
-        validate=lambda x: x
+        validator=lambda x: x
         in [
             "geothermal",
             "isenthalpic",
@@ -168,7 +168,7 @@ MELTS_environment_variables = {  # Solution Models
     ),
     "PTPATH_FILE": mvar(
         set=False,
-        validate=filepath_validator,
+        validator=filepath_validator,
         desc=description(
             """Gives the name of the ptpath_file, which is a simple
             space delimited text file with one ‘P_value T_value’
@@ -178,7 +178,7 @@ MELTS_environment_variables = {  # Solution Models
         ),
     ),
     "DELTAP": mvar(
-        validate=numeric_validator,
+        validator=numeric_validator,
         type=float,
         default=1000.0,
         units="bars",
@@ -195,7 +195,7 @@ MELTS_environment_variables = {  # Solution Models
         ),
     ),
     "DELTAT": mvar(
-        validate=numeric_validator,
+        validator=numeric_validator,
         default=10.0,
         type=float,
         units="Degrees Celsius",
@@ -210,7 +210,7 @@ MELTS_environment_variables = {  # Solution Models
         ),
     ),
     "MAXP": mvar(
-        validate=numeric_validator,
+        validator=numeric_validator,
         type=float,
         default=lambda env: [30000, 40000][env["VERSION"] != "MELTS"],
         dependent_on=["VERSION"],
@@ -221,7 +221,7 @@ MELTS_environment_variables = {  # Solution Models
         ),
     ),
     "MINP": mvar(
-        validate=numeric_validator,
+        validator=numeric_validator,
         type=float,
         default=lambda env: [1, 10000][env["VERSION"] != "MELTS"],
         dependent_on=["VERSION"],
@@ -232,7 +232,7 @@ MELTS_environment_variables = {  # Solution Models
         ),
     ),
     "MAXT": mvar(
-        validate=numeric_validator,
+        validator=numeric_validator,
         type=float,
         default=2000,
         units="Degrees Celsius",
@@ -242,7 +242,7 @@ MELTS_environment_variables = {  # Solution Models
         ),
     ),
     "MINT": mvar(
-        validate=numeric_validator,
+        validator=numeric_validator,
         type=float,
         default=0,
         units="Degrees Celsius",

@@ -29,7 +29,7 @@ cumulate_phases.tail(3).T
 #
 import matplotlib.pyplot as plt
 import pyrolite.plot
-from pyrolite.util.plot import mappable_from_values
+from pyrolite.util.plot.style import mappable_from_values
 
 chemvars = ["MgO", "Al2O3", "FeO"]
 cumulate_comp = phases.loc[phases.phase == "cumulate", :]

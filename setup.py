@@ -10,7 +10,7 @@ dev_require = [
     "twine",
     "sphinx_rtd_theme",
     "sphinx-autodoc-annotation",
-    "sphinx_gallery",
+    "sphinx_gallery>=0.6.0",
     "recommonmark",
 ] + tests_require
 
@@ -45,7 +45,7 @@ setup(
     keywords=["geochemistry", "compositional data", "visualisation", "petrology"],
     packages=find_packages(exclude=["test*"]),
     install_requires=[
-        "pyrolite>=0.2.2",
+        "pyrolite>=0.2.7",
         "requests",
         "psutil",
         "xmljson",

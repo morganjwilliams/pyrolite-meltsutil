@@ -4,16 +4,38 @@ alphaMELTS download and installsation utilities.
 import os, sys, platform
 import subprocess, shutil
 import io
+import re
 import requests
 import zipfile
 from pathlib import Path
-from pyrolite.util.general import copy_file, extract_zip, remove_tempdir
+from pyrolite.util.general import copy_file, remove_tempdir
 from pyrolite.util.web import internet_connection
 from .util.general import pyrolite_meltsutil_datafolder, check_perl
 import logging
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 logger = logging.getLogger(__name__)
+
+
+def extract_zip(zipfile, output_dir):
+    """
+    Extracts a zipfile without the uppermost folder.
+
+    Parameters
+    ----------
+    zipfile: zipfile object
+        Zipfile object to extract.
+    output_dir: str | Path
+        Directory to extract files to.
+    """
+    output_dir = Path(output_dir)
+    if zipfile.testzip() is None:
+        for m in zipfile.namelist():
+            fldr, name = re.split("/", m, maxsplit=1)
+            if name:
+                content = zipfile.open(m, "r").read()
+                with open(str(output_dir / name), "wb") as out:
+                    out.write(content)
 
 
 def download_melts(directory, version=None):

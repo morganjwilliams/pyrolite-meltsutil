@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from pyrolite.util.meta import subkwargs
-from pyrolite.util.plot import proxy_line
+from pyrolite.util.plot.legend import proxy_line
 from .style import phase_color, phaseID_linestyle, phaseID_marker
 from ..util.log import Handle
 

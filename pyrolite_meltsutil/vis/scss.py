@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pyrolite_meltsutil as melts
-from pyrolite.util.plot import get_twins, share_axes
+from pyrolite.util.plot.axes import get_twins, share_axes
 from pyrolite.geochem.magma import SCSS
 from ..util.log import Handle
 

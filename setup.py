@@ -10,7 +10,7 @@ dev_require = [
     "twine",
     "sphinx_rtd_theme",
     "sphinx-autodoc-annotation",
-    "sphinx_gallery",
+    "sphinx_gallery>=0.6.0",
     "recommonmark",
 ] + tests_require
 

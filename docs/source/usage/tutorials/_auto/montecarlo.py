@@ -144,7 +144,7 @@ cfg = import_batch_config(experiment_dir)  # and also the configuration
 # masses change with temperature (i.e. during crystallisation).
 #
 import matplotlib.pyplot as plt
-from pyrolite.util.plot import proxy_line
+from pyrolite.util.plot.legend import proxy_line
 from pyrolite_meltsutil.vis.style import phaseID_linestyle, phaseID_marker, phase_color
 
 phaselist = ["liquid", "clinopyroxene", "feldspar", "olivine"]

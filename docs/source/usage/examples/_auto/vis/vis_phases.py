@@ -18,7 +18,7 @@ name, cfg, env = import_batch_config(batchdir)[hsh]  # and also the configuratio
 #
 import pyrolite.plot
 import matplotlib.pyplot as plt
-from pyrolite.util.plot import proxy_line
+from pyrolite.util.plot.legend import proxy_line
 from pyrolite_meltsutil.vis.style import phase_color, phaseID_linestyle, phaseID_marker
 
 phasenames = ["olivine", "clinopyroxene", "feldspar", "liquid"]

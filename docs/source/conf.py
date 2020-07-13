@@ -236,18 +236,18 @@ from sphinx_gallery.sorting import ExplicitOrder
 
 sphinx_gallery_conf = {
     "examples_dirs": [
-        "usage/examples/_auto/",
-        "usage/tutorials/_auto/",
+        "gallery/examples/",
+        "gallery/tutorials/",
     ],  # path to your example scripts
-    #"expected_failing_examples": ["usage/examples/_auto/web/meltsweb.py"],
+    # "expected_failing_examples": ["usage/examples/_auto/web/meltsweb.py"],
     "subsection_order": ExplicitOrder(
         [
-            "usage/examples/_auto/tables",
-            "usage/examples/_auto/automation",
-            "usage/examples/_auto/vis",
-            "usage/examples/_auto/install",
-            "usage/examples/_auto/web",
-            "usage/tutorials/_auto",
+            "gallery/examples/tables",
+            "gallery/examples/automation",
+            "gallery/examples/vis",
+            "gallery/examples/install",
+            "gallery/examples/web",
+            "gallery/tutorials/",
         ]
     ),
     "gallery_dirs": [

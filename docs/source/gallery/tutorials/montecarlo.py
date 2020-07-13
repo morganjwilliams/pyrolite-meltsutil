@@ -33,7 +33,7 @@ MORB.T
 # it'll be handy to have a function to do so. Here's a simple one which
 # achieves this and is sufficient for our purpose:
 #
-from pyrolite.comp.codata import ilr, inverse_ilr
+from pyrolite.comp.codata import ILR, inverse_ILR
 
 
 def blur_compositions(df, noise=0.05, scale=100):
@@ -42,9 +42,9 @@ def blur_compositions(df, noise=0.05, scale=100):
     its best to use measured uncertainties to generate these simulated compositions.
     """
     # transform into compositional space, add noise, return to simplex
-    xvals = ilr(df.values)
+    xvals = ILR(df.values)
     xvals += np.random.randn(*xvals.shape) * noise
-    return inverse_ilr(xvals) * scale
+    return inverse_ILR(xvals) * scale
 
 
 ########################################################################################

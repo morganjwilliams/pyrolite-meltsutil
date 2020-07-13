@@ -6,7 +6,7 @@ from pyrolite_meltsutil.web import *
 
 @unittest.skipIf(not internet_connection(), "Needs internet connection.")
 @unittest.skipIf(
-    not internet_connection("http://melts.ofm-research.org/TestMeltsWebService.html"),
+    not internet_connection("melts.ofm-research.org/TestMeltsWebService.html"),
     "Web service shut down.",
 )
 class TestWebService(unittest.TestCase):

@@ -37,7 +37,7 @@ ax = cumulate_comp.loc[:, chemvars].pyroplot.scatter(
     c=cumulate_comp.temperature, cmap="magma"
 )
 plt.colorbar(
-    mappable_from_values(cumulate_comp.temperature, cmap="magma"),
+    mappable_from_values(cumulate_comp.temperature.dropna(), cmap="magma"),
     label="Temperature (C)",
 )
 plt.show()

@@ -9,7 +9,7 @@ Todo
 from pyrolite.util.plot.legend import proxy_line
 from ..tables.load import import_tables
 from .style import phase_color, phaseID_linestyle
-
+from . import templates
 from ..util.log import Handle
 
 logger = Handle(__name__)

@@ -29,7 +29,7 @@ jobs:
           - "$HOME/Library/Caches/pip"
       addons:
         homebrew:
-          update: true
+          # update: true
           packages: python3
       before_install:
         - python3 -m pip install --upgrade virtualenv

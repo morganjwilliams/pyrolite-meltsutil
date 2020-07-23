@@ -79,22 +79,27 @@ def integrate_solid_composition(df, frac=True):
         # rather than .loc[<index list>, :]
         cumulate["mass"] = np.nancumsum(slds["mass"].reindex(index=idx.index).values)
 
-        chem = slds.reindex(
-            index=idx.index,
-            columns=[
-                i for i in slds.pyrochem.list_compositional if i not in ["S", "H", "V"]
-            ],
-        )
+        chem_columns = [
+            i for i in slds.pyrochem.list_compositional if i not in ["S", "H", "V"]
+        ]
+        chem = slds.reindex(index=idx.index, columns=chem_columns,)
         chem = chem.apply(pd.to_numeric, errors="coerce")
+
         increments = (
-            slds["mass"].reindex(index=idx.index).values[:, np.newaxis] * chem.values
+            slds["mass"].reindex(index=idx.index).values[:, np.newaxis]
+            * chem.values
         )
-        cumulate[chem.columns] = np.nancumsum(increments, axis=1)
+        cumulate[chem_columns] = np.nancumsum(increments, axis=1)
         cumulate[["pressure", "temperature", "step"]] = slds.loc[
             :, ["pressure", "temperature", "step"]
         ]
+        # renormalise these compositions to 100%
+        cumulate[chem_columns] = cumulate.loc[:, chem_columns].pyrocomp.renormalise(
+            scale=100.0
+        )
     else:
         cumulate = slds.reindex(index=idx.index)
+
     cumulate.pyrochem.add_MgNo()
     return cumulate
 
@@ -144,7 +149,7 @@ def integrate_solid_proportions(df, frac=True):
     mindf = mindf.loc[idx.index, :]  # sort index
     if frac:
         mindf = mindf.apply(np.nancumsum, axis=0)  # accumulate minerals
-    # fractioal mass of total cumulate
+    # fractional mass of total cumulate
     mindf = mindf.div(mindf.sum(axis=1).replace(0, np.nan), axis=0) * 100.0
     PTS = idx
     mindf.loc[idx.index, ["pressure", "temperature", "step"]] = PTS

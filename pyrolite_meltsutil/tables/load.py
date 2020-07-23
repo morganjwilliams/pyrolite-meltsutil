@@ -331,7 +331,7 @@ def import_tables(pth, kelvin=False):
     phase = phase.append(cumulate_comp, sort=False)
 
     cumulate_phases = integrate_solid_proportions(phase, frac=frac)
-    cumulate_comp["phase"] = "cumulate"
+    cumulate_phases["phase"] = "cumulate"
     # TODO: Integrate these?
 
     phase["step"] = system.loc[phase.index, "step"]
@@ -377,7 +377,10 @@ def import_batch_config(filepath):
 
 
 def aggregate_tables(
-    lst=Path("./"), kelvin=False, validate_path=lambda x: len(x.name) == 10
+    lst=Path("./"),
+    kelvin=False,
+    validate_path=lambda x: len(x.name) == 10,
+    errors=logger.warning,
 ):
     """
     Aggregate a number of melts tables to a single dataframe.
@@ -415,7 +418,11 @@ def aggregate_tables(
                 system = system.append(S, sort=False)
                 phases = phases.append(P, sort=False)
             except Exception as e:
-                logger.warning("{} at {}.".format(e, d.name))  # record the error
+                msg = "{} at {}.".format(e, d.name)
+                if errors is not None:
+                    errors(msg)  # record the error
+                else:
+                    raise e(msg)
     elif isinstance(lst[0], (list, tuple)) and isinstance(lst[0][0], (pd.DataFrame)):
         # if the list is of tuples of dataframes,
         # aggregate them to a single table

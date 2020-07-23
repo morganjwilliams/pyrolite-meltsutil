@@ -209,6 +209,8 @@ class MeltsBatch(object):
         self.timeout = timeout
         self.logger = logger
         self.fromdir = Path(fromdir)
+        if not self.fromdir.exists():
+            self.fromdir.mkdir(parents=True)
         # make a file logger
         fh = logging.FileHandler(self.fromdir / "autolog.log")
         fh.setLevel(logging.DEBUG)

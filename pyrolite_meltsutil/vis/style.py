@@ -42,7 +42,7 @@ COLORS = {
 }
 
 
-def phase_color(phase, rgb=False):
+def phase_color(phase, rgb=False, default="darkseagreen"):
     """
     Method for generating colors for delineating phase names
     (e.g. olivine, clinopyroxene) based on their names.
@@ -57,13 +57,13 @@ def phase_color(phase, rgb=False):
     :class:`str`
         Color for the phase.
     """
-    c = COLORS.get(phasename(phase), None)
+    c = COLORS.get(phasename(phase), default) or default
     if rgb:
         c = mcolors.to_rgb(c)  # will error on None
     return c
 
 
-def phaseID_linestyle(phaseID, linestyles=["-", "--", ":", "-."]*2):
+def phaseID_linestyle(phaseID, linestyles=["-", "--", ":", "-."] * 2):
     """
     Method for generating linestyles for delineating sequential phases
     based on their phase IDs (e.g. olivine_0, olivine_1) .
@@ -87,7 +87,7 @@ def phaseID_linestyle(phaseID, linestyles=["-", "--", ":", "-."]*2):
         return linestyles[0]
 
 
-def phaseID_marker(phaseID, markers=["D", "s", "o", "+", "*"]*2):
+def phaseID_marker(phaseID, markers=["D", "s", "o", "+", "*"] * 2):
     """
     Method for generating markers for delineating sequential phases
     based on their phase IDs (e.g. olivine_0, olivine_1) .

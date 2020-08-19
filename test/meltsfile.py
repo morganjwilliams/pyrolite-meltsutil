@@ -2,7 +2,7 @@ import unittest
 import pandas as pd
 import io
 from pyrolite.util.pd import to_numeric
-from pyrolite.util.synthetic import test_df, test_ser
+from pyrolite.util.synthetic import normal_frame, normal_series
 from pyrolite_meltsutil.meltsfile import *
 
 
@@ -163,9 +163,9 @@ log fo2 Path: None
 
 class Test2MELTSFiles(unittest.TestCase):
     def setUp(self):
-        self.df = test_df()
+        self.df = normal_frame()
         self.df.loc[:, "Title"] = ["Title {}".format(x) for x in self.df.index.values]
-        self.ser = test_ser()
+        self.ser = normal_series()
         self.ser.loc["Title"] = "Test_title"
 
     def test_series_to_melts_file(self):

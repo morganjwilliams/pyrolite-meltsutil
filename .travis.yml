@@ -3,9 +3,13 @@ dist: bionic
 os: linux
 cache: pip
 
+before_install:
+  - sudo apt-get install jq curl
+
 install:
-  - pip install -q pytest pytest-runner pytest-cov coverage coveralls
-  - python setup.py install
+  - pip install -q pytest pytest-runner pytest-cov coverage codacy-coverage
+  - pip install coveralls
+  - pip install . # install skl, statsmodels
 
 script:
   - xvfb-run python setup.py test
@@ -58,6 +62,3 @@ jobs:
         - pip install -q pytest pytest-runner pytest-cov coverage codacy-coverage coveralls
       script:
         - python3 setup.py test
-      after_success:
-        - "ls -lr htmlcov"
-        - coveralls # coverage to coveralls.io

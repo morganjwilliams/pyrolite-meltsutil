@@ -2,17 +2,13 @@ from setuptools import setup, find_packages
 import versioneer
 
 tests_require = ["pytest", "pytest-runner", "pytest-cov", "coverage", "coveralls"]
-
-dev_require = [
-    "pytest",
-    "versioneer",
-    "black",
-    "twine",
+docs_require = [
     "sphinx_rtd_theme",
     "sphinx-autodoc-annotation",
     "sphinx_gallery>=0.6.0",
     "recommonmark",
-] + tests_require
+]
+dev_require = ["pytest", "versioneer", "black", "twine"] + tests_require + docs_require
 
 with open("README.md", "r") as src:
     LONG_DESCRIPTION = src.read()

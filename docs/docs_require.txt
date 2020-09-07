@@ -1,2 +1,2 @@
 git+git://github.com/morganjwilliams/pyrolite.git@develop#egg=pyrolite[skl] # most recent pyrolite
-.[dev]
+.[docs]

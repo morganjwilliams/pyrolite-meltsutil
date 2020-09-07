@@ -48,7 +48,7 @@ setup(
         "dicttoxml",
         "tqdm",
     ],
-    extras_require={"dev": dev_require},
+    extras_require={"dev": dev_require, "docs": docs_require},
     tests_require=tests_require,
     test_suite="test",
     include_package_data=True,

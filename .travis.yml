@@ -55,7 +55,5 @@ jobs:
         - python3 -m pip install --upgrade virtualenv
         - virtualenv -p python3 --system-site-packages "$HOME/venv"
         - source "$HOME/venv/bin/activate"
-      install:
-        - pip install -q pytest pytest-runner pytest-cov coverage codacy-coverage coveralls
       script:
         - python3 setup.py test

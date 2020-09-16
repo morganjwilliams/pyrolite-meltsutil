@@ -98,7 +98,7 @@ Writing Tests
 
 There is currently a broad unit test suite for :mod:`pyrolite-meltsutil`, which guards
 against breaking changes and assures baseline functionality. :mod:`pyrolite-meltsutil` uses continuous
-integration via `Travis <https://travis-ci.org/morganjwilliams/pyrolite-meltsutil>`__, where the
+integration via `Travis <https://travsi-ci.com/morganjwilliams/pyrolite-meltsutil>`__, where the
 full suite of tests are run for each commit and pull request, and test coverage output
 to `Coveralls <https://coveralls.io/github/morganjwilliams/pyrolite-meltsutil>`__.
 

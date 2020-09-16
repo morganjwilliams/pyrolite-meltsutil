@@ -40,5 +40,5 @@ pip install pyrolite-meltsutil
 
 | **master** | **develop** |
 |:----------:|:-----------:|
-| [![Build Status](https://travis-ci.org/morganjwilliams/pyrolite-meltsutil.svg?branch=master)](https://travis-ci.org/morganjwilliams/pyrolite-meltsutil) | [![Build Status](https://travis-ci.org/morganjwilliams/pyrolite-meltsutil.svg?branch=develop)](https://travis-ci.org/morganjwilliams/pyrolite-meltsutil) |
+| [![Build Status](https://travsi-ci.com/morganjwilliams/pyrolite-meltsutil.svg?branch=master)](https://travsi-ci.com/morganjwilliams/pyrolite-meltsutil) | [![Build Status](https://travsi-ci.com/morganjwilliams/pyrolite-meltsutil.svg?branch=develop)](https://travsi-ci.com/morganjwilliams/pyrolite-meltsutil) |
 | [![Coverage Status](https://coveralls.io/repos/github/morganjwilliams/pyrolite-meltsutil/badge.svg?branch=master)](https://coveralls.io/github/morganjwilliams/pyrolite-meltsutil?branch=master) | [![Coverage Status](https://coveralls.io/repos/github/morganjwilliams/pyrolite-meltsutil/badge.svg?branch=develop)](https://coveralls.io/github/morganjwilliams/pyrolite-meltsutil?branch=develop) |

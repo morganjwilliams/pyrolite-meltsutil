@@ -7,7 +7,7 @@ pyrolite can download and manage its own version of alphaMELTS (without any real
 purposes.
 
 """
-from pyrolite.util.meta import stream_log
+from pyrolite.util.log import stream_log
 from pyrolite_meltsutil.download import install_melts
 from pyrolite_meltsutil.util.general import pyrolite_meltsutil_datafolder
 

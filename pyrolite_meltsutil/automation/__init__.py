@@ -16,7 +16,7 @@ from tqdm import tqdm
 
 from pyrolite.geochem.ind import common_elements, common_oxides
 from pyrolite.comp.codata import renormalise
-from pyrolite.util.meta import ToLogger
+from pyrolite.util.log import ToLogger
 from pyrolite.util.multip import combine_choices
 
 from ..parse import read_envfile, read_meltsfile

@@ -1,8 +1,9 @@
 from pathlib import Path
 from pyrolite_meltsutil.tables import get_experiments_summary
 from pyrolite_meltsutil.plottemplates import table_by_phase
-from pyrolite.util.meta import stream_log
-logger = stream_log('pyrolite_meltsutil.tables', level='DEBUG')
+from pyrolite.util.log import stream_log
+
+logger = stream_log("pyrolite_meltsutil.tables", level="DEBUG")
 tempdir = Path("./_auto") / "montecarlo"
 summary = get_experiments_summary(tempdir / "isobar5kbar1300-800CFMQ", kelvin=False)
 # %%
@@ -53,7 +54,6 @@ def component_matrix(components=[], phases=[], names=[]):
     return oxides
 
 
-
 from pyrolite.util.synthetic import test_df, random_cov_matrix
 
 X = test_df(
@@ -66,6 +66,7 @@ component_matrix(components=X.columns, phases=["CaAl2Si2O8", "Mg2Si2O4", "CaMgSi
 
 mixed = X @ components.pyrochem.to_weight().pyrocomp.renormalise(scale=1)
 mixed
+
 
 def unmix_compositions(X, components, bdl=10 * -5):
     x = X.copy()
@@ -93,6 +94,7 @@ add_colorbar(ax.collections[-1], norm=norm, cmap=cmap)
 
 # %%
 import scipy
+
 
 def cost(norm, compositon, components, order=2):
     """

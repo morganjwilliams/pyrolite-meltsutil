@@ -92,7 +92,7 @@ from pyrolite_meltsutil.util.general import get_data_example
 experiment_dir = get_data_example("montecarlo")
 ########################################################################################
 # Let's also set up logging we can see the progression:
-from pyrolite.util.meta import stream_log
+from pyrolite.util.log import stream_log
 import logging
 
 logger = logging.Logger(__name__)

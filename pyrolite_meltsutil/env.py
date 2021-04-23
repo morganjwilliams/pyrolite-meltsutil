@@ -124,12 +124,11 @@ class MELTS_Env(object):
         :class:`str`
             String-representation of the environment which can be writen to a file.
         """
-        preamble = dedent(
-            """
+        preamble = """
         ! Default values of environment variables (pyrolite export)
         ! Variables preceeded by '!' are 'unset' (i.e. 'false')
         """
-        )
+        preamble = "\n".join([s.strip() for s in preamble.splitlines() if s]) + "\n"
         return preamble + "\n".join(
             [
                 ["", "!"][v is None] + "{} {}".format(k, v)

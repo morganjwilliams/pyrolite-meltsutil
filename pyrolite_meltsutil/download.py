@@ -138,9 +138,9 @@ def install_melts(
     if (
         temp_dir / "install.command"
     ).exists() and version is None:  # already downloaded for some reason
-        pass
+        logger.info("Existing installation found.")
     else:
-        logger.info("Downloading Melts")
+        logger.info("Downloading alphaMELTS")
         if not temp_dir.exists():
             temp_dir.mkdir(parents=True)
         download_melts(temp_dir, version=version)

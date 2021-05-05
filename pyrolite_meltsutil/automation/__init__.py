@@ -58,12 +58,14 @@ class MeltsExperiment(object):
         meltsfile=None,
         env=None,
         timeout=None,
+        executable=None,
     ):
         self.name = name  # folder name
         self.title = title  # meltsfile title
         self.fromdir = fromdir  # create an experiment directory here
         self.log = []
         self.timeout = timeout
+        self.executable = executable
 
         if meltsfile is not None:
             self.set_meltsfile(meltsfile)
@@ -121,6 +123,7 @@ class MeltsExperiment(object):
             env="environment.txt",
             fromdir=str(self.folder),
             timeout=self.timeout,
+            executable=self.executable,
         )
         self.mp.write([3, [0, 1][superliquidus_start], 4], wait=True, log=log)
         self.mp.terminate()
@@ -205,12 +208,14 @@ class MeltsBatch(object):
         env=None,
         logger=logger,
         timeout=None,
+        executable=None,
     ):
         self.timeout = timeout
         self.logger = logger
         self.fromdir = Path(fromdir)
         if not self.fromdir.exists():
             self.fromdir.mkdir(parents=True)
+        self.exectuable = exectuable
         # make a file logger
         fh = logging.FileHandler(self.fromdir / "autolog.log")
         fh.setLevel(logging.DEBUG)
@@ -278,7 +283,14 @@ class MeltsBatch(object):
         with open(target, "wb") as f:
             f.write(data)
 
-    def run(self, overwrite=False, exclude=[], superliquidus_start=True, timeout=None):
+    def run(
+        self,
+        overwrite=False,
+        exclude=[],
+        superliquidus_start=True,
+        timeout=None,
+        log=False,
+    ):
         self.dump()  # Serialize the config first
         timeout = self.timeout or timeout
         self.started = time.time()
@@ -309,9 +321,10 @@ class MeltsBatch(object):
                 env=env,
                 fromdir=self.fromdir,
                 timeout=timeout,
+                exectuable=self.exectuable,
             )
             try:
-                M.run(superliquidus_start=superliquidus_start)
+                M.run(superliquidus_start=superliquidus_start, log=log)
                 self.logger.debug("Finished {}.".format(title))
             except OSError:
                 try:

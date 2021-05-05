@@ -228,6 +228,7 @@ class MeltsProcess(object):
             msg = (str(message).strip() + str(os.linesep)).encode("utf-8")
             self.process.stdin.write(msg)
             self.process.stdin.flush()
+
             if wait:
                 self.wait()
             if log:

@@ -174,16 +174,31 @@ class MeltsBatch(object):
         Dictionary of default parameters.
     config_grid : class:`dict`
         Dictionary of parameters to systematically vary.
+    fromdir : :class:`str` | :class:`pathlib.Path`
+        Directory to run the set of experiments from, and where the results of
+        each of the experiments will be saved.
+    env : :class:`str` | :class:`pathlib.Path` | :class:`pyrolite_meltsutil.env.MELTS_Env`
+        Environment file to use, if not the default.
+    executable : :class:`str` | :class:`pathlib.Path`
+        Path to an executable to use, if not the default (specifically the path
+        to :code:`run_alphamelts.command` or :code:`run_alphamelts.bat`).
+    timeout : :class:`int`
+        Timeout in seconds after which to try and terminate an experiment.
+    logger : :class:`logging.Logger`
+        Logger to use for logging output, if not the default.
 
     Attributes
     -----------
 
     compositions : :class:`list` of :class:`dict`
-        Compositions to use for
+        Compositions to use for the experiments.
 
     configs : :class:`list` of :class:`dict`
+        Set of experiment configurations to use.
 
     experiments : :class:`list` of :class:`dict`
+        Combination of compositions and configurations to generate a 'grid'
+        of experiments.
 
     Todo
     ------
@@ -202,13 +217,13 @@ class MeltsBatch(object):
     def __init__(
         self,
         comp_df,
-        fromdir=Path("./"),
         default_config={},
         config_grid={},
+        fromdir=Path("./"),
         env=None,
-        logger=logger,
-        timeout=None,
         executable=None,
+        timeout=None,
+        logger=logger,
     ):
         self.timeout = timeout
         self.logger = logger

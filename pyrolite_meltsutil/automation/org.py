@@ -50,13 +50,17 @@ def make_meltsfolder(
 
     meltsfile, mpath = read_meltsfile(meltsfile)
     assert experiment_folder.exists() and experiment_folder.is_dir()
-    (experiment_folder / title).with_suffix(".melts").touch()
-    with open(str((experiment_folder / title).with_suffix(".melts")), "w") as f:
+    melts_output_path = (experiment_folder / title).with_suffix(".melts")
+    melts_output_path.touch()
+    logger.debug("Creating meltsfile at {}".format(str(melts_output_path)))
+    with open(str(melts_output_path), "w") as f:
         f.write(meltsfile)
 
-    (experiment_folder / "environment").with_suffix(".txt").touch()
     env, epath = read_envfile(env, unset_variables=False)
-    with open(str(experiment_folder / "environment.txt"), "w") as f:
+    env_output_path = (experiment_folder / "environment").with_suffix(".txt")
+    env_output_path.touch()
+    logger.debug("Creating envfile at {}".format(str(env_output_path)))
+    with open(str(env_output_path), "w") as f:
         f.write(env)
 
     return experiment_folder  # return the folder name

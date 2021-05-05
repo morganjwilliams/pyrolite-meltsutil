@@ -6,7 +6,7 @@ import psutil
 import queue
 import time
 from pathlib import Path
-from ..util.general import get_local_link, get_process_tree
+from ..util.general import get_local_link, get_process_tree, check_perl
 from ..util.log import Handle
 
 logger = Handle(__name__)
@@ -93,6 +93,18 @@ class MeltsProcess(object):
                 "Using local executable: {} @ {}".format(
                     executable.name, executable.parent
                 )
+            )
+        if not Path(exectuable).exists():
+            logger.warning(
+                "Executable does not seem to exist. "
+                "Make sure you have alphaMELTS installed."
+            )
+
+        if not check_perl():
+            logger.warning(
+                "Cannot directly call perl "
+                "Make sure you have a version of perl installed "
+                "(through conda or otherwise)."
             )
 
         executable = Path(executable)

@@ -215,7 +215,7 @@ class MeltsBatch(object):
         self.fromdir = Path(fromdir)
         if not self.fromdir.exists():
             self.fromdir.mkdir(parents=True)
-        self.exectuable = exectuable
+        self.executable = executable
         # make a file logger
         fh = logging.FileHandler(self.fromdir / "autolog.log")
         fh.setLevel(logging.DEBUG)
@@ -321,7 +321,7 @@ class MeltsBatch(object):
                 env=env,
                 fromdir=self.fromdir,
                 timeout=timeout,
-                exectuable=self.exectuable,
+                executable=self.executable,
             )
             try:
                 M.run(superliquidus_start=superliquidus_start, log=log)

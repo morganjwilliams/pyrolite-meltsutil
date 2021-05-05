@@ -94,7 +94,9 @@ class MeltsProcess(object):
                     executable.name, executable.parent
                 )
             )
-        if not Path(exectuable).exists():
+
+        executable = Path(executable)
+        if not executable.exists():
             logger.warning(
                 "Executable does not seem to exist. "
                 "Make sure you have alphaMELTS installed."
@@ -107,7 +109,6 @@ class MeltsProcess(object):
                 "(through conda or otherwise)."
             )
 
-        executable = Path(executable)
         self.exname = str(executable.name)
         self.executable = str(executable)
         st = os.stat(self.executable)

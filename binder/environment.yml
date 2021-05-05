@@ -1,4 +1,4 @@
-name: pyrolitedocs
+name: pyrolitemeltsutildocs
 
 channels:
   - conda-forge
@@ -11,4 +11,4 @@ dependencies:
   - scipy>=1.2
   - pandas>=0.23
   - pip:
-      - pyrolite-meltsutil
+      - -e git+git://github.com/morganjwilliams/pyrolite-meltsutil.git@develop#egg=pyrolite-meltsutil

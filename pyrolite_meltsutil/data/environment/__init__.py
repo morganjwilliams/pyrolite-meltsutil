@@ -1,5 +1,6 @@
-from pyrolite.util.text import normalise_whitespace, to_width
 from pathlib import Path
+
+from pyrolite.util.text import normalise_whitespace, to_width
 
 
 def mvar(**kwargs):

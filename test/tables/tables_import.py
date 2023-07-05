@@ -1,16 +1,18 @@
+import logging
 import unittest
-from pyrolite.util.general import temp_path, remove_tempdir
+
+from pyrolite.util.general import remove_tempdir, temp_path
+
 from pyrolite_meltsutil.tables.load import (
-    import_tables,
-    read_phase_table,
-    read_melts_tablefile,
-    phasetable_from_phasemain,
-    phasetable_from_alphameltstxt,
     aggregate_tables,
     import_batch_config,
+    import_tables,
+    phasetable_from_alphameltstxt,
+    phasetable_from_phasemain,
+    read_melts_tablefile,
+    read_phase_table,
 )
 from pyrolite_meltsutil.util.general import get_data_example
-import logging
 
 logger = logging.Logger(__name__)
 

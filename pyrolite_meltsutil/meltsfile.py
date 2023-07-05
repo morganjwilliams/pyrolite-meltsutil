@@ -2,14 +2,15 @@
 Utilities for reading and writing .melts files.
 """
 import io
-import os
 import itertools
+import logging
+import os
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from pyrolite.util.pd import to_frame, to_ser
 from pyrolite.geochem.ind import common_elements, common_oxides
-import logging
+from pyrolite.util.pd import to_frame, to_ser
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 logger = logging.getLogger(__name__)
@@ -85,7 +86,7 @@ def dict_to_meltsfile(
         )
     ]
 
-    for (k, v) in PTpars:
+    for k, v in PTpars:
         if not pd.isnull(v):  # no NaN data in MELTS files
             lines.append("{}: {}".format(k, v))
 

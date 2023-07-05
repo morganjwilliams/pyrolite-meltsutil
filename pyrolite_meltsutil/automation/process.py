@@ -1,12 +1,16 @@
-import os, sys, platform
-import subprocess
-import threading
-import stat
-import psutil
+import os
+import platform
 import queue
+import stat
+import subprocess
+import sys
+import threading
 import time
 from pathlib import Path
-from ..util.general import get_local_link, get_process_tree, check_perl
+
+import psutil
+
+from ..util.general import check_perl, get_local_link, get_process_tree
 from ..util.log import Handle
 
 logger = Handle(__name__)

@@ -7,21 +7,23 @@ Notes
     * Some variable abbreviations are converted to their names (e.g.
         enthalpy, entropy and volume).
 """
-import re
 import io
 import json
-import pandas as pd
-import numpy as np
+import re
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
 from pyrolite.util.pd import zero_to_nan
+
 from ..parse import from_melts_cstr
+from ..util.log import Handle
 from ..util.tables import (
-    phasename,
-    tuple_reindex,
     integrate_solid_composition,
     integrate_solid_proportions,
+    phasename,
+    tuple_reindex,
 )
-from ..util.log import Handle
 
 logger = Handle(__name__)
 
@@ -202,7 +204,7 @@ def phasetable_from_alphameltstxt(filepath, kelvin=False):
             phasettlbs = re.split(r"[\n\r][\n\r]+", phasetbl.strip())
             for tab in phasettlbs:
                 tabdf = read_phase_table(tab)
-                df = df.append(tabdf, sort=False)
+                df = pd.concat([df, tabdf])
 
     df = convert_thermo_names(df)
     non_num = ["step", "structure", "phaseID", "phase", "formula"]
@@ -244,7 +246,7 @@ def phasetable_from_phasemain(filepath, kelvin=False):
     with open(str(filepath)) as f:
         data = re.split(r"[\n\r][\n\r]+", f.read())[1:]  # double line sep
         for tab in data:
-            df = df.append(read_phase_table(tab), sort=False)
+            df = pd.concat([df, read_phase_table(tab)])
 
     df = convert_thermo_names(df)
     non_num = ["step", "structure", "phaseID", "phase", "formula"]
@@ -322,13 +324,13 @@ def import_tables(pth, kelvin=False):
     # traces could be imported here
 
     for tb in [bulk, solid]:
-        phase = phase.append(tb, sort=False)
+        phase = pd.concat([phase, tb])
     # integrated solids for fractionation - if the system mass changes significantly
     # could add this threshold as a parameter
     frac = system.mass.max() / system.mass.min() > 1.05
     cumulate_comp = integrate_solid_composition(phase, frac=frac)
     cumulate_comp["phase"] = "cumulate"
-    phase = phase.append(cumulate_comp, sort=False)
+    phase = pd.concat([phase, cumulate_comp])
 
     cumulate_phases = integrate_solid_proportions(phase, frac=frac)
     cumulate_phases["phase"] = "cumulate"
@@ -428,7 +430,6 @@ def aggregate_tables(
         # aggregate them to a single table
         Sagg, Pagg = pd.DataFrame(), pd.DataFrame()
         for ix, d in enumerate(lst):
-
             S, P = d
             # ensure the experiment index is incorporated
             S["experiment"] = ix

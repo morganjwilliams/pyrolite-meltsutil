@@ -2,13 +2,14 @@
 This submodule is a home for templates for quickly
 regenerating common visualistions from melts tables.
 """
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from pyrolite.util.meta import subkwargs
 from pyrolite.util.plot.legend import proxy_line
-from .style import phase_color, phaseID_linestyle, phaseID_marker
+
 from ..util.log import Handle
+from .style import phase_color, phaseID_linestyle, phaseID_marker
 
 logger = Handle(__name__)
 
@@ -60,8 +61,7 @@ def plot_xy_phase_groupby(ax, df, xvar, yvar, legend=True, markersize=3, **kwarg
 
 
 def plot_phasevolumes(phasetable, xvar="temperature", legend=True, ax=None, **kwargs):
-    """
-    """
+    """ """
     ax, proxies = plot_xy_phase_groupby(
         ax, phasetable, xvar, "volume%", legend=legend, **kwargs
     )
@@ -69,8 +69,7 @@ def plot_phasevolumes(phasetable, xvar="temperature", legend=True, ax=None, **kw
 
 
 def plot_phasemasses(phasetable, xvar="temperature", legend=True, ax=None, **kwargs):
-    """
-    """
+    """ """
     ax, proxies = plot_xy_phase_groupby(
         ax, phasetable, xvar, "mass%", legend=legend, **kwargs
     )

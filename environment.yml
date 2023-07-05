@@ -5,17 +5,17 @@ channels:
   - defaults
 
 dependencies:
-  - python=3.7
+  - python=3.10
   # pandas and scientific python
   - numpy
   - numpydoc
-  - pandas>=1.0  # dataframe acccessors, attrs attribute
+  - pandas>=1.0 # dataframe acccessors, attrs attribute
   - xlrd
   - openpyxl
   - psutil
   - matplotlib # note that 3.4+ is incompatible with mpltern <0.3.3
   - pytables
-  - scipy>=1.2  # uses scipy.optimize.Bounds, added around 1.2
+  - scipy>=1.2 # uses scipy.optimize.Bounds, added around 1.2
   - umap-learn
   - tinydb
   - periodictable
@@ -30,22 +30,21 @@ dependencies:
   - ipykernel
   - pip
   - black
-  - jedi<0.18.0 # for use on atom/ipython
+  - isort
+  - pyrolite
   - pip:
-    - pyzmq
-    - pytest
-    - pytest-runner
-    - pytest-cov
-    - coverage
-    - codecov
-    - sphinx_rtd_theme
-    - sphinx-autodoc-annotation
-    - sphinx_gallery>=0.6.0
-    - recommonmark
-    - versioneer
-    - twine
-    - pyrolite
-    - -e . # install the local pyrolite-meltsutil package
+      - pytest
+      - pytest-runner
+      - pytest-cov
+      - coverage
+      - codecov
+      - sphinx_rtd_theme
+      - sphinx-autodoc-annotation
+      - sphinx_gallery>=0.6.0
+      - recommonmark
+      - versioneer
+      - twine
+      - -e . # install the local pyrolite-meltsutil package
 
 # conda env create -f environment.yml
 # python -m ipykernel install --user --name pyrolite-meltsutil

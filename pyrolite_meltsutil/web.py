@@ -7,9 +7,11 @@ Todo
     * Function to generate a valid parameter dictionary to pass to the service.
 """
 import logging
-import requests
-import dicttoxml, xmljson
 from xml.etree import ElementTree as ET
+
+import dicttoxml
+import requests
+import xmljson
 from pyrolite.util.web import internet_connection
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

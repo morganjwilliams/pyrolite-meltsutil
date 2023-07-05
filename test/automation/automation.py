@@ -1,15 +1,16 @@
 import io
-import unittest
-import pandas as pd
-from pyrolite.util.pd import to_numeric
-from pyrolite.util.general import temp_path, remove_tempdir
-from pyrolite.geochem.norm import get_reference_composition
-
-from pyrolite_meltsutil.env import MELTS_Env
-from pyrolite_meltsutil.automation import MeltsProcess, MeltsExperiment, MeltsBatch
-from pyrolite_meltsutil.automation.org import make_meltsfolder
-from pyrolite_meltsutil.util.general import get_local_example, check_perl
 import logging
+import unittest
+
+import pandas as pd
+from pyrolite.geochem.norm import get_reference_composition
+from pyrolite.util.general import remove_tempdir, temp_path
+from pyrolite.util.pd import to_numeric
+
+from pyrolite_meltsutil.automation import MeltsBatch, MeltsExperiment, MeltsProcess
+from pyrolite_meltsutil.automation.org import make_meltsfolder
+from pyrolite_meltsutil.env import MELTS_Env
+from pyrolite_meltsutil.util.general import check_perl, get_local_example
 
 logger = logging.Logger(__name__)
 

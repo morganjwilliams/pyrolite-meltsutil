@@ -2,7 +2,9 @@
 Generating synthetic data for use with alphaMELTS.
 """
 from collections import OrderedDict
+
 from pyrolite.geochem.norm import get_reference_composition
+
 from ..util.log import Handle
 
 logger = Handle(__name__)

@@ -1,8 +1,9 @@
-import unittest
-from pyrolite_meltsutil.automation.naming import exp_hash, exp_name
-from pyrolite_meltsutil.util.general import get_data_example
-from pyrolite_meltsutil.tables.load import import_batch_config
 import logging
+import unittest
+
+from pyrolite_meltsutil.automation.naming import exp_hash, exp_name
+from pyrolite_meltsutil.tables.load import import_batch_config
+from pyrolite_meltsutil.util.general import get_data_example
 
 logger = logging.Logger(__name__)
 
@@ -19,7 +20,6 @@ class TestExpHash(unittest.TestCase):
         }
 
     def test_default(self):
-
         for k, c in self.exps.items():
             self.assertTrue(k == exp_hash(c))
 
@@ -34,7 +34,6 @@ class TestExpName(unittest.TestCase):
         }
 
     def test_default(self):
-
         for n, c in self.exps.items():
             self.assertTrue(n == exp_name(c))
 

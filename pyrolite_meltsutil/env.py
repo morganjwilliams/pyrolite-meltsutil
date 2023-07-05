@@ -1,11 +1,13 @@
 """
 alphaMELTS environment managment.
 """
-import os
 import logging
+import os
+from textwrap import dedent
+
 from pyrolite.util.env import validate_update_envvar
 from pyrolite.util.text import remove_prefix
-from textwrap import dedent
+
 from .data.environment import MELTS_environment_variables
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

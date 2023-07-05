@@ -1,6 +1,7 @@
 import unittest
-from pyrolite_meltsutil.util.synthetic import default_data_dictionary
 from collections import OrderedDict
+
+from pyrolite_meltsutil.util.synthetic import default_data_dictionary
 
 
 class TestDefaultMELTSDict(unittest.TestCase):

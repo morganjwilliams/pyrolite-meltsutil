@@ -6,8 +6,7 @@ TIME_PER_STEP = 0.05  # seconds per iteration, varies
 
 
 def get_P_steps(exp):
-    """
-    """
+    """ """
 
     if "isobaric" in exp.get("modes", []):
         steps = 0

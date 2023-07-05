@@ -5,10 +5,11 @@ channels:
   - defaults
 
 dependencies:
-  - python=3.7
+  - python=3.10
   - pip
   - matplotlib
   - scipy>=1.2
   - pandas>=0.23
+  - pyrolite>=0.3.3
   - pip:
       - -e git+git://github.com/morganjwilliams/pyrolite-meltsutil.git@develop#egg=pyrolite-meltsutil[dev]

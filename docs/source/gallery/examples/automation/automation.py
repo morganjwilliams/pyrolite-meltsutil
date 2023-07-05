@@ -8,11 +8,14 @@ experiments at different conditions for a single MORB composition. Once we have 
 data in a :class:`~pandas.DataFrame`, we configure the default alphaMELTS environment
 before running the batch of experiments.
 """
-import os, sys
+import os
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from pathlib import Path
-import matplotlib.pyplot as plt
+
 from pyrolite_meltsutil.automation import MeltsBatch
 
 ########################################################################################

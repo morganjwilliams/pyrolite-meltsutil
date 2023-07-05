@@ -1,9 +1,12 @@
-import psutil
 import subprocess
+
+import psutil
 from pyrolite.util.meta import get_module_datafolder
+
 from ..util.log import Handle
 
 logger = Handle(__name__)
+
 
 def check_perl():
     """
@@ -24,6 +27,7 @@ def check_perl():
         returncode = 1
 
     return returncode == 0
+
 
 def get_process_tree(process, levels_up=1):
     """

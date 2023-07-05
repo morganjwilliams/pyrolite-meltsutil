@@ -1,12 +1,15 @@
 import unittest
+
 import numpy as np
 import periodictable as pt
-from pyrolite.util.general import temp_path, remove_tempdir
+from pyrolite.util.general import remove_tempdir, temp_path
+
 from pyrolite_meltsutil.parse import *
-from pyrolite_meltsutil.util.general import get_local_example, check_perl
+from pyrolite_meltsutil.util.general import check_perl, get_local_example
 
 MELTSFILE = get_local_example("Morb.melts")
 ENV = get_local_example("alphamelts_default_env.txt")
+
 
 class TestReadMeltsfile(unittest.TestCase):
     def setUp(self):

@@ -1,11 +1,14 @@
-import numpy as np
 import matplotlib.pyplot as plt
-import pyrolite_meltsutil as melts
-from pyrolite.util.plot.axes import get_twins, share_axes
+import numpy as np
 from pyrolite.geochem.magma import SCSS
+from pyrolite.util.plot.axes import get_twins, share_axes
+
+import pyrolite_meltsutil as melts
+
 from ..util.log import Handle
 
 logger = Handle(__name__)
+
 
 def plot_sulfur_saturation_point(
     liquid, ax=None, start=1000, xvar="mass%", mode="sulfide"
@@ -43,7 +46,7 @@ def plot_sulfur_saturation_point(
         ax2 = ax2[0]
     ax2.set_ylabel("Free S (Mass %)")
 
-    if not "SCSS" in liquid.columns: # add SCSS if its missing
+    if not "SCSS" in liquid.columns:  # add SCSS if its missing
         liquid["SCSS"] = SCSS(
             liquid,
             T=liquid.temperature,

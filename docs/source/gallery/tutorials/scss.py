@@ -13,8 +13,8 @@ Here we use this function to predict sulfur saturation in a fractionally
 crystallizing MORB melt with a range of sulfur contents. First we'll import a set of
 example data tables:
 """
+from pyrolite_meltsutil.tables.load import import_batch_config, import_tables
 from pyrolite_meltsutil.util.general import get_data_example
-from pyrolite_meltsutil.tables.load import import_tables, import_batch_config
 
 # sphinx_gallery_thumbnail_number = 3
 hsh = "363f3d0a0b"  # the hash index of our experiment
@@ -48,6 +48,7 @@ liquid.loc[:, "SCSS"] = sulfide
 #
 import matplotlib.pyplot as plt
 import pyrolite.plot
+
 from pyrolite_meltsutil.vis.scss import plot_sulfur_saturation_point
 
 xvar, colorvar = "mass%", "temperature"
@@ -69,6 +70,7 @@ plt.show()
 # We can clean up these axes a bit by relimiting and rescaling:
 #
 import numpy as np
+
 ax.set_xlim((np.nanmax(liquid["mass%"]), 0))
 ########################################################################################
 # To this we can also add the saturation points (where sulfur content crosses SCSS)

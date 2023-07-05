@@ -1,17 +1,22 @@
 """
 alphaMELTS download and installsation utilities.
 """
-import os, sys, platform
-import subprocess, shutil
 import io
+import logging
+import os
+import platform
 import re
-import requests
+import shutil
+import subprocess
+import sys
 import zipfile
 from pathlib import Path
+
+import requests
 from pyrolite.util.general import copy_file, remove_tempdir
 from pyrolite.util.web import internet_connection
-from .util.general import pyrolite_meltsutil_datafolder, check_perl
-import logging
+
+from .util.general import check_perl, pyrolite_meltsutil_datafolder
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 logger = logging.getLogger(__name__)
@@ -199,7 +204,7 @@ def install_melts(
             # copy files from tempdir to install_dir
             regs = []  #'command', 'command_auto_file', 'path', 'perl']
             comms = ["install", "column_pick", "file_format", "run_alphamelts"]
-            for (prefixes, ext) in [(regs, ".reg"), (comms, ".command")]:
+            for prefixes, ext in [(regs, ".reg"), (comms, ".command")]:
                 for prefix in prefixes:
                     temp_regpath = (temp_dir / prefix).with_suffix(ext)
                     install_regpath = install_dir / temp_regpath.name
@@ -235,12 +240,12 @@ def install_melts(
             alphaalias = [alphafile, "alphamelts"][system == "Windows"]
             copy_file(temp_dir / alphafile, install_dir / alphaalias, permissions=0o777)
             # copy examples
-            for (target, files) in [(eg_dir, egs)]:
+            for target, files in [(eg_dir, egs)]:
                 for fn in files:
                     copy_file(temp_dir / fn.name, target / fn.name)
 
             # copycommand files
-            for (target, files) in [(install_dir, [(temp_dir / i) for i in comms])]:
+            for target, files in [(install_dir, [(temp_dir / i) for i in comms])]:
                 for fn in files:  # executable files will need permissions
                     copy_file(temp_dir / fn.name, target / fn.name, permissions=0o777)
 

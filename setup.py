@@ -1,4 +1,5 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
+
 import versioneer
 
 tests_require = ["pytest", "pytest-runner", "pytest-cov", "coverage", "coveralls"]
@@ -8,7 +9,7 @@ docs_require = [
     "sphinx_gallery>=0.6.0",
     "recommonmark",
 ]
-dev_require = ["pytest", "versioneer", "black", "twine"] + tests_require + docs_require
+dev_require = ["pytest", "versioneer", "black", "twine", "isort"] + tests_require + docs_require
 
 with open("README.md", "r") as src:
     LONG_DESCRIPTION = src.read()
@@ -32,16 +33,17 @@ setup(
         "Intended Audience :: Science/Research",
         "Natural Language :: English",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Topic :: Scientific/Engineering",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     keywords=["geochemistry", "compositional data", "visualisation", "petrology"],
     packages=find_packages(exclude=["test*"]),
     install_requires=[
-        "pyrolite>=0.3.0",
+        "pyrolite>=0.3.3",
         "requests",
         "psutil",
         "xmljson",

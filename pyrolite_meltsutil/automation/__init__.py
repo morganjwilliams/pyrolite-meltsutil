@@ -7,29 +7,28 @@ Issues
     * names are truncated for modifychem melts files?
     * need a timeout so processes can keep going, add unfinished experiments to failed list
 """
+import datetime
 import itertools
-from pathlib import Path
-import time, datetime
-import numpy as np
 import json
-from tqdm import tqdm
+import logging
+import time
+from pathlib import Path
 
-from pyrolite.geochem.ind import common_elements, common_oxides
+import numpy as np
 from pyrolite.comp.codata import renormalise
+from pyrolite.geochem.ind import common_elements, common_oxides
 from pyrolite.util.log import ToLogger
 from pyrolite.util.multip import combine_choices
+from tqdm import tqdm
 
-from ..parse import read_envfile, read_meltsfile
 from ..env import MELTS_Env
 from ..meltsfile import dict_to_meltsfile
-
-from .naming import exp_name, exp_hash
+from ..parse import read_envfile, read_meltsfile
+from ..util.log import Handle
+from .naming import exp_hash, exp_name
 from .org import make_meltsfolder
 from .process import MeltsProcess
 from .timing import estimate_experiment_duration
-
-import logging
-from ..util.log import Handle
 
 logger = Handle(__name__)
 

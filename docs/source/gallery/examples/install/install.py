@@ -8,6 +8,7 @@ purposes.
 
 """
 from pyrolite.util.log import stream_log
+
 from pyrolite_meltsutil.download import install_melts
 from pyrolite_meltsutil.util.general import pyrolite_meltsutil_datafolder
 

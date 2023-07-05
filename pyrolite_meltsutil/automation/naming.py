@@ -1,6 +1,8 @@
-import json
 import hashlib
+import json
+
 from pyrolite.util.text import slugify
+
 from ..util.log import Handle
 
 logger = Handle(__name__)

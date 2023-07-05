@@ -1,5 +1,7 @@
 import unittest
+
 from pyrolite.util.web import internet_connection
+
 from pyrolite_meltsutil.util.synthetic import default_data_dictionary
 from pyrolite_meltsutil.web import *
 

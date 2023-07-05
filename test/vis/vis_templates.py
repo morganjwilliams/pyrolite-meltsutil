@@ -1,11 +1,11 @@
-import unittest
 import logging
-from pyrolite_meltsutil.util.general import get_data_example
+import unittest
+
 from pyrolite_meltsutil.tables import import_tables
-from pyrolite_meltsutil.vis.templates import (
-    # plot_xy_phase_groupby,
-    plot_phasevolumes,
+from pyrolite_meltsutil.util.general import get_data_example
+from pyrolite_meltsutil.vis.templates import (  # plot_xy_phase_groupby,
     plot_phasemasses,
+    plot_phasevolumes,
 )
 
 logger = logging.Logger(__name__)

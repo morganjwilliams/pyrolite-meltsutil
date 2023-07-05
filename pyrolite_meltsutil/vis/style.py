@@ -1,6 +1,7 @@
-from ..util.tables import phasename
 import matplotlib.colors as mcolors
+
 from ..util.log import Handle
+from ..util.tables import phasename
 
 logger = Handle(__name__)
 

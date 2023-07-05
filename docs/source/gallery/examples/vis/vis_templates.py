@@ -19,6 +19,7 @@ system, phases = import_tables(exp_dir)
 # We can quickly visualise the phase volume relationships versus temperature:
 #
 import matplotlib.pyplot as plt
+
 from pyrolite_meltsutil.vis.templates import plot_phasevolumes
 
 ax, proxies = plot_phasevolumes(phases)

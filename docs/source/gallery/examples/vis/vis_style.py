@@ -7,6 +7,7 @@ Visualisation: Distinguishing Phases
 # :func:`~pyrolite_meltsutil.vis.style.phase_color` function, which will return
 # unique colors for each phase:
 from pyrolite_meltsutil.vis.style import phase_color
+
 # sphinx_gallery_thumbnail_number = 2
 phase_color("olivine")
 ########################################################################################

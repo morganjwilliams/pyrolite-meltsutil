@@ -12,9 +12,10 @@ represent analytical uncertainty. Geological uncertainties are typically strongl
 correlated, and the uncertainties associated with e.g. variable mineral assemblages
 should be modelled differently.
 """
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
 
 np.random.seed(23)
 # sphinx_gallery_thumbnail_number = 2
@@ -52,8 +53,8 @@ def blur_compositions(df, noise=0.05, scale=100):
 # to each to create a range of plausible compositions:
 #
 import pyrolite.geochem
-from pyrolite.util.text import slugify
 from pyrolite.util.pd import accumulate
+from pyrolite.util.text import slugify
 
 reps = 10  # increase this to perform more experiments
 df = accumulate([MORB] * reps)
@@ -133,8 +134,8 @@ batch = MeltsBatch(
 #
 from pyrolite_meltsutil.tables.load import (
     aggregate_tables,
-    import_tables,
     import_batch_config,
+    import_tables,
 )
 
 system, phases = aggregate_tables(experiment_dir)  # let's import the tables
@@ -145,7 +146,8 @@ cfg = import_batch_config(experiment_dir)  # and also the configuration
 #
 import matplotlib.pyplot as plt
 from pyrolite.util.plot.legend import proxy_line
-from pyrolite_meltsutil.vis.style import phaseID_linestyle, phaseID_marker, phase_color
+
+from pyrolite_meltsutil.vis.style import phase_color, phaseID_linestyle, phaseID_marker
 
 phaselist = ["liquid", "clinopyroxene", "feldspar", "olivine"]
 

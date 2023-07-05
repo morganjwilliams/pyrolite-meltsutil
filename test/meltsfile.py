@@ -1,8 +1,10 @@
-import unittest
-import pandas as pd
 import io
+import unittest
+
+import pandas as pd
 from pyrolite.util.pd import to_numeric
 from pyrolite.util.synthetic import normal_frame, normal_series
+
 from pyrolite_meltsutil.meltsfile import *
 
 
@@ -160,7 +162,6 @@ log fo2 Path: None
 """
 
 
-
 class Test2MELTSFiles(unittest.TestCase):
     def setUp(self):
         self.df = normal_frame()
@@ -220,7 +221,7 @@ class TestFromMELTSFiles(unittest.TestCase):
                     (
                         tg.iloc[0, :].values[where_numeric]
                         - tg.iloc[1, :].values[where_numeric]
-                    ).astype(np.float),
+                    ).astype(float),
                     np.zeros(n_numeric),
                 )[0]
                 > 0

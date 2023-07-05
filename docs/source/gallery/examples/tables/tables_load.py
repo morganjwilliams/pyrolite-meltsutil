@@ -13,8 +13,8 @@ returns two tables - one for :code:`system` variables and one for :code:`phases`
 which contains information pertaining to individual phases or aggregates (e.g.
 'olivine_0', 'bulk', 'liquid' etc).
 """
-from pyrolite_meltsutil.util.general import get_data_example
 from pyrolite_meltsutil.tables.load import import_tables
+from pyrolite_meltsutil.util.general import get_data_example
 
 # let's use the example batch data for this
 experiment_dir = get_data_example("batch/363f3d0a0b")

@@ -1,6 +1,8 @@
 import unittest
+
+from pyrolite.util.general import remove_tempdir, temp_path
 from pyrolite.util.web import internet_connection
-from pyrolite.util.general import temp_path, remove_tempdir
+
 from pyrolite_meltsutil.download import *
 from pyrolite_meltsutil.util.general import check_perl
 

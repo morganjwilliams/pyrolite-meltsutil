@@ -1,12 +1,14 @@
 """
 Parsing utilities for use with alphaMELTS.
 """
-import re
-import pandas as pd
-from pathlib import Path
 import logging
+import re
+from pathlib import Path
+
+import pandas as pd
 import periodictable as pt
 from pyrolite.mineral.transform import merge_formulae
+
 from .env import MELTS_Env
 from .meltsfile import ser_to_meltsfile
 
@@ -146,7 +148,7 @@ def from_melts_cstr(composition_str, formula=True):
         )  # replace ' with count(')
 
     # replace iron valences
-    tfm = lambda s: re.sub(sub, repl, s).replace('[]', '')
+    tfm = lambda s: re.sub(sub, repl, s).replace("[]", "")
     if not formula:
         result = re.findall(regex, composition_str)
         result = [(tfm(el), float(val)) for el, val in result]

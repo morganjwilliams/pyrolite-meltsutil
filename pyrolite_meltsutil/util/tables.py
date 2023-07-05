@@ -1,6 +1,7 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import pyrolite.geochem
+
 from ..util.log import Handle
 
 logger = Handle(__name__)
@@ -82,12 +83,14 @@ def integrate_solid_composition(df, frac=True):
         chem_columns = [
             i for i in slds.pyrochem.list_compositional if i not in ["S", "H", "V"]
         ]
-        chem = slds.reindex(index=idx.index, columns=chem_columns,)
+        chem = slds.reindex(
+            index=idx.index,
+            columns=chem_columns,
+        )
         chem = chem.apply(pd.to_numeric, errors="coerce")
 
         increments = (
-            slds["mass"].reindex(index=idx.index).values[:, np.newaxis]
-            * chem.values
+            slds["mass"].reindex(index=idx.index).values[:, np.newaxis] * chem.values
         )
         cumulate[chem_columns] = np.nancumsum(increments, axis=1)
         cumulate[["pressure", "temperature", "step"]] = slds.loc[

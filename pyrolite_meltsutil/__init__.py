@@ -69,9 +69,5 @@ from ._version import get_versions
 __version__ = get_versions()["version"]
 del get_versions
 
+from . import automation, env, tables, vis
 from .download import install_melts
-
-from . import env
-from . import automation
-from . import vis
-from . import tables

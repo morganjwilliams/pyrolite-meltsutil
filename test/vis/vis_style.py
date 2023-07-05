@@ -1,5 +1,5 @@
-import unittest
 import logging
+import unittest
 
 logger = logging.Logger(__name__)
 

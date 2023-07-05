@@ -19,11 +19,11 @@
 
 
 import os
-import sys
 import re
+import sys
+import warnings
 from datetime import date
 from pathlib import Path
-import warnings
 
 warnings.filterwarnings("ignore", "Unknown section")
 
@@ -33,6 +33,7 @@ sys.path.insert(0, os.path.abspath("../.."))
 # pip install git+https://github.com/rtfd/recommonmark.git@master
 import recommonmark
 from recommonmark.transform import AutoStructify
+
 import pyrolite_meltsutil
 
 version = re.findall(r"^[\d]*.[\d]*.[\d]*", pyrolite_meltsutil.__version__)[0]
@@ -97,7 +98,7 @@ author = "Morgan Williams"
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

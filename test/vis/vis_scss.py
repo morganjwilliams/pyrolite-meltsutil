@@ -1,7 +1,8 @@
-import unittest
 import logging
-from pyrolite_meltsutil.util.general import get_data_example
+import unittest
+
 from pyrolite_meltsutil.tables import import_tables
+from pyrolite_meltsutil.util.general import get_data_example
 from pyrolite_meltsutil.vis.scss import plot_sulfur_saturation_point
 
 logger = logging.Logger(__name__)

@@ -7,6 +7,7 @@ channels:
 dependencies:
   - python=3.10
   # pandas and scientific python
+  - pyrolite
   - numpy
   - numpydoc
   - pandas>=1.0 # dataframe acccessors, attrs attribute
@@ -19,31 +20,33 @@ dependencies:
   - umap-learn
   - tinydb
   - periodictable
-  - mpltern>=0.3.1
+  - mpltern>=0.4.0
   - mpmath
-  - sympy
+  - sympy>=1.7 # import changes after sympy 1.6
   - joblib
   - requests
   # Tools
   - jupyter
   - jupyterlab
+  - jupyterlab-spellchecker
+  - jupyterlab_code_formatter
   - ipykernel
   - pip
   - black
   - isort
-  - pyrolite
+  - pyzmq
+  - pytest
+  - pytest-runner
+  - pytest-cov
+  - coverage
+  - codecov
+  - sphinx_rtd_theme
+  - recommonmark
+  - versioneer
+  - twine
   - pip:
-      - pytest
-      - pytest-runner
-      - pytest-cov
-      - coverage
-      - codecov
-      - sphinx_rtd_theme
       - sphinx-autodoc-annotation
       - sphinx_gallery>=0.6.0
-      - recommonmark
-      - versioneer
-      - twine
       - -e . # install the local pyrolite-meltsutil package
 
 # conda env create -f environment.yml

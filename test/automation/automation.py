@@ -111,7 +111,7 @@ class TestMeltsBatch(unittest.TestCase):
             "P2O5",
         ]
         MORB = Gale_MORB.comp.loc[:, majors].apply(pd.to_numeric)
-        MORB = MORB.append(MORB).reset_index().drop(columns="index")
+        MORB = pd.concat([MORB, MORB]).reset_index(drop=True)
         MORB["Title"] = [
             "{}_{}".format(Gale_MORB.name, ix).replace("_", "")
             for ix in MORB.index.values.astype(str)

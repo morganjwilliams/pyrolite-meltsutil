@@ -6,7 +6,7 @@ Extension for pyrolite for working with alphaMELTS and its outputs.
 <p align="left">
 <a href="https://pypi.python.org/pypi/pyrolite-meltsutil/">
   <img src="https://img.shields.io/pypi/v/pyrolite-meltsutil.svg" alt="PyPI"></a>
-<a href="https://github.com/morganjwilliams/pyrolite-meltsutil/blob/master/LICENSE" >
+<a href="https://github.com/morganjwilliams/pyrolite-meltsutil/blob/main/LICENSE" >
   <img src="https://img.shields.io/badge/MIT_License-blue.svg"
        alt="License: MIT License"></a>
 </p>
@@ -37,7 +37,7 @@ pip install pyrolite-meltsutil
 
 ### Build Status
 
-|                                                                                                            **master**                                                                                                            |                                                                                                             **develop**                                                                                                             |
+|                                                                                                            **main**                                                                                                            |                                                                                                             **develop**                                                                                                             |
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| [![Unit Tests on Master](https://github.com/morganjwilliams/pyrolite-meltsutil/workflows/Unittest/badge.svg?branch=master)](https://github.com/morganjwilliams/pyrolite-meltsutil/actions?query=workflow:Unittest+branch:master) | [![Unit Tests on Develop](https://github.com/morganjwilliams/pyrolite-meltsutil/workflows/Unittest/badge.svg?branch=develop)](https://github.com/morganjwilliams/pyrolite-meltsutil/actions?query=workflow:Unittest+branch:develop) |
-|                 [![Coverage Status](https://coveralls.io/repos/github/morganjwilliams/pyrolite-meltsutil/badge.svg?branch=master)](https://coveralls.io/github/morganjwilliams/pyrolite-meltsutil?branch=master)                 |                 [![Coverage Status](https://coveralls.io/repos/github/morganjwilliams/pyrolite-meltsutil/badge.svg?branch=develop)](https://coveralls.io/github/morganjwilliams/pyrolite-meltsutil?branch=develop)                  |
+| [![Unit Tests on Main](https://github.com/morganjwilliams/pyrolite-meltsutil/workflows/Unittest/badge.svg?branch=main)](https://github.com/morganjwilliams/pyrolite-meltsutil/actions?query=workflow:Unittest+branch:main) | [![Unit Tests on Develop](https://github.com/morganjwilliams/pyrolite-meltsutil/workflows/Unittest/badge.svg?branch=develop)](https://github.com/morganjwilliams/pyrolite-meltsutil/actions?query=workflow:Unittest+branch:develop) |
+|                 [![Coverage Status](https://coveralls.io/repos/github/morganjwilliams/pyrolite-meltsutil/badge.svg?branch=main)](https://coveralls.io/github/morganjwilliams/pyrolite-meltsutil?branch=main)                 |                 [![Coverage Status](https://coveralls.io/repos/github/morganjwilliams/pyrolite-meltsutil/badge.svg?branch=develop)](https://coveralls.io/github/morganjwilliams/pyrolite-meltsutil?branch=develop)                  |

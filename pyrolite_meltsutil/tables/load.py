@@ -146,8 +146,8 @@ def read_melts_tablefile(filepath, kelvin=False, skiprows=3, **kwargs):
                     "-".join([str(i) for i in linelen])
                 )
             )
-    buff = io.BytesIO("".join(lines[1:]).encode("UTF-8"))
-    df = pd.read_csv(buff, sep=" ", names=headers, **kwargs)
+    df = pd.DataFrame([l.split() for l in lines[1:]], columns=headers)
+    df = df.apply(pd.to_numeric, errors='coerce')  # anything which isn't float will become nan
     df = df.loc[
         :, ~df.columns.str.replace("(\.\d+)$", "").duplicated()
     ]  # remove duplicate columns
@@ -417,8 +417,8 @@ def aggregate_tables(
                 S["experiment"] = d.name
                 P["experiment"] = d.name
 
-                system = system.append(S, sort=False)
-                phases = phases.append(P, sort=False)
+                system = pd.concat([system, S], axis=0)
+                phases = pd.concat([phases, P], axis=0)
             except Exception as e:
                 msg = "{} at {}.".format(e, d.name)
                 if errors is not None:
@@ -435,8 +435,8 @@ def aggregate_tables(
             S["experiment"] = ix
             P["experiment"] = ix
 
-            system = system.append(S, sort=False)
-            phases = phases.append(P, sort=False)
+            system = pd.concat([system, S], axis=0)
+            phases = pd.concat([phases, P], axis=0)
     else:
         raise NotImplementedError
 

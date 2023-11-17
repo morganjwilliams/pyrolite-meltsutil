@@ -4,9 +4,8 @@ from pathlib import Path
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import _pylab_helpers
-from sphinx_gallery import scrapers
-
 from pyrolite.util.plot import save_figure
+from sphinx_gallery import scrapers
 
 
 def alt_matplotlib_scraper(block, block_vars, gallery_conf, **kwargs):

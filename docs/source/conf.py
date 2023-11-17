@@ -240,6 +240,10 @@ sphinx_gallery_conf = {
         "gallery/examples/",
         "gallery/tutorials/",
     ],  # path to your example scripts
+    "gallery_dirs": [
+        "examples",
+        "tutorials",
+    ],
     # "expected_failing_examples": ["gallery/examples/web/meltsweb.py"],
     "subsection_order": ExplicitOrder(
         [
@@ -251,10 +255,7 @@ sphinx_gallery_conf = {
             "gallery/tutorials/",
         ]
     ),
-    "gallery_dirs": [
-        "examples",
-        "tutorials",
-    ],  # path to where to save gallery generated output
+    # path to where to save gallery generated output
     "capture_repr": ("_repr_html_", "__repr__", "__str__"),
     "backreferences_dir": "_backreferences",
     "doc_module": ("pyrolite_meltsutil"),
@@ -274,8 +275,10 @@ sphinx_gallery_conf = {
         # Optional keys
         # "filepath_prefix": "/docs/notebooks/",  # A prefix to prepend to any filepaths in Binder links.
         "notebooks_dir": "docs/source/",
+        "use_jupyter_lab": True,
     },
     "first_notebook_cell": "%matplotlib inline\n",
+    "nested_sections": False
 }
 # Remove matplotlib agg warnings from generated doc when using plt.show
 warnings.filterwarnings(

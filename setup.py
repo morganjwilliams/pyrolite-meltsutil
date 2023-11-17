@@ -6,10 +6,12 @@ tests_require = ["pytest", "pytest-runner", "pytest-cov", "coverage", "coveralls
 docs_require = [
     "sphinx_rtd_theme",
     "sphinx-autodoc-annotation",
-    "sphinx_gallery>=0.6.0",
+    "sphinx-gallery>=0.6.0",
     "recommonmark",
 ]
-dev_require = ["pytest", "versioneer", "black", "twine", "isort"] + tests_require + docs_require
+dev_require = (
+    ["pytest", "versioneer", "black", "twine", "isort"] + tests_require + docs_require
+)
 
 with open("README.md", "r") as src:
     LONG_DESCRIPTION = src.read()
@@ -29,7 +31,7 @@ setup(
     author="Morgan Williams",
     author_email="morgan.williams@csiro.au",
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 3 - Alpha",
         "Intended Audience :: Science/Research",
         "Natural Language :: English",
         "Programming Language :: Python :: 3 :: Only",

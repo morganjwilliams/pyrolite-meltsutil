@@ -22,11 +22,4 @@ formats:
 # Optionally set the version of Python and requirements required to build your docs
 python:
   install:
-    - method: pip
-      path: git+https://github.com/morganjwilliams/pyrolite.git@develop#egg=pyrolite
-      extra_requirements:
-        - skl
-    - method: pip
-      path: .
-      extra_requirements:
-        - docs
+    - requirements: docs/docs_require.txt

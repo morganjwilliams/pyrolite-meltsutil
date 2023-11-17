@@ -23,9 +23,10 @@ formats:
 python:
   install:
     - method: pip
-      path: git+git://github.com/morganjwilliams/pyrolite.git@develop#egg=pyrolite[skl]
+      path: git+https://github.com/morganjwilliams/pyrolite.git@develop#egg=pyrolite
+      extra_requirements:
+        - skl
     - method: pip
       path: .
       extra_requirements:
         - docs
-        - skl # for sklearn-based examples

@@ -40,6 +40,7 @@ plt.colorbar(
     mappable_from_values(cumulate_comp.temperature.dropna(), cmap="magma"),
     label="Temperature (C)",
     ax=ax,
+    shrink=0.7,
 )
 plt.show()
 ########################################################################################
@@ -54,5 +55,6 @@ plt.colorbar(
     mappable_from_values(cumulate_phases.temperature, cmap="magma"),
     label="Temperature (C)",
     ax=ax,
+    shrink=0.7,
 )
 plt.show()
